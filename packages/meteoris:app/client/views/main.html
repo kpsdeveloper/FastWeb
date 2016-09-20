@@ -1,0 +1,17 @@
+<template name="mainLayout">
+    {{#if Template.subscriptionsReady}}
+    {{#AdminLTE skin=model.skin fixed=model.fixed sidebarMini=model.sidebarMini}}  
+    {{> app_header}}
+    <!--{{> meteoris_themeAdminSidebar}}-->
+
+    <!-- Content Wrapper. Contains page content -->      
+    <!-- Main content -->
+    {{> Template.dynamic template=content}}
+    <!-- /.content-wrapper -->                
+    <!--
+    {{> meteoris_flash}}-->
+    {{> app_footer}}
+    <!--{{> meteoris_themeAdminControlSidebar}}-->
+    {{/AdminLTE}}
+    {{/if}}          
+</template>
