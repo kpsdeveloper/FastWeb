@@ -14,11 +14,12 @@ Package.onUse(function(api) {
         'templating',
         'meteoris:flash@0.0.0',
         'mfactory:admin-lte@0.0.0',
-        'fortawesome:fontawesome@4.0.0',
+        //'fortawesome:fontawesome@4.0.0',
     ], 'client');
 
     api.use([
         'meteoris:core@0.0.0',
+        'meteoris:role@0.0.0',
 //        'deps',
 //        'session',
         'mongo',
@@ -28,12 +29,13 @@ Package.onUse(function(api) {
         'aldeed:collection2@2.0.0',
         'aldeed:simple-schema@1.0.0',
         'rochal:slimscroll@1.0.0',
+        'cfs:standard-packages@0.0.0',
     ], ['client', 'server']);
 
     api.addFiles([
-        //'lib/controllers/ThemeAdminController.js',
-        //'lib/collections/ThemeAdmin.js',
-        //'lib/router.js',
+        'lib/controllers/AppController.js',
+        'lib/collections/ThemeAdmin.js',
+        'lib/router.js',
     ], ['client', 'server']);
 
     api.addFiles([
@@ -47,8 +49,12 @@ Package.onUse(function(api) {
         'client/views/main.html',
         'client/views/main.js',
         'client/views/index.html',
+        'client/views/index.js',
         'client/views/header.html',
         'client/views/footer.html',
+        'client/views/sidebar.html',
+        'client/views/admin/products/index.html',
+        'client/views/admin/products/insert.html'
         /*'client/views/login.html',
         'client/views/login.js',
         'client/views/register.html',
@@ -64,5 +70,13 @@ Package.onUse(function(api) {
         'client/views/setting-menu.html',
         'client/views/setting-menu.js',*/
     ], 'client');
+    api.export([
+        'UserController',
+    ], 'client');
 
+    api.export([
+        'Role',
+        'RoleGroup',
+        'RoleCollection',
+    ], ['client', 'server']);
 });

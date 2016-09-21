@@ -2,11 +2,13 @@
     {{#if Template.subscriptionsReady}}
     {{#AdminLTE skin=model.skin fixed=model.fixed sidebarMini=model.sidebarMini}}  
     {{> app_header}}
-    <!--{{> meteoris_themeAdminSidebar}}-->
+    {{> app_sidebar}}
 
     <!-- Content Wrapper. Contains page content -->      
     <!-- Main content -->
-    {{> Template.dynamic template=content}}
+    <div class="content-wrapper"> 
+        {{> Template.dynamic template=content}}
+    </div>
     <!-- /.content-wrapper -->                
     <!--
     {{> meteoris_flash}}-->

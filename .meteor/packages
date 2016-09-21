@@ -20,5 +20,16 @@ meteoris:core
 meteoris:theme-admin
 meteoris:role
 meteoris:user
-
 meteoris:app
+aldeed:collection2
+tap:i18n-db
+mrt:fs
+tap:i18n
+random
+u2622:persistent-session
+manuelschoebel:wait-on-lib
+meteorhacks:npm
+wylio:mandrill
+npm-container
+cfs:standard-packages
+cfs:gridfs

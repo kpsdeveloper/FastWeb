@@ -2,13 +2,16 @@ var ctrl = new Meteoris.AppController();
 
 Template.mainLayout.onCreated(function() {
     var self = this;
+    console.log(ctrl.getId());
     self.autorun(function() {
         self.subscribe('meteoris_themeAdmin', ctrl.getId());
     });    
 });
 
-Template.mainLayout.helpers({
+Template.index.helpers({
     model: function(){
-        return ctrl.main().model;
+        var data = ctrl.main().model;
+        console.log('data:', data);
+
     },    
 });

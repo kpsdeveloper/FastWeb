@@ -14,12 +14,11 @@ Package.onUse(function(api) {
         'templating',
         'meteoris:flash@0.0.0',
         'mfactory:admin-lte@0.0.0',
-        'fortawesome:fontawesome@4.0.0',
+        //'fortawesome:fontawesome@4.0.0',
     ], 'client');
 
     api.use([
         'meteoris:core@0.0.0',
-//        'deps',
 //        'session',
         'mongo',
         'kadira:flow-router@2.0.0',
