@@ -5,6 +5,7 @@ Template.mainLayout.onCreated(function() {
     console.log(ctrl.getId());
     self.autorun(function() {
         self.subscribe('meteoris_themeAdmin', ctrl.getId());
+        TAPi18n.subscribe('Categories');
     });    
 });
 
