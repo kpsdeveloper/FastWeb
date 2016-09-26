@@ -13,5 +13,15 @@ Template.index.helpers({
         var data = ctrl.main().model;
         console.log('data:', data);
 
-    },    
+    },
+    test: function(){
+    	var data = ctrl.test().model;
+    	return {data:data}
+    }    
+});
+Template.index.onCreated(function() {
+    var self = this;
+    self.autorun(function() {
+        self.subscribe('banner');
+    });    
 });

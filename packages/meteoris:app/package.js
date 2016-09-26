@@ -39,7 +39,7 @@ Package.onUse(function(api) {
     ], ['client', 'server']);
 
     api.addFiles([
-        //'server/ThemeAdminServer.js'
+        'server/ThemeAdminServer.js'
     ], 'server');
 
     api.addFiles([

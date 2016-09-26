@@ -1,4 +1,5 @@
 /* create default setting collection */
+/*
 Meteor.startup(function() {
     var _id = "setting";
     if (!Meteoris.ThemeAdmin.findOne(_id)) {
@@ -13,14 +14,12 @@ Meteor.startup(function() {
         });
     }
 });
-
-Meteor.publish('meteoris_themeAdmin', function(doc, sort) {
-    console.log("subscribing some ThemeAdmin with it's relation");
-    var doc = doc || {};
-    var sort = sort || {};
-    return Meteoris.ThemeAdmin.find(doc, sort);
+*/
+Meteor.publish('banner', function() {
+    console.log("subscribing banner");
+    return Banner.find({});
 });
-
+/*
 Meteor.methods({
     "Meteoris.ThemeAdmin.insert": function(doc) {
         var _id = Meteoris.ThemeAdmin.insert(doc);
@@ -37,4 +36,4 @@ Meteor.methods({
     "Meteoris.ThemeAdmin.remove": function(doc) {
         Meteoris.ThemeAdmin.remove(doc);
     },
-});
+});*/
