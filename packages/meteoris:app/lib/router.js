@@ -25,6 +25,6 @@ groupRoutes.route('/products/add', {
 });
 FlowRouter.route('/category/:name', {
     action: function() {
-        BlazeLayout.render('mainLayout', {content: "index"});
+        BlazeLayout.render('mainLayout', {content: "category"});
     },   
 });

@@ -54,7 +54,8 @@ Package.onUse(function(api) {
         'client/views/footer.html',
         'client/views/sidebar.html',
         'client/views/admin/products/index.html',
-        'client/views/admin/products/insert.html'
+        'client/views/admin/products/insert.html',
+        'client/views/category.html',
         /*'client/views/login.html',
         'client/views/login.js',
         'client/views/register.html',
