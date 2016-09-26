@@ -28,3 +28,8 @@ FlowRouter.route('/category/:name', {
         BlazeLayout.render('mainLayout', {content: "index"});
     },   
 });
+FlowRouter.route('/detail', {
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "detail"});
+    },   
+});
