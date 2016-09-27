@@ -39,7 +39,8 @@ Package.onUse(function(api) {
     ], ['client', 'server']);
 
     api.addFiles([
-        'server/ThemeAdminServer.js'
+        'server/ThemeAdminServer.js',
+        'server/AppController.js'
     ], 'server');
 
     api.addFiles([
@@ -56,6 +57,8 @@ Package.onUse(function(api) {
         'client/views/admin/products/index.html',
         'client/views/admin/products/insert.html',
         'client/views/category.html',
+        'client/views/profile/profile.html',
+        'client/apps/profile.js'
         /*'client/views/login.html',
         'client/views/login.js',
         'client/views/register.html',

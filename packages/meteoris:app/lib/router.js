@@ -28,3 +28,9 @@ FlowRouter.route('/category/:name', {
         BlazeLayout.render('mainLayout', {content: "category"});
     },   
 });
+
+FlowRouter.route('/profile', {
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "meteoris_profile"});
+    },   
+});
