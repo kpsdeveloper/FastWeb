@@ -14,15 +14,15 @@ Template.meteoris_profile.events = {
     	ctrl.updateProfileInfo(t);
     },
     'click #uploadImg': function(e, t) {
-    	//alert("kkk");
-		filepicker.pick({
-            mimetype: 'image/*', /* Images only */
-            maxSize: 1024 * 1024 * 5, /* 5mb */
-            imageMax: [1500, 1500], /* 1500x1500px */
-            cropRatio: 1/1, /* Perfect squares */
-            services: ['*'] /* All available third-parties */
+    	
+		/*filepicker.pick({
+            mimetype: 'image/*', 
+            maxSize: 1024 * 1024 * 5, 
+            imageMax: [1500, 1500],
+            cropRatio: 1/1, 
+            services: ['*'] 
         }, function(blob){
-            // Returned Stuff
+           
             var filename = blob.filename;
             var url = blob.url;
             var id = blob.id;
@@ -37,6 +37,6 @@ Template.meteoris_profile.events = {
 				}
 			});
         });
-
+        */
 	}
 };
