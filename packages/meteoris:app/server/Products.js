@@ -16,21 +16,10 @@ Meteor.startup(function() {
 });
 */
 
-/*
+
 Meteor.methods({
-    "Meteoris.ThemeAdmin.insert": function(doc) {
-        var _id = Meteoris.ThemeAdmin.insert(doc);
-        return {
-            _id: _id,
-        }
+    "Meteoris.Count.Products": function( categoryId ) {
+        var total = Meteoris.Products.find({category:categoryId},{fields:{_id:1}});
+        return total.count();
     },
-    "Meteoris.ThemeAdmin.update": function(_id, doc) {
-        var _id = Meteoris.ThemeAdmin.update(_id, {$set: doc});
-        return {
-            _id: _id,
-        }
-    },
-    "Meteoris.ThemeAdmin.remove": function(doc) {
-        Meteoris.ThemeAdmin.remove(doc);
-    },
-});*/
+});

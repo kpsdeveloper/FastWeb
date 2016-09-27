@@ -3,30 +3,34 @@
     <div class="content">
         <div class="box">
             <div class="box-body product-list">
-            	
-              	<div class="form-group">
-                    <label for="logoLarge" class="control-label">Fragrance</label>
-                </div>
-                {{#each getListProducts}}
-
-                    <div class="col-md-3 col-xs-12">
-                        <img src="/images/images-2dwrLTJiwmTYsYffR-Mascara-Volume-Effet-Faux-Cils-Shocking-Small.jpg" class="img-responsive">
-                        <h3 class="title">{{title}}</h3>
-                        <p class="price">{{price}}</p>
+            	{{#if Template.subscriptionsReady}}
+                  	<div class="form-group">
+                        <label for="logoLarge" class="control-label">Fragrance</label>
                     </div>
-                {{/each}}
-                <div class="col-md-12 col-xs-12">
-                    <ul class="pagination">
-                        <li><a href="#">&laquo;</a></li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li><a href="#">&raquo;</a></li>
-                    </ul>
-                </div>
-				
+                    {{#each getListProducts}}
+
+                        <div class="col-md-3 col-xs-12">
+                            <img src="/images/images-2dwrLTJiwmTYsYffR-Mascara-Volume-Effet-Faux-Cils-Shocking-Small.jpg" class="img-responsive">
+                            <h3 class="title">{{title}}</h3>
+                            <p class="price">{{price}}</p>
+                        </div>
+                    {{/each}}
+                    <div class="col-md-12 col-xs-12">
+                        <ul class="pagination">
+                            {{#with getCurrentCategorySlug}}
+                                {{#if prevstatus}}
+                                    <li><a class="pager" href="/category/{{name}}/{{prev}}" data-page="{{prev}}">&laquo;</a></li>
+                                {{/if}}
+                                {{#each getNumPage}}
+                                    <li><a class="pager" href="/category/{{../name}}/{{num}}" data-page="{{num}}">{{num}}</a></li>
+                                {{/each}}
+                                {{#if nextstatus}}
+                                    <li><a class="pager" href="/category/{{name}}/{{next}}" data-page="{{next}}">&raquo;</a></li>
+                                {{/if}}
+                            {{/with}}
+                        </ul>
+                    </div>
+				{{/if}}
             </div>
         </div>
     </div>    

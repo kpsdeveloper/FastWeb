@@ -28,9 +28,12 @@ Package.onUse(function(api) {
         'zephraph:namespace@1.0.0',
         'aldeed:collection2@2.0.0',
         'aldeed:simple-schema@1.0.0',
-        'rochal:slimscroll@1.0.0',
+        //'rochal:slimscroll@1.0.0',
         'cfs:standard-packages@0.0.0',
-        'tap:i18n@1.2.1'
+        'tap:i18n@1.2.1',
+        'tap:i18n-db@0.4.0',
+        'session@1.1.1',
+        //'u2622:persistent-session@0.4.4'
     ], ['client', 'server']);
 
     api.addFiles([
@@ -38,6 +41,7 @@ Package.onUse(function(api) {
         'lib/controllers/ProductsController.js',
         'lib/collections/ThemeAdmin.js',
         'lib/collections/Products.js',
+        'lib/collections/Categories.js',
         'lib/router.js',
     ], ['client', 'server']);
 
@@ -62,6 +66,7 @@ Package.onUse(function(api) {
         'client/views/admin/products/insert.html',
         'client/views/category.html',
         'client/apps/Products.js',
+        'client/apps/helper.js',
         'client/assets/main.css',
         /*'client/views/login.html',
         'client/views/login.js',
@@ -86,7 +91,5 @@ Package.onUse(function(api) {
         'Role',
         'RoleGroup',
         'RoleCollection',
-        'AppController',
-        'ProductsController'
     ], ['client', 'server']);
 });
