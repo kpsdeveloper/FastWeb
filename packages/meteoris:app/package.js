@@ -7,13 +7,14 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-
+    
     api.versionsFrom('1.2.0.2');
 
     api.use([
         'templating',
         'meteoris:flash@0.0.0',
         'mfactory:admin-lte@0.0.0',
+        'session@1.1.1',
         //'fortawesome:fontawesome@4.0.0',
     ], 'client');
 
@@ -30,23 +31,30 @@ Package.onUse(function(api) {
         'aldeed:simple-schema@1.0.0',
         'rochal:slimscroll@1.0.0',
         'cfs:standard-packages@0.0.0',
+        'tap:i18n@1.2.1',
+        'tap:i18n-db@0.4.0',
+        //'kadira:debug@3.2.2',
+        //'kadira:runtime-dev@0.0.1',
+        //'meteorhacks:kadira@2.23.4'
     ], ['client', 'server']);
 
     api.addFiles([
         'lib/controllers/AppController.js',
+        'lib/controllers/ProductsController.js',
         'lib/collections/ThemeAdmin.js',
+        'lib/collections/Products.js',
+        'lib/collections/Categories.js',
         'lib/router.js',
     ], ['client', 'server']);
 
     api.addFiles([
         'server/ThemeAdminServer.js',
-        'server/AppController.js'
+        'server/profile.js',
+        'server/Products.js',
+        'server/Publish.js'
     ], 'server');
 
     api.addFiles([
-        /* assets */
-        //'client/assets/adminlte-app.js',
-        /* views */
         'client/views/main.html',
         'client/views/main.js',
         'client/views/index.html',
@@ -58,7 +66,7 @@ Package.onUse(function(api) {
         'client/views/admin/products/insert.html',
         'client/views/category.html',
         'client/views/profile/profile.html',
-        'client/apps/profile.js'
+        'client/apps/profile.js',
         /*'client/views/login.html',
         'client/views/login.js',
         'client/views/register.html',
@@ -73,6 +81,10 @@ Package.onUse(function(api) {
         'client/views/setting.js',
         'client/views/setting-menu.html',
         'client/views/setting-menu.js',*/
+        'client/apps/Products.js',
+        'client/apps/helper.js',
+        'client/assets/main.css',
+
     ], 'client');
     api.export([
         'UserController',

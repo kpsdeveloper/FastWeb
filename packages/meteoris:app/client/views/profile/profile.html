@@ -4,10 +4,12 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-8">
+				<button id="uploadImg">UploadImage</button>
 				<form>
-					<!-- <div class="form-group">
-						<input type="file" name="img" id="imagefile">
-					</div> -->
+					<div class="form-group">
+						<input type="hidden" name="img" id="imagefile" value="{{getProfileInfo 'imageurl'}}">
+
+					</div>
 					<div class="form-group">
 					    <label for="">UserName</label>
 					    <input type="text" class="form-control" id="username" value="{{getProfileInfo 'username'}}">

@@ -23,7 +23,7 @@ Package.onUse(function(api) {
         'meteoris:formatter@0.0.0',
         'meteoris:form-validation@0.0.0',
         'meteoris:theme-admin@0.0.0',
-        'sacha:spin@2.0.0',
+        //'sacha:spin@2.0.0',
     ], 'client');
 
     api.use([
@@ -32,15 +32,15 @@ Package.onUse(function(api) {
         'accounts-password',
         'service-configuration',
         'reactive-var',
-        'accounts-facebook',
+        //'accounts-facebook',
         'kadira:flow-router@2.0.0',
         'kadira:blaze-layout@2.0.0',
         'zephraph:namespace@1.0.0',
         'aldeed:collection2@2.0.0',
         'aldeed:simple-schema@1.0.0',
         'dburles:collection-helpers@1.0.0',
-        'reywood:publish-composite@1.0.0',
-        'matteodem:server-session@0.4.2'
+        //'reywood:publish-composite@1.0.0',
+        //'matteodem:server-session@0.4.2'
     ], ['client', 'server']);
 
     api.addFiles([

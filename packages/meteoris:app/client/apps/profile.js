@@ -13,13 +13,30 @@ Template.meteoris_profile.events = {
     	e.preventDefault();
     	ctrl.updateProfileInfo(t);
     },
-    'change #file': function(event, template) {
-		event.preventDefault();
-		var files = event.target.files;
-		for (var i = 0, ln = files.length; i < ln; i++) {
-			images.insert(files[i], function (err, fileObj) {
-				Session.set('ADDIMAGEID', fileObj._id);
+    'click #uploadImg': function(e, t) {
+    	//alert("kkk");
+		filepicker.pick({
+            mimetype: 'image/*', /* Images only */
+            maxSize: 1024 * 1024 * 5, /* 5mb */
+            imageMax: [1500, 1500], /* 1500x1500px */
+            cropRatio: 1/1, /* Perfect squares */
+            services: ['*'] /* All available third-parties */
+        }, function(blob){
+            // Returned Stuff
+            var filename = blob.filename;
+            var url = blob.url;
+            var id = blob.id;
+            var isWriteable = blob.isWriteable;
+            var mimetype = blob.mimetype;
+            var size = blob.size;
+
+            console.log(blob)
+            Meteor.call('updateImgProfile',url,function(err){
+				if(err){
+					Meteoris.Flash.set('danger', err.message);  
+				}
 			});
-		}
+        });
+
 	}
 };

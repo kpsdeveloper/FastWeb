@@ -30,6 +30,8 @@ Meteoris.AppController = Meteoris.Controller.extend({
         		data= result.emails[0].address;
         	}else if (params=="createdAt"){
         		data=result.profile.createdAt;
+        	}else if (params=="imageurl"){
+        		data=result.profile.imageurl;
         	}else{
         		data='';
         	}
@@ -52,6 +54,7 @@ Meteoris.AppController = Meteoris.Controller.extend({
         var address= t.find('#address').value;
         var createdAt= t.find('#createdAt').value;
         var updatedAt= new Date();
+        var imageurl=t.find("#imagefile").value;
         varemail=this._validateEmail(email);
         varphone=this._validatePhone(phone);
         varhomephone=this._validatePhone(homephone);
@@ -85,7 +88,8 @@ Meteoris.AppController = Meteoris.Controller.extend({
 		                homephone: homephone,
 		                address: address,
 		                createdAt: createdAt,
-		                updatedAt: updatedAt
+		                updatedAt: updatedAt,
+		                imageurl:imageurl
 		            }
 		        };
 		       Meteor.call("updateProfileInfo",_id,doc,function(err){

@@ -23,8 +23,8 @@ groupRoutes.route('/products/add', {
         BlazeLayout.render('mainLayout', {content: "meteoris_productAdd"});
     },
 });
-FlowRouter.route('/category/:name', {
-    action: function() {
+FlowRouter.route('/category/:name/:page', {
+    action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "category"});
     },   
 });

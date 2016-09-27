@@ -9,6 +9,6 @@ Template.mainLayout.onCreated(function() {
 
 Template.mainLayout.helpers({
     model: function(){
-        return ctrl.main().model;
+        //return ctrl.main().model;
     },    
 });
