@@ -7,13 +7,14 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-
+    
     api.versionsFrom('1.2.0.2');
 
     api.use([
         'templating',
         'meteoris:flash@0.0.0',
         'mfactory:admin-lte@0.0.0',
+        'session@1.1.1',
         //'fortawesome:fontawesome@4.0.0',
     ], 'client');
 
@@ -30,7 +31,11 @@ Package.onUse(function(api) {
         'aldeed:simple-schema@1.0.0',
         'rochal:slimscroll@1.0.0',
         'cfs:standard-packages@0.0.0',
-        'tap:i18n@1.2.1'
+        'tap:i18n@1.2.1',
+        'tap:i18n-db@0.4.0',
+        //'kadira:debug@3.2.2',
+        //'kadira:runtime-dev@0.0.1',
+        //'meteorhacks:kadira@2.23.4'
     ], ['client', 'server']);
 
     api.addFiles([
@@ -38,6 +43,7 @@ Package.onUse(function(api) {
         'lib/controllers/ProductsController.js',
         'lib/collections/ThemeAdmin.js',
         'lib/collections/Products.js',
+        'lib/collections/Categories.js',
         'lib/router.js',
     ], ['client', 'server']);
 
@@ -48,9 +54,6 @@ Package.onUse(function(api) {
     ], 'server');
 
     api.addFiles([
-        /* assets */
-        //'client/assets/adminlte-app.js',
-        /* views */
         'client/views/main.html',
         'client/views/main.js',
         'client/views/index.html',
@@ -62,21 +65,8 @@ Package.onUse(function(api) {
         'client/views/admin/products/insert.html',
         'client/views/category.html',
         'client/apps/Products.js',
+        'client/apps/helper.js',
         'client/assets/main.css',
-        /*'client/views/login.html',
-        'client/views/login.js',
-        'client/views/register.html',
-        'client/views/register.js',
-        'client/views/header.html',
-        'client/views/header.js',
-        'client/views/sidebar.html',
-        'client/views/control-sidebar.html',
-        'client/views/footer.html',
-        'client/views/footer.js',
-        'client/views/setting.html',
-        'client/views/setting.js',
-        'client/views/setting-menu.html',
-        'client/views/setting-menu.js',*/
     ], 'client');
     api.export([
         'UserController',
@@ -86,7 +76,5 @@ Package.onUse(function(api) {
         'Role',
         'RoleGroup',
         'RoleCollection',
-        'AppController',
-        'ProductsController'
     ], ['client', 'server']);
 });

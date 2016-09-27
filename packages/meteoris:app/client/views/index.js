@@ -4,7 +4,7 @@ Template.mainLayout.onCreated(function() {
     var self = this;
   
     self.autorun(function() {
-        self.subscribe('meteoris_themeAdmin', ctrl.getId());
+        //self.subscribe('meteoris_themeAdmin', ctrl.getId());
         TAPi18n.subscribe('Categories');
     });    
     filepicker.setKey("ACTP7A0fnQou2s5L4f9FBz");
