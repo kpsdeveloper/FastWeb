@@ -49,6 +49,7 @@ Package.onUse(function(api) {
 
     api.addFiles([
         'server/ThemeAdminServer.js',
+        'server/profile.js',
         'server/Products.js',
         'server/Publish.js'
     ], 'server');
@@ -64,9 +65,26 @@ Package.onUse(function(api) {
         'client/views/admin/products/index.html',
         'client/views/admin/products/insert.html',
         'client/views/category.html',
+        'client/views/profile/profile.html',
+        'client/apps/profile.js',
+        /*'client/views/login.html',
+        'client/views/login.js',
+        'client/views/register.html',
+        'client/views/register.js',
+        'client/views/header.html',
+        'client/views/header.js',
+        'client/views/sidebar.html',
+        'client/views/control-sidebar.html',
+        'client/views/footer.html',
+        'client/views/footer.js',
+        'client/views/setting.html',
+        'client/views/setting.js',
+        'client/views/setting-menu.html',
+        'client/views/setting-menu.js',*/
         'client/apps/Products.js',
         'client/apps/helper.js',
         'client/assets/main.css',
+
     ], 'client');
     api.export([
         'UserController',
