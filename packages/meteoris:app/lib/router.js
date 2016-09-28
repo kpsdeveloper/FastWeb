@@ -29,8 +29,19 @@ FlowRouter.route('/category/:name/:page', {
     },   
 });
 
+FlowRouter.route('/detail/:title', {
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "detail"});
+    },   
+});
+
 FlowRouter.route('/profile', {
     action: function() {
         BlazeLayout.render('mainLayout', {content: "meteoris_profile"});
+    },   
+});
+FlowRouter.route('/changepassword', {
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "meteoris_changepassword"});
     },   
 });

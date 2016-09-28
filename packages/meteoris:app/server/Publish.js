@@ -10,6 +10,15 @@ Meteor.publish('Products', function(categoryId, page , limit) {
     return [data, dataattr];
     
 });
+Meteor.publish('detailTitle', function(title) {
+    var data = Meteoris.Products.find({"title":title});
+    var oneCategory = data.fetch()[0];
+    var categoryId = oneCategory.category;
+    console.log("CatID:",categoryId);
+    var dataCat = Meteoris.Categories.find({_id:'DfwSwoSezQetwuGYy'});
+    console.log("dataCat:",dataCat);
+    return data;
+});
 TAPi18n.publish('Categories', function() {
     var data = Meteoris.Categories.find({});
     return data;

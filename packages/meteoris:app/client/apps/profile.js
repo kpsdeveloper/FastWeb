@@ -1,4 +1,8 @@
 var ctrl = new Meteoris.AppController();
+var ctrlUser = new Meteoris.UserController();
+Template.meteoris_profile.onCreated(function() {
+    Meteor.Loader.loadJs("//api.filestackapi.com/filestack.js");
+});
 
 Template.meteoris_profile.helpers({
    getProfileInfo:function(params) {
@@ -14,13 +18,14 @@ Template.meteoris_profile.events = {
     	ctrl.updateProfileInfo(t);
     },
     'click #uploadImg': function(e, t) {
-    	
-		/*filepicker.pick({
-            mimetype: 'image/*', 
-            maxSize: 1024 * 1024 * 5, 
-            imageMax: [1500, 1500],
-            cropRatio: 1/1, 
-            services: ['*'] 
+    	//alert("kkk");
+        filepicker.setKey("ACTP7A0fnQou2s5L4f9FBz");
+		filepicker.pick({
+            mimetype: 'image/*', /* Images only */
+            maxSize: 1024 * 1024 * 5, /* 5mb */
+            imageMax: [1500, 1500], /* 1500x1500px */
+            cropRatio: 1/1, /* Perfect squares */
+            services: ['*'] /* All available third-parties */
         }, function(blob){
            
             var filename = blob.filename;
@@ -37,6 +42,14 @@ Template.meteoris_profile.events = {
 				}
 			});
         });
-        */
+        
 	}
+};
+
+Template.meteoris_changepassword.events = {
+    'click #btnchangepwd': function(e, t) {
+        e.preventDefault();
+        //alert("hello");
+        ctrlUser.changePassword(t);
+    }
 };
