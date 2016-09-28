@@ -25,10 +25,10 @@ groupRoutes.route('/products/add', {
 });
 FlowRouter.route('/category/:name', {
     action: function() {
-        BlazeLayout.render('mainLayout', {content: "index"});
+        BlazeLayout.render('mainLayout', {content: "category"});
     },   
 });
-FlowRouter.route('/detail', {
+FlowRouter.route('/detail/:title', {
     action: function() {
         BlazeLayout.render('mainLayout', {content: "detail"});
     },   

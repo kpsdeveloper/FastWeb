@@ -30,16 +30,21 @@ Package.onUse(function(api) {
         'aldeed:simple-schema@1.0.0',
         'rochal:slimscroll@1.0.0',
         'cfs:standard-packages@0.0.0',
+        'tap:i18n@1.2.1'
     ], ['client', 'server']);
 
     api.addFiles([
         'lib/controllers/AppController.js',
+        'lib/controllers/ProductsController.js',
         'lib/collections/ThemeAdmin.js',
+        'lib/collections/Products.js',
         'lib/router.js',
     ], ['client', 'server']);
 
     api.addFiles([
-        'server/ThemeAdminServer.js'
+        'server/ThemeAdminServer.js',
+        'server/Products.js',
+        'server/Publish.js'
     ], 'server');
 
     api.addFiles([
@@ -55,7 +60,10 @@ Package.onUse(function(api) {
         'client/views/sidebar.html',
         'client/views/admin/products/index.html',
         'client/views/admin/products/insert.html',
-        'client/views/detail.html'
+        'client/views/detail.html',
+        'client/views/category.html',
+        'client/apps/Products.js',
+        'client/assets/main.css',
         /*'client/views/login.html',
         'client/views/login.js',
         'client/views/register.html',
@@ -79,5 +87,7 @@ Package.onUse(function(api) {
         'Role',
         'RoleGroup',
         'RoleCollection',
+        'AppController',
+        'ProductsController'
     ], ['client', 'server']);
 });

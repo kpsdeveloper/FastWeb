@@ -1,3 +1,31 @@
 <template name="detail">
-    Hello Detail!
+    <div class="container" style="padding-top: 25px;">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 ">
+                <div class="col-md-12">
+                    This is image of product!
+                </div>
+            </div>
+
+            <div class="col-md-6  col-sm-12" id="detail_desccription">
+                {{#with getTitleInDetail}}
+                    <div class="hold_description">
+                        <h3>{{title}}</h3>
+                        <p class="brand"><span>Brands:</span>
+                            <span style="color:#dd2a1b">
+                                {{Brand}}
+                            </span>
+                        </p>   
+                        <p class="detail-txt" style="padding-top: 20px; text-align: justify;">{{description}}</p>  
+                        <p><span>Category:</span>
+                            <span style="font-weight:bolder;">
+                                {{getCategoryName category}}
+                            </span>
+                        </p>              
+                    </div>
+                {{/with}}
+                {{getCategoryName category}}
+            </div>
+        </div>
+    </div>
 </template>
