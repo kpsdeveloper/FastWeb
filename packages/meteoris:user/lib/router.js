@@ -2,6 +2,7 @@ var userRoutes = FlowRouter.group({
     prefix: '/meteoris/user',
     name: 'meteoris_user',
     triggersEnter: [function(context, redirect) {
+            console.log("HAMLLL"+context.path);
             authenticating(context.path);
         }]
 });

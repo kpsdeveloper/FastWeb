@@ -8,8 +8,15 @@ var groupRoutes = FlowRouter.group({
 function authenticating() {    
     console.log(Meteoris.Role.userIsInGroup("admin"));
     if (!Meteoris.Role.userIsInGroup("admin")){
-        Meteoris.Flash.set("danger", "403 Unauthenticated");
         FlowRouter.go("/");
+        Meteoris.Flash.set("danger", "403 Unauthenticated");
+    }
+}
+
+function checkIsLogin(){
+    if (!Meteor.userId()){
+        FlowRouter.go("/");
+        Meteoris.Flash.set("danger", "403 Unauthenticated");
     }
 }
 
@@ -32,10 +39,17 @@ FlowRouter.route('/category/:name/:page', {
 FlowRouter.route('/profile', {
     action: function() {
         BlazeLayout.render('mainLayout', {content: "meteoris_profile"});
+
     },   
+    triggersEnter: [function(context, redirect) {
+        checkIsLogin();
+    }]
 });
 FlowRouter.route('/changepassword', {
     action: function() {
         BlazeLayout.render('mainLayout', {content: "meteoris_changepassword"});
     },   
+    triggersEnter: [function(context, redirect) {
+        checkIsLogin();
+    }]
 });
