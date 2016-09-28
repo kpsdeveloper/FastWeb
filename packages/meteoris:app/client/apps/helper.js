@@ -1,4 +1,26 @@
+var ctrl = new Meteoris.ProductsController();
+Session.set('SUBSCRIBELISTPRO', '');
 Session.set('TOTALPRODUCT', 0);
+Template.registerHelper('getListProductsHelper', function( categoryId ) {
+	var limit = 16;
+	var page = Session.get('PAGE');
+	if( Session.get('SUBSCRIBELISTPRO') === 1 ){
+		var List = ctrl.getListProducts(categoryId, page , limit);
+		var html = '';
+		if( List.count() > 0 ){
+			List.forEach( function(data, index){
+				html += '<div class="col-md-3 col-xs-12">';
+				html += 	'<img src="/images/images-2dwrLTJiwmTYsYffR-Mascara-Volume-Effet-Faux-Cils-Shocking-Small.jpg" class="img-responsive">';
+				html += 	'<h3 class="title">'+data.title+'</h3>';
+                html +=     '<p class="price">'+data.price+'</p>';
+                html += '</div>';
+			})
+		}
+		
+		return html;
+	}
+});
+
 Template.registerHelper('getCategories', function() {
    Meteoris.Categories.find();
 });
@@ -42,7 +64,7 @@ Template.registerHelper('getNumPage', function(  ) {
 
 window.getCurrentCategory = function( name ){
 	if (name != 'undefined' && name != null) {
-        var l = categories.findOne({ title: name });
+        var l = Meteoris.Categories.findOne({ title: name });
         if (l == 'undefined' || l == null) {
             var title = name;
             title = title.replace(/\(percentag\)/g, "%");
@@ -66,7 +88,7 @@ window.getCurrentCategory = function( name ){
             title = title.replace(/\(eaccentgrave\)/g, "è");
             title = title.replace(/\(hyphen\)/g, "–");
             
-            var l = categories.findOne({ "i18n.en.title": title });
+            var l = Meteoris.Categories.findOne({ "i18n.en.title": title });
         }
         return l;
     }

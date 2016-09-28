@@ -33,9 +33,11 @@ Package.onUse(function(api) {
         'cfs:standard-packages@0.0.0',
         'tap:i18n@1.2.1',
         'tap:i18n-db@0.4.0',
+        'mrt:fs@0.1.5',
         //'kadira:debug@3.2.2',
         //'kadira:runtime-dev@0.0.1',
-        //'meteorhacks:kadira@2.23.4'
+        //'meteorhacks:kadira@2.23.4',
+        //'meteorhacks:kadira-profiler@1.2.1'
     ], ['client', 'server']);
 
     api.addFiles([

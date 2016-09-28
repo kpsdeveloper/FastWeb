@@ -2,7 +2,7 @@ Meteor.publish('Products', function(categoryId, page , limit) {
 	//var total = Meteoris.Products.find({category:categoryId},{fields:{_id:1}});
 	//console.log('total:', total.count());
 	var skip = (page<=1)? 0 : (page - 1) * limit;
-    var data = Meteoris.Products.find({ category:categoryId},{ fields:{_id:1, title:1,price:1,category:1, oldId:1}, skip: skip, limit:limit});
+    var data = Meteoris.Products.find({ category:categoryId},{ fields:{_id:1, title:1,price:1,category:1, oldId:1}, sort:{price:1},skip: skip, limit:limit});
     //var dataattr = publishAttributeProducts( data );
     var attrId = data.map(function(p) { return p.oldId });
     var dataattr = Meteoris.Attributes.find({product: {$in: attrId}})

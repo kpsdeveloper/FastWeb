@@ -14,9 +14,9 @@ Template.category.onCreated(function() {
         itemSub = self.subscribe('Products', categoryId, page, limit,function(){
         	Session.set('SUBSCRIBELISTPRO', 1);
         })
-    });    
+    });  
 });
-Template.category.helpers({
+/*Template.category.helpers({
     getListProducts: function(){
     	var categoryId = 'DYq5Z8GmZZ6wyMmWj';
     	var limit = 16;
@@ -26,7 +26,7 @@ Template.category.helpers({
     		return List;
     	}
     }
-});
+});*/
 var itemSub;
 Template.category.events({
 	'click .pager': function(e){
