@@ -23,13 +23,25 @@ groupRoutes.route('/products/add', {
         BlazeLayout.render('mainLayout', {content: "meteoris_productAdd"});
     },
 });
-FlowRouter.route('/category/:name', {
-    action: function() {
+FlowRouter.route('/category/:name/:page', {
+    action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "category"});
     },   
 });
+
 FlowRouter.route('/detail/:title', {
     action: function() {
         BlazeLayout.render('mainLayout', {content: "detail"});
+    },   
+});
+
+FlowRouter.route('/profile', {
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "meteoris_profile"});
+    },   
+});
+FlowRouter.route('/changepassword', {
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "meteoris_changepassword"});
     },   
 });

@@ -32,7 +32,7 @@ Package.onUse(function(api) {
         'accounts-password',
         'service-configuration',
         'reactive-var',
-        'accounts-facebook',
+        //'accounts-facebook',
         'kadira:flow-router@2.0.0',
         'kadira:blaze-layout@2.0.0',
         'zephraph:namespace@1.0.0',
