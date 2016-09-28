@@ -111,6 +111,7 @@ Meteoris.AppController = Meteoris.Controller.extend({
     	var ph = /^[0-9]+$/;
     	return ph.test(phone);
     },
+    
 
 
 });

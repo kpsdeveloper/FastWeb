@@ -1,5 +1,5 @@
 var ctrl = new Meteoris.AppController();
-
+var ctrlUser = new Meteoris.UserController();
 Template.meteoris_profile.onCreated(function() {
     Meteor.Loader.loadJs("//api.filestackapi.com/filestack.js");
 });
@@ -44,4 +44,12 @@ Template.meteoris_profile.events = {
         });
         
 	}
+};
+
+Template.meteoris_changepassword.events = {
+    'click #btnchangepwd': function(e, t) {
+        e.preventDefault();
+        //alert("hello");
+        ctrlUser.changePassword(t);
+    }
 };

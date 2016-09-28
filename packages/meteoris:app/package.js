@@ -66,6 +66,7 @@ Package.onUse(function(api) {
         'client/views/admin/products/insert.html',
         'client/views/category.html',
         'client/views/profile/profile.html',
+        'client/views/profile/changepassword.html',
         'client/apps/profile.js',
         /*'client/views/login.html',
         'client/views/login.js',
