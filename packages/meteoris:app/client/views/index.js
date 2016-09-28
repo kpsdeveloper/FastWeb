@@ -7,12 +7,10 @@ Template.mainLayout.onCreated(function() {
         //self.subscribe('meteoris_themeAdmin', ctrl.getId());
         TAPi18n.subscribe('Categories');
     });    
-    //filepicker.setKey("ACTP7A0fnQou2s5L4f9FBz");
 });
 
 Template.index.onCreated(function() {
     Meteor.Loader.loadJs("//api.filestackapi.com/filestack.js");
-    // filepicker.setKey("ACTP7A0fnQou2s5L4f9FBz");
 });
 
 

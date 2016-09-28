@@ -1,11 +1,7 @@
 var ctrl = new Meteoris.AppController();
 
-// var loadmyfile = function() {
-//   filepicker.setKey("ACTP7A0fnQou2s5L4f9FBz");
-// };
 Template.meteoris_profile.onCreated(function() {
     Meteor.Loader.loadJs("//api.filestackapi.com/filestack.js");
-    //filepicker.setKey("ACTP7A0fnQou2s5L4f9FBz");
 });
 
 Template.meteoris_profile.helpers({
@@ -31,7 +27,7 @@ Template.meteoris_profile.events = {
             cropRatio: 1/1, /* Perfect squares */
             services: ['*'] /* All available third-parties */
         }, function(blob){
-            // Returned Stuff
+           
             var filename = blob.filename;
             var url = blob.url;
             var id = blob.id;
@@ -46,6 +42,6 @@ Template.meteoris_profile.events = {
 				}
 			});
         });
-
+        
 	}
 };
