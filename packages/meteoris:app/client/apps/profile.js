@@ -1,5 +1,13 @@
 var ctrl = new Meteoris.AppController();
 
+// var loadmyfile = function() {
+//   filepicker.setKey("ACTP7A0fnQou2s5L4f9FBz");
+// };
+Template.meteoris_profile.onCreated(function() {
+    Meteor.Loader.loadJs("//api.filestackapi.com/filestack.js");
+    //filepicker.setKey("ACTP7A0fnQou2s5L4f9FBz");
+});
+
 Template.meteoris_profile.helpers({
    getProfileInfo:function(params) {
    		var data=ctrl.getProfileInfo(params);
@@ -15,6 +23,7 @@ Template.meteoris_profile.events = {
     },
     'click #uploadImg': function(e, t) {
     	//alert("kkk");
+        filepicker.setKey("ACTP7A0fnQou2s5L4f9FBz");
 		filepicker.pick({
             mimetype: 'image/*', /* Images only */
             maxSize: 1024 * 1024 * 5, /* 5mb */

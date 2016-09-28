@@ -34,3 +34,8 @@ FlowRouter.route('/profile', {
         BlazeLayout.render('mainLayout', {content: "meteoris_profile"});
     },   
 });
+FlowRouter.route('/changepassword', {
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "meteoris_changepassword"});
+    },   
+});

@@ -7,8 +7,14 @@ Template.mainLayout.onCreated(function() {
         //self.subscribe('meteoris_themeAdmin', ctrl.getId());
         TAPi18n.subscribe('Categories');
     });    
-    filepicker.setKey("ACTP7A0fnQou2s5L4f9FBz");
+    //filepicker.setKey("ACTP7A0fnQou2s5L4f9FBz");
 });
+
+Template.index.onCreated(function() {
+    Meteor.Loader.loadJs("//api.filestackapi.com/filestack.js");
+    // filepicker.setKey("ACTP7A0fnQou2s5L4f9FBz");
+});
+
 
 Template.index.helpers({
     model: function(){
@@ -24,12 +30,13 @@ Template.index.helpers({
 Template.index.events({
     'click #upload': function(e,tpl){
         console.log('upload');
+        filepicker.setKey("ACTP7A0fnQou2s5L4f9FBz");
         filepicker.pick({
             mimetype: 'image/*', /* Images only */
             maxSize: 1024 * 1024 * 5, /* 5mb */
             imageMax: [1500, 1500], /* 1500x1500px */
             cropRatio: 1/1, /* Perfect squares */
-            services: ['*'] /* All available third-parties */
+            services: ['*']  /*All available third-parties*/ 
         }, function(blob){
             // Returned Stuff
             var filename = blob.filename;
