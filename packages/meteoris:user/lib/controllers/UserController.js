@@ -57,7 +57,11 @@ Meteoris.UserController = Meteoris.Controller.extend({
                 Meteoris.Flash.set('danger', err.message);
             } else {
                 Meteoris.Flash.set('success', 'login success');
-                FlowRouter.go('/');
+                if( redirecturl = Session.get('REDIRECTURL') ){
+                    Session.set('REDIRECTURL','')
+                    FlowRouter.go( redirecturl );
+                }else
+                    FlowRouter.go('/');
             }
         });
     },

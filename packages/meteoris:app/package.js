@@ -13,7 +13,7 @@ Package.onUse(function(api) {
     api.use([
         'templating',
         'meteoris:flash@0.0.0',
-        'mfactory:admin-lte@0.0.0',
+        //'mfactory:admin-lte@0.0.0',
         'session@1.1.1',
         //'fortawesome:fontawesome@4.0.0',
     ], 'client');
@@ -34,6 +34,7 @@ Package.onUse(function(api) {
         'tap:i18n@1.2.1',
         'tap:i18n-db@0.4.0',
         'mrt:fs@0.1.5',
+        'cfs:filesystem@0.0.0',
         //'kadira:debug@3.2.2',
         //'kadira:runtime-dev@0.0.1',
         //'meteorhacks:kadira@2.23.4',
@@ -46,6 +47,7 @@ Package.onUse(function(api) {
         'lib/collections/ThemeAdmin.js',
         'lib/collections/Products.js',
         'lib/collections/Categories.js',
+        'lib/collections/Images.js',
         'lib/router.js',
     ], ['client', 'server']);
 
@@ -66,28 +68,13 @@ Package.onUse(function(api) {
         'client/views/sidebar.html',
         'client/views/admin/products/index.html',
         'client/views/admin/products/insert.html',
-        'client/views/detail.html',
-        'client/views/category.html',
+        'client/views/products/detail.html',
+        'client/views/products/category.html',
         'client/views/profile/profile.html',
         'client/views/profile/changepassword.html',
         'client/apps/profile.js',
-        /*'client/views/login.html',
-        'client/views/login.js',
-        'client/views/register.html',
-        'client/views/register.js',
-        'client/views/header.html',
-        'client/views/header.js',
-        'client/views/sidebar.html',
-        'client/views/control-sidebar.html',
-        'client/views/footer.html',
-        'client/views/footer.js',
-        'client/views/setting.html',
-        'client/views/setting.js',
-        'client/views/setting-menu.html',
-        'client/views/setting-menu.js',*/
         'client/apps/Products.js',
         'client/apps/helper.js',
-        'client/assets/main.css',
 
     ], 'client');
     api.export([

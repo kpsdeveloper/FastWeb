@@ -7,8 +7,8 @@
                   	<div class="form-group">
                         <label for="logoLarge" class="control-label">Fragrance</label>
                     </div>
-                    {{#with getCurrentCategory}}
-                        {{{getListProductsHelper this._id}}}
+                    {{#with getCategoryIdChildren}}
+                        {{{getListProductsHelper list "true"}}}
                     {{/with}}
                     <div class="col-md-12 col-xs-12">
                         <ul class="pagination">

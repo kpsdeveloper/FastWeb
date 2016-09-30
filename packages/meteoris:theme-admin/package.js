@@ -13,7 +13,7 @@ Package.onUse(function(api) {
     api.use([
         'templating',
         'meteoris:flash@0.0.0',
-        'mfactory:admin-lte@0.0.0',
+        //'mfactory:admin-lte@0.0.0',
         //'fortawesome:fontawesome@4.0.0',
     ], 'client');
 

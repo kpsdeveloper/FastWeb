@@ -1,11 +1,8 @@
 var ctrl = new Meteoris.AppController();
-
 Template.mainLayout.onCreated(function() {
     var self = this;
-  
     self.autorun(function() {
         //self.subscribe('meteoris_themeAdmin', ctrl.getId());
-        TAPi18n.subscribe('Categories');
     });    
 });
 

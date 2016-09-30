@@ -7,7 +7,8 @@ Template.category.onCreated(function() {
 	Session.set('PAGE', FlowRouter.current().params.page);
 	Session.set('RELOADCATEGORYPAGE',1);
     var self = this;
-    var categoryId = 'DYq5Z8GmZZ6wyMmWj';
+    var name = FlowRouter.current().params.name;
+    var categoryId = getCategoryIdChildren( name );
     var limit = 16;
     var page = Session.get('PAGE');
     self.autorun(function() {
@@ -15,14 +16,6 @@ Template.category.onCreated(function() {
         	Session.set('SUBSCRIBELISTPRO', 1);
         })
     });  
-});
-
-Template.detail.onCreated(function() {
-    var title = FlowRouter.current().params.title;
-    var self = this;
-    self.autorun(function() {
-        self.subscribe('detailTitle',title);
-    });    
 });
 /*
 Template.category.helpers({
@@ -36,19 +29,48 @@ Template.category.helpers({
     	}
     }
 });*/
+Template.detail.onCreated(function() {
+    var title = unslugTitle(FlowRouter.current().params.title);
+    var self = this;
+    self.autorun(function() {
+        self.subscribe('detailTitle',title, Meteor.userId());
+    }); 
+
+});
+
 Template.detail.helpers({
     getTitleInDetail: function(){
-        var title = FlowRouter.current().params.title;
+        var title = unslugTitle(FlowRouter.current().params.title);
         var objTitle = ctrl.getTitleInDetail(title);
         return objTitle;
     },
     getCategoryName: function(categoryid){
-        console.log("CaID",categoryid);
         var objCategory = ctrl.getCategoryName(categoryid);
-        console.log("CategoryName:",objCategory);
         return objCategory;
+    },
+    getRecommendProducts: function( recommended ){
+    	return ctrl.getRecommendProducts( recommended );
     }
 });
+Template.detail.events({
+	'click .attribute': function(e){
+		e.preventDefault();
+		var price = $(e.currentTarget).attr('data-price');
+		$('.attribute').removeClass('active');
+		$(e.currentTarget).addClass('active');
+		$('.price').text(price);
+	},
+	'submit .add-review': function(e, t){
+		e.preventDefault(); 
+		var title = unslugTitle(FlowRouter.current().params.title);     
+        ctrl.addReview(t, title);
+	},
+	'click .rating i.rateStar': function(e) {
+        $(e.currentTarget).addClass('yellow-star star_active');
+        $(e.currentTarget).parent().prevAll('div').children('i').addClass('yellow-star star_active');
+        $(e.currentTarget).parent().nextAll('div').children('i').removeClass('yellow-star');
+    },
+})
 var itemSub;
 Template.category.events({
 	'click .pager': function(e){
@@ -57,7 +79,8 @@ Template.category.events({
 		Session.set('RELOADCATEGORYPAGE', 0);
 		Session.set('PAGE', page);
 		var self = this;
-	    var categoryId = 'DYq5Z8GmZZ6wyMmWj';
+	    var name = FlowRouter.current().params.name;
+    	var categoryId = getCategoryIdChildren( name );
 	    var limit = 16;
 	    //var page = Session.get('PAGE');
 	    Meteor.autorun(function() {

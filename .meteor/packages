@@ -35,4 +35,6 @@ wylio:mandrill
 npm-container
 cfs:standard-packages
 cfs:gridfs
+cfs:filesystem
 mrt:external-file-loader
+msavin:mongol

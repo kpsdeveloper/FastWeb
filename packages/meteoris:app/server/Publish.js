@@ -2,22 +2,45 @@ Meteor.publish('Products', function(categoryId, page , limit) {
 	//var total = Meteoris.Products.find({category:categoryId},{fields:{_id:1}});
 	//console.log('total:', total.count());
 	var skip = (page<=1)? 0 : (page - 1) * limit;
-    var data = Meteoris.Products.find({ category:categoryId},{ fields:{_id:1, title:1,price:1,category:1, oldId:1}, sort:{price:1},skip: skip, limit:limit});
+    var data = Meteoris.Products.find({ category:{$in:categoryId}},{ fields:{_id:1, title:1,price:1,category:1, oldId:1,image:1}, sort:{price:1},skip: skip, limit:limit});
     //var dataattr = publishAttributeProducts( data );
     var attrId = data.map(function(p) { return p.oldId });
-    var dataattr = Meteoris.Attributes.find({product: {$in: attrId}})
-    console.log('count attr:', dataattr.count());
-    return [data, dataattr];
+    var imgId = data.map(function(n) { 
+    	if (n.image instanceof Array)
+        	return n.image[0];
+    	else
+        	return n.image;
+    });
+    var dataattr = Meteoris.Attributes.find({product: {$in: attrId}});
+    var dataimg = Meteoris.Images.find({_id: {$in: imgId}})
+    return [dataimg, data, dataattr];
     
 });
-Meteor.publish('detailTitle', function(title) {
-    var data = Meteoris.Products.find({"title":title});
-    var oneCategory = data.fetch()[0];
-    var categoryId = oneCategory.category;
-    console.log("CatID:",categoryId);
-    var dataCat = Meteoris.Categories.find({_id:'DfwSwoSezQetwuGYy'});
-    console.log("dataCat:",dataCat);
-    return data;
+Meteor.publish('detailTitle', function(title, userId) {
+    var currentPro = Meteoris.Products.findOne({"title":title},{fields:{_id:1,recommended:1}});
+    
+    if( currentPro ){
+    	var id_product = [];
+    	
+    	if( currentPro.hasOwnProperty('recommended') ){
+    		if(currentPro.recommended.length > 0) id_product = currentPro.recommended;
+    	}
+    	id_product.push(currentPro._id);
+    	var data = Meteoris.Products.find({_id:{$in:id_product}});
+    	console.log('product:', data.count());
+	    var attrId = data.map(function(p) { return p.oldId });
+	    var imgId = data.map(function(n) { 
+	    	if (n.image instanceof Array)
+	        	return n.image[0];
+	    	else
+	        	return n.image;
+	    });
+	    var datafav = Meteoris.Favorites.find({proId:currentPro._id, userId:userId});
+	    var dataattr = Meteoris.Attributes.find({product: {$in: attrId}});
+    	var dataimg = Meteoris.Images.find({_id: {$in: imgId}});
+	    return [dataimg, data, dataattr, datafav];
+	} else return []
+
 });
 TAPi18n.publish('Categories', function() {
     var data = Meteoris.Categories.find({});
