@@ -234,10 +234,11 @@ window.getImgCDNv2 = function(id, thumb) {
     } else {
         var img = Meteoris.Images.findOne({ _id: id });
         if (img){
-        	/*if( thumb == 'true')
+        	if( thumb == 'true')
             	return 'http://54.171.217.142' + "/upload/small/" + img.copies.images.key;
-        	else*/
-        		return 'http://54.171.217.142' + "/upload/" + img.copies.images.key;
+        	else
+        	   return 'http://54.171.217.142' + "/upload/" + img.copies.images.key;
+        
         }else 
             return id;
         
