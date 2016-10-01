@@ -33,6 +33,7 @@ Meteor.methods({
     },
     'getRemoteAddress':function(){
         clientIP = Meteor.absoluteUrl();
-        console.log('IP:', clientIP);
+        //console.log('IP:', clientIP);
+        return clientIP;
     }
 });

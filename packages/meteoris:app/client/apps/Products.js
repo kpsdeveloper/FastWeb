@@ -16,7 +16,7 @@ Template.category.onCreated(function() {
         	Session.set('SUBSCRIBELISTPRO', 1);
         })
     });  
-    Meteor.call('getRemoteAddress');
+    
 });
 /*
 Template.category.helpers({
