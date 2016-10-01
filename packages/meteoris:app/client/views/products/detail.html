@@ -47,13 +47,13 @@
                         <option value="10">10</option>
                     </select>
                 </div>
-                <div class="block">  
+                <div class="block attrwrapper">  
                     {{#each attribute}}
-                        <span data-price="{{price}}" class="btn btn-primary {{active}} attribute">{{value}}</span>
+                        <span data-price="{{price}}" data-attr="{{_id}}" class="btn btn-primary {{active}} attribute">{{value}}</span>
                     {{/each}}
                 </div>
                 <div class="block">                 
-                    <button class="btn btn-addtocart" id="addmycart" data-id="{{product._id}}"><span style="width:25px; height:25px; margin-left:-19px; margin-top:-3px;" class="cart pull-left"></span> ADD TO CART</button>
+                    <button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>
                      
                 </div> 
                  <div class="block"> 

@@ -4,7 +4,7 @@ Template.mainLayout.onCreated(function() {
     var self = this;
     self.autorun(function() {
         self.subscribe('meteoris_themeAdmin', ctrl.getId());
-        Meteor.call('getRemoteAddress', function(err,url){ Session.set('ABSOLUTEURL', url)}); 
+        //Meteor.call('getRemoteAddress', function(err,url){ Session.set('ABSOLUTEURL', url)}); 
     }); 
 
 });

@@ -9,6 +9,9 @@
     border: none;
     width: 100%;
 }
+.product-details #addToCart span{
+	width:25px; height:25px; margin-left:-19px; margin-top:-3px;
+}
 .product-details .quantity{
 	display: inline-block;
 }
