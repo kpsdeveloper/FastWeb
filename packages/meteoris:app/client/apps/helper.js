@@ -39,7 +39,37 @@ Template.mainLayout.events({
 	        Session.set("REDIRECTURL", FlowRouter.current().path);
 	        FlowRouter.go("/meteoris/user/login");
 	    }
-	}
+	},
+    'click #addToCart': function(e, tpl){
+        e.preventDefault();
+        var title = unslugTitle(FlowRouter.getParam("title"));  
+        var product = Meteoris.Products.findOne({title:title});
+        
+        
+        var id_product = ( product )? product._id:$(e.currentTarget).parent().attr('id');
+        var qty = (tpl.$("#qty").val())? tpl.$("#qty").val():$('#qty'+id_product).val();
+        var attrid = $('.attrwrapper .active').attr('data-attr');
+        var attribute = '';
+        if( attrid )
+             attribute = attrid;
+        else{
+            var pro = Meteoris.Products.findOne({_id:id_product});
+            if( pro ){
+                var attr = Meteoris.Attributes.find({product:pro.oldId}).fetch();
+                if( attribute == '')
+                    attribute = attr[0]._id;
+            }
+        }
+        var userId = getSessionUserID();
+
+        console.log('Id Product:', id_product);
+        console.log('Id attribute:', attribute);
+        console.log('Id userId:', userId);
+        console.log('qty:', qty);
+        var data = {id_product:id_product, attribute:attribute, userId:userId, qty:qty};
+        Meteor.call('Meteoris.Products.addToCart', data);
+        
+    }
 });
 Template.registerHelper('getListProductsHelper', function( categoryId, thumb) {
 	var limit = 16;
@@ -59,10 +89,12 @@ Template.registerHelper('getListProductsHelper', function( categoryId, thumb) {
 window.listProductHtml = function( data , thumb){
 	var html = '';
 	var src = getImgForProductCDNv2( data._id , thumb)
-	html += '<div class="col-md-3 col-xs-12">';
+	html += '<div class="col-md-3 col-xs-12" id="'+data._id+'">';
 	html += 	'<a href="/details/'+slugTitle(data.title)+'"><img src="'+src+'" style="width:201px;height:201px"></a>';
 	html += 	'<a href="/details/'+slugTitle(data.title)+'"><h3 class="title">'+data.title+'</h3></a>';
     html +=     '<p>ریال  <span class="price">'+data.price+'</span></p>';
+    html +=     '<label class="quantity" for="select">Quantity</label><select id="qty'+data._id+'" name="select" class="quantity" size="1"><option value="1">1</option></select>';
+    html +=     '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>';
     html += '</div>';
     return html;
 }
@@ -237,7 +269,7 @@ window.getImgCDNv2 = function(id, thumb) {
         //var currentdomain = Session.get('ABSOLUTEURL');
         
         //var localcdn = currentdomain;
-        var cdnurl = 'http://54.171.217.142/'; //(currentdomain.indexOf('localhost') > -1 )? 'http://54.171.217.142/':localcdn;
+        var cdnurl = 'http://54.71.1.92/'; //(currentdomain.indexOf('localhost') > -1 )? 'http://54.171.217.142/':localcdn;
         if (img){
         	if( thumb == 'true')
             	return cdnurl+ "upload/small/" + img.copies.images.key;
