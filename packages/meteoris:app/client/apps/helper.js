@@ -235,8 +235,9 @@ window.getImgCDNv2 = function(id, thumb) {
         var img = Meteoris.Images.findOne({ _id: id });
         var currentdomain = Session.get('ABSOLUTEURL');
         console.log('host:', currentdomain);
-        var localcdn = currentdomain;
-        var cdnurl = (currentdomain.indexOf('localhost') > -1 )? 'http://54.171.217.142/':localcdn;
+        //var localcdn = currentdomain;i
+	var cdnurl = 'http://46.101.165.89:8080/html/';
+        //var cdnurl = (currentdomain.indexOf('localhost') > -1 )? 'http://54.171.217.142/':localcdn;
         if (img){
         	if( thumb == 'true')
             	return  cdnurl+ "upload/small/" + img.copies.images.key;
