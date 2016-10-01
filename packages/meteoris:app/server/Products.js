@@ -30,5 +30,9 @@ Meteor.methods({
     },
     "Meteoris.Products.removeFavorite": function(productId, userId) {
         Meteoris.Favorites.remove({ proId: productId, userId: userId });
+    },
+    'getRemoteAddress':function(){
+        clientIP = this.connection.clientAddress;
+        console.log('IP:', clientIP);
     }
 });
