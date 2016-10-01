@@ -242,7 +242,7 @@ window.getImgCDNv2 = function(id, thumb) {
         	if( thumb == 'true')
             	return  cdnurl+ "upload/small/" + img.copies.images.key;
         	else
-        	   return cdnurl + "upload/" + img.copies.images.key;
+        	   return 'http://54.171.217.142/' + "upload/" + img.copies.images.key;
         
         }else 
             return id;
