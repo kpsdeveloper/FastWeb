@@ -233,15 +233,15 @@ window.getImgCDNv2 = function(id, thumb) {
         return id;
     } else {
         var img = Meteoris.Images.findOne({ _id: id });
-        var currentdomain = Session.get('ABSOLUTEURL');
-        console.log('host:', currentdomain);
-        var localcdn = currentdomain;
-        var cdnurl = (currentdomain.indexOf('localhost') > -1 )? 'http://54.171.217.142/':localcdn;
+        //var currentdomain = Session.get('ABSOLUTEURL');
+        
+        //var localcdn = currentdomain;
+        var cdnurl = 'http://54.171.217.142/'; //(currentdomain.indexOf('localhost') > -1 )? 'http://54.171.217.142/':localcdn;
         if (img){
         	if( thumb == 'true')
-            	return  cdnurl+ "upload/small/" + img.copies.images.key;
+            	return cdnurl+ "upload/small/" + img.copies.images.key;
         	else
-        	   return 'http://54.171.217.142/' + "upload/" + img.copies.images.key;
+        	   return cdnurl + "upload/" + img.copies.images.key;
         
         }else 
             return id;
