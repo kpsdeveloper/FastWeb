@@ -32,7 +32,7 @@ Meteor.methods({
         Meteoris.Favorites.remove({ proId: productId, userId: userId });
     },
     'getRemoteAddress':function(){
-        clientIP = this.connection.clientAddress;
+        clientIP = Meteor.absoluteUrl();
         console.log('IP:', clientIP);
     }
 });
