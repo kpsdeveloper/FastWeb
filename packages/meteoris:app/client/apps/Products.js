@@ -92,3 +92,12 @@ Template.category.events({
 	    });    
 	}
 });
+/**Seyha search function**/
+Template.app_header.events({
+    'click .kesearch':function(e){
+        e.preventDefault();
+        var search = $('#textToSearch').val();
+        Session.set('keyward',search);
+        FlowRouter.go('/searchproduct/'+search);
+    }
+});
