@@ -68,6 +68,11 @@ Template.mainLayout.events({
             FlowRouter.go('/meteoris/user/login');    
         }
         
+    },
+    'clcik .search-option li': function(e){
+        e.preventDefault();
+        $('.search-option li').removeClass('active');
+        $(e.currentTarget).addClass('active');
     }
 });
 Template.registerHelper('getListProductsHelper', function( categoryId, thumb) {

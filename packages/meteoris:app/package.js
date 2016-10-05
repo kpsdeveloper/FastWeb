@@ -52,6 +52,7 @@ Package.onUse(function(api) {
         'lib/collections/Images.js',
         'lib/collections/Carts.js',
         'lib/collections/Orders.js',
+        'lib/collections/Contents.js',
         'lib/router.js',
     ], ['client', 'server']);
 
@@ -86,7 +87,7 @@ Package.onUse(function(api) {
         'client/views/orders/paymentDetails.html',
         'client/views/search/searchproduct.html',
         
-        'client/apps/Cart.js',
+        'client/apps/cart.js',
         'client/apps/profile.js',
         'client/apps/Products.js',
         'client/apps/Orders.js',
