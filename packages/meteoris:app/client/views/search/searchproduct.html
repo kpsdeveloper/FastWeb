@@ -1,0 +1,352 @@
+<template name="searchproduct">
+    <style>
+        .zoom {
+            display:inline-block;
+            position: relative;
+        }
+        /* magnifying glass icon */
+        .zoom img {
+            display: block;
+        }
+        .zoom img::selection { background-color: transparent; }
+        #ex2 img:hover { cursor: url(grab.cur), default; }
+        #ex2 img:active { cursor: url(grabbed.cur), default; }
+        .bert-alert.my-error{
+        background: #fff;
+        color: #000;
+        box-shadow: 2px 2px 15px #888;
+        }
+        .fa-remove-iconbg {
+            background-image: url('../img/remove.png');
+            background-size: 32px 32px;
+            width: 32px;
+            height: 32px;
+        }
+        .fa-fav-iconbg {
+            background-image: url('../img/fav.png');
+            background-size: 32px 32px;
+            width: 32px;
+            height: 32px;
+        }
+        .fa-addcart-iconbg{
+        background-image: url('../img/cart.png');
+        background-size: 32px 32px;
+        width: 32px;
+        height: 32px;
+        }
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .quickview{
+                display: none;
+            }
+        }
+        /*btn add to cart*/
+        button.disabled#addmycart-quickview {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        /*btn add to cart*/
+        .tab-search {margin-left: -15px;margin-right: -15px;}
+        .tab-search .nav-tabs > li > a{
+        border-radius: 0px 0px 0 0;
+        /*border-right: 1px solid #ccc;*/
+        font-size: 12px;
+        }
+        .tab-search .nav-tabs > li:hover > a{
+            color: #000;
+            background: transparent;
+        }
+        .tab-search .nav-tabs > li.active > a{
+            color:#000;
+            border-radius: 0px 0px 0 0;
+            font-weight: bold;
+        }
+        .search-result{
+            border-bottom:1px solid #ccc; 
+            padding-bottom:2px;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+        .search-result p{
+            padding-bottom:10px;
+            font-size: 12px;
+
+        }
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+            color: #555;
+            cursor: default;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-bottom-color: transparent;
+        }
+        .myclose{display: none;}
+        .myinput{background-color: #fff;}
+        </style>
+    
+    
+    <div class="container">
+        <div class="col-md-12">
+            <div class="tab-search">  
+
+            <ul class="nav nav-tabs newtab">  
+                <li class="li1"><a id="tab-a" re-keyword="pro_re" href="#">{{_"Products"}} <span><span dir="ltr">(</span>{{dataCount}}<span dir="ltr">)</span></span></a></li>   
+                <li class="li2"><a id="tab-a" re-keyword="we_re" href="#">{{_"WEBZINE"}} <span><span dir="ltr">(</span>{{length_webzine}}<span dir="ltr">)</span></span></a></li>  
+                <li class="li3"><a id="tab-a" re-keyword="tuto_re" href="#">{{_"Tutorials"}} <span><span dir="ltr">(</span>{{length_tuto}}<span dir="ltr">)</span></span></a></li>    
+            </ul>  
+        </div> 
+        <br> 
+        <div class="search-result">
+            <p >
+            <span class="pro_re" id="pro_re">{{dataCount}} {{_"Products result"}}:</span> 
+            <span class="myclose we_re" id="we_re">{{length_webzine}} {{_"Webzine result"}}:</span> 
+            <span class="myclose tuto_re" id="tuto_re"><span dir="ltr">(</span>{{length_tuto}}<span dir="ltr">)</span> {{_"Tutorial result"}}:</span> 
+            <b>“{{keyword}}”</b>
+            {{#with searchBrand}}
+            {{#if status}}
+            <a href="/behindthebrand/{{brand}}" class="pull-right">Shoping <span>{{brand}}</span> Now <span class="fa fa-caret-right"></span></a>
+            {{/if}}
+            {{/with}}
+            </p>
+        </div> 
+        <div style="min-height:100px; padding:25px;" class="col-md-8 col-md-offset-4">
+            <form role="form" class="form-horizontal">
+                <div class="form-group ">
+                <label class="col-sm-3 text-right" for="selectSort">{{_"Sort By"}}:</label>
+                <div class="col-sm-3">
+                  <select class="form-control myinput" id="selectSort">
+                    <option value="title">{{_"Title"}}</option>
+                    <option value="price">{{_"Price"}}</option>
+                    
+              
+                  </select>
+                </div>
+
+                <label class="col-sm-2 text-right" for="inputNameDepartment">{{_"View"}}</label>
+                <div class="col-sm-4">
+                  <select class="form-control myinput" id="inputNameDepartment">
+                    <option value="60">60 {{_"per pages"}}</option>
+                    <option value="100">100 {{_"per pages"}}</option>
+         
+                  </select>
+                </div>
+              </div>
+            </form>
+        </div>
+        <script type="text/javascript">
+        $(document).ready(function() {
+            var selector = 'ul.newtab li';
+            $(selector).on('click', function() {
+                $(selector).removeClass('active');
+                $(this).addClass('active');
+            });
+        })
+        </script>
+
+            <!-- <div class="hold_result">
+                <h1>{{_"Products"}}</h1><br>
+                <p>{{nbproducts}}/{{dataCount}} {{_"Products result"}}</p>
+            </div> -->
+            <div class="pro_re">
+                {{#if statusproduct}}
+                <div class="all-product" style="">
+                    <ul class="list-inline">
+                        {{#each product}}
+                        {{{oneProductv2 this showquickview "tester" "small"}}}
+                        {{/each}}
+                    </ul>
+                </div>
+                {{else}}
+                <h3 class="text-center">{{_"No Product result"}}</h3>
+                {{/if}}
+            </div>
+            
+        </div>      
+    </div>
+    
+    
+    <div class="container">
+        <div class="col-md-12 we_re myclose" >
+            {{#if statuswebzine}}
+            <ul class="list-inline masonry-container">
+                {{#each webzine}}
+                <li class="col-md-3 col-sm-6 ">
+                    <div class="wz-thumbnail thumbnail-webzine">
+                        <div class="hold-quickview">
+                            
+                            <a href="/webzinedetails/{{slug title}}">
+                                {{#with getFirstImgContent _id}}
+                                <img src="{{getImgv2 this}}" onError="this.onerror=null;this.src='{{getImgCDNv2 this}}';"  alt="{{../title}}" class="img-responsive thumbanil-webzine">
+                                {{/with}}
+                            </a>
+                            
+                        </div>
+                        <div class="title-webzine"><a href="/webzinedetails/{{slug title}}">{{title}}</a></div>
+                            <p class="description"><a href="/webzinedetails/{{slug title}}">{{{ limitSrt content}}} <span class="fa fa-angle-double-right fa-red pull-right"></span></a></p>
+                    </div>
+                </li>
+                {{/each}}
+            </ul>
+            {{else}}
+            <h3 class="text-center">{{_"No Wezine result"}}</h3>
+            {{/if}}
+        </div>
+
+        <div class="col-md-12 tuto_re myclose">
+            {{#if statustuto}}
+            <ul class="list-inline masonry-container">
+                {{#each tuto}}
+                <li class="col-md-3 col-sm-6 ">
+                    <div class="wz-thumbnail thumbnail-webzine">
+                        <div class="hold-quickview">
+                            
+                            <a href="/tutodetails/{{slug title}}">
+                                {{#with getFirstImgContent _id}}
+                                <img src="{{getImgv2 this}}" onError="this.onerror=null;this.src='{{getImgCDNv2 this}}';"  alt="{{../title}}" class="img-responsive thumbanil-webzine">
+                                {{/with}}
+                            </a>
+                            
+                        </div>
+                        <div class="title-webzine"><a href="/tutodetails/{{slug title}}">{{title}}</a></div>
+                            <p class="description"><a href="/tutodetails/{{slug title}}">{{{ limitSrt content}}} <span class="fa fa-angle-double-right fa-red pull-right"></span></a></p>
+                    </div>
+                </li>
+                {{/each}}
+            </ul>
+            {{else}}
+            <h3 class="text-center">{{_"No Tutorial result"}}</h3>
+            {{/if}}
+        </div>
+    </div>
+    
+    
+
+    <!-- quickview -->
+    <div class="modal" id="quickView" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top:30px;" dir="{{getDirection}}">
+        
+        {{#with getSelectedProduct}}
+        <div class="modal-dialog" role="document">
+            <div class="modal-content {{quickviewStyle}}">
+                      <div class="modal-content">
+                      {{#if farsi}}
+                        <div class="modal-header" style="background:#000; padding:0px;height: 37px; margin-top: -1px; width: 900px;margin-right: -1px;" >
+                          <button type="button" class="close" data-dismiss="modal"><img src="/images/pop_cancel.png"></button>
+                        </div>
+                        {{else}}
+                            <div class="modal-header" style="background:#000; padding:0px;height: 37px; margin-top: -1px; width: 900px;margin-left: -1px;" >
+                          <button type="button" class="close" data-dismiss="modal"><img src="/images/pop_cancel.png"></button>
+                        </div>
+                        {{/if}}
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <span class='zoom' id='ex1'>
+                                        <img id="hoverZoom" width="250" height="250" class="img_principle" src="{{getImgForProduct _id}}" onError="this.onerror=null;this.src='{{getImgForProductCDN _id}}';" alt="{{title}}"/>     
+                                    </span> 
+                                    <script>
+                                        $(document).ready(function(){
+                                            $('#ex1').zoom('{{getFirstImgProduct _id}}');
+                                            $('#ex2').zoom({ on:'grab' });
+                                            $('#ex3').zoom({ on:'click' });          
+                                            $('#ex4').zoom({ on:'toggle' });
+                                        });
+                                    </script>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="quick-detail">
+                                        <h2 class="title-quick-view">{{title}}</h2>
+                                        <p class="arab-font">{{{description}}}</p>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <span>{{_"QTY"}}</span> &nbsp;
+                                            <select class="select-view" id="qty">
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                          <a href="/details/{{slug title}}"><button class="btn-moredetail-view left">{{_"MORE DETAIL"}}</button></a>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                              <a href="/details/{{slug title}}" style="font-weight:bold;color:#000;" class="price{{oldId}}">
+                                                <h3 id="quick_view_price" style="font-weight:bold;color:#000;">{{getAttribprice oldId}}</h3>
+                                              </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button class="btn-add-tocard left" id="addmycart-quickview">{{_ "ADD TO CARD"}}</button>
+                                            <!-- <button class="btn-add-tocard left {{#with getProBarcodeCart}}{{class}}{{/with}}" id="addmycart-quickview" disabled="{{#with getProBarcodeCart}}{{class}}{{/with}}"> {{_ "ADD TO CART"}}</button>
+                                            {{#with getProBarcodeCart}}
+                                                {{{html}}}
+                                            {{/with}} -->
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                               <hr style="border:1px solid #000;">
+                            </div>
+                        </div>
+
+                        <div class="modal-footer center-block" style="border:none">
+                            <div class="col-md-12">
+                               <h4 class="pull-left">{{_"Related products"}}</h4>
+                            </div>
+                            
+                            <div class="row">
+                                {{>recommendation}}         
+                            </div>
+                        </div>
+                      </div>    
+                    </div>
+                    </div>
+                    {{/with}}
+                
+                    <script>
+                    $('.modal-backdrop').remove();
+                    </script>
+                </div>
+                <script type="text/javascript">
+        $(document).ready(function(){
+            var group = Session.get('groupsearchv2');
+            switch(group){
+                case 0:
+                    $('.newtab li.li1').addClass('active');
+                    $('.newtab li.li2').removeClass('active');
+                    $('.newtab li.li3').removeClass('active');
+                    $('.pro_re').removeClass('myclose');
+                    $('.we_re').addClass('myclose');
+                    $('.tuto_re').addClass('myclose');
+                    break;
+                case 4:
+                    $('.newtab li.li2').addClass('active');
+                    $('.newtab li.li1').removeClass('active');
+                    $('.newtab li.li3').removeClass('active');
+                    $('.pro_re').addClass('myclose');
+                    $('.we_re').removeClass('myclose');
+                    $('.tuto_re').addClass('myclose');
+                    break;
+                case 5:
+                    $('.newtab li.li3').addClass('active');
+                    $('.newtab li.li1').removeClass('active');
+                    $('.newtab li.li2').removeClass('active');
+                    $('.pro_re').addClass('myclose');
+                    $('.we_re').addClass('myclose');
+                    $('.tuto_re').removeClass('myclose');
+                    break;
+                case 1:
+                    $('.newtab li.li1').addClass('active');
+                    $('.newtab li.li2').removeClass('active');
+                    $('.newtab li.li3').removeClass('active');
+                    $('.pro_re').removeClass('myclose');
+                    $('.we_re').addClass('myclose');
+                    $('.tuto_re').addClass('myclose');
+                    break;
+            }
+        })
+        </script>
+
+
+</template>

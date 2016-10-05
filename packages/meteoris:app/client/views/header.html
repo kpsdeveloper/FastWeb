@@ -1,4 +1,16 @@
 <template name="app_header">
+    <style type="text/css">
+        .searchnew ul.list-inline li a {
+        color: #000;
+        font-size: 16px;
+        font-weight: normal;
+        }
+        
+        .searchnew ul.list-inline li.active a {
+            color: #000;
+            border-bottom: 2px solid #000;
+        }
+    </style>
     <header class="main-header">
         <!-- Logo -->
         <a href="/" class="logo">
@@ -9,6 +21,39 @@
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
+            <!-- Start of header search-->
+            <div class="pull-right searchnew col-md-6 col-sm-6">
+                <ul class="list-inline search-option {{getDiv}}">
+                    <li><a href="#" id="selsect_search" data-group="1">ALL</a></li>
+                    <li class="active"><a href="#" id="selsect_search" data-group="0">Products</a></li>
+                    <li><a href="#" id="selsect_search" data-group="4">WEBZINE</a></li>
+                    <li><a href="#" id="selsect_search" data-group="5">Tutorials</a></li>
+                </ul>
+                <script type="text/javascript">
+                $(document).ready(function() {
+                    var selector = '.searchnew ul li';
+                    $(selector).on('click', function() {
+                        $(selector).removeClass('active');
+                        $(this).addClass('active');
+                    });
+                })
+                </script>
+                <form>
+                    <div class="input-group {{getBtnSearch}}" id="data-group-search" style="">
+                        <input class="form-control input-search {{searching}} mysearchbox" placeholder='Search for...' type="text" id="textToSearch" style="width:100%;height:38px;background:black;border:1px;color:white"> {{#if checkKeywordSeach}}
+                        <ul class="nav ulsearch" style="position:absolute; left:0;right:0;background:#fff;z-index:999999;margin:40px 37px 0px 0px;border-left:1px solid #ccc; border-right:1px solid #ccc; border-bottom:1px solid #ccc">
+                            {{#each dataSearch.products}}
+                            <li data-title="{{title}}" class="searchnav"><a class="keyword" href="/details/{{slug title}}">{{{titlebold}}}</a></li>
+                            {{/each}} {{#each dataSearch.contents}}
+                            <li data-title="{{title}}" class="searchnav"><a class="keyword" href="{{checkLinkContent _id}}{{slug title}}">{{{titlebold}}}</a></li>
+                            {{/each}}
+                        </ul>
+                        {{/if}}
+                        <span class="input-group-addon search-btn kesearch"><i class="fa fa-search search-font"></i></span>
+                    </div>
+                </form>
+            </div>
+            <!-- end of header search-->            
             <!-- Sidebar toggle button-->
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>

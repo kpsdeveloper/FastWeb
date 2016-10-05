@@ -82,6 +82,15 @@ Meteor.publish('Accounts', function( userId ) {
     return Meteoris.Accounts.find({userId: userId});
 });
 
+Meteor.publish('searchproduct', function(keyword, groupid) {
+    if (keyword != "") {
+        if (groupid == 1) {
+            return products.find({ $or: [{ $and: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }, { $and: [{ description: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }] });
+        } else if (groupid != 5 && groupid != 4) {
+            return products.find({ $or: [{ $and: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }, { tag_quizz: { $regex: new RegExp(keyword, "i") } }, { "tags.value": { $regex: new RegExp(keyword, "i") } }, { $and: [{ description: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }] });
+        }
+    } else return this.ready();
+});
 publishAttributeProducts = function(allpro) {
     var attrlist = [];
     if (allpro.count() > 0) {

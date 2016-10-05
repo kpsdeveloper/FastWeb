@@ -12,7 +12,15 @@ function authenticating() {
         FlowRouter.go("/");
     }
 }
-
+FlowRouter.route('/searchproduct/:slug', {
+    template: 'searchproduct',
+    subscriptions: function(){
+        TAPi18n.subscribe('Categories');
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "detail"});
+    }
+});
 groupRoutes.route('/products/list', {
     action: function() {
         BlazeLayout.render('mainLayout', {content: "meteoris_productIndex"});
