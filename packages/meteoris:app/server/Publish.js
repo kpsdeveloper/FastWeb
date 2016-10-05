@@ -42,10 +42,46 @@ Meteor.publish('detailTitle', function(title, userId) {
 	} else return []
 
 });
+Meteor.publish('Carts', function( userId ) {
+    var data = Meteoris.Carts.find({userId:userId});
+
+    if( data.count() > 0 ){
+        var id_product = [];
+        cart = data.fetch()[0];
+        cart.items.forEach( function(item){
+            id_product.push(item.id_product);
+        })
+        var product = Meteoris.Products.find({_id:{$in:id_product}});
+        var imgId = product.map(function(n) { 
+            if (n.image instanceof Array)
+                return n.image[0];
+            else
+                return n.image;
+        });
+        var image = Meteoris.Images.find({_id: {$in: imgId}})
+        console.log('cart:', data.count());
+        console.log('product:', product.count());
+        console.log('image:', image.count());
+
+        return [data, image, product];
+    }
+    else return [];
+    
+});
 TAPi18n.publish('Categories', function() {
     var data = Meteoris.Categories.find({});
     return data;
 });
+Meteor.publish('Provinces', function() {
+    return Meteoris.Provinces.find({});
+});
+Meteor.publish('Cities', function( provinceId ) {
+    return Meteoris.Cities.find({provinceId: provinceId});
+});
+Meteor.publish('Accounts', function( userId ) {
+    return Meteoris.Accounts.find({userId: userId});
+});
+
 publishAttributeProducts = function(allpro) {
     var attrlist = [];
     if (allpro.count() > 0) {

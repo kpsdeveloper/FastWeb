@@ -19,6 +19,7 @@ groupRoutes.route('/products/list', {
     },
 });
 groupRoutes.route('/products/add', {
+
     action: function() {
         BlazeLayout.render('mainLayout', {content: "meteoris_productAdd"});
     },
@@ -27,18 +28,62 @@ FlowRouter.route('/category/:name/:page', {
     subscriptions: function(){
        
         TAPi18n.subscribe('Categories');
+        Meteor.subscribe('Carts', getSessionUserID());
     },
     action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "category"});
     }
 
 });
-
+FlowRouter.route('/checkout', {
+    subscriptions: function(){
+        TAPi18n.subscribe('Categories');
+        Meteor.subscribe('Carts', getSessionUserID());
+    },
+    action: function( params ) {
+        BlazeLayout.render('mainLayout', {content: "showCart"});
+    }
+});
+FlowRouter.route('/chooseAddress', {
+    subscriptions: function(){
+        Meteor.subscribe('Carts', getSessionUserID());
+        Meteor.subscribe('Accounts', Meteor.userId());
+    },
+    action: function( params ) {
+        BlazeLayout.render('mainLayout', {content: "chooseAddress"});
+    }
+});
+FlowRouter.route('/addnewAddress', {
+    subscriptions: function(){
+        Meteor.subscribe('Carts', getSessionUserID());
+        Meteor.subscribe('Accounts', Meteor.userId());
+    },
+    action: function( params ) {
+        BlazeLayout.render('mainLayout', {content: "addressDetails"});
+    }
+});
+FlowRouter.route('/orderReview', {
+    subscriptions: function(){
+        Meteor.subscribe('Carts', getSessionUserID());
+    },
+    action: function( params ) {
+        BlazeLayout.render('mainLayout', {content: "orderReview"});
+    }
+});
+FlowRouter.route('/payment', {
+    subscriptions: function(){
+        Meteor.subscribe('Carts', getSessionUserID());
+    },
+    action: function( params ) {
+        BlazeLayout.render('mainLayout', {content: "paymentDetails"});
+    }
+});
 FlowRouter.route('/details/:title', {
     subscriptions: function(){
         //Meteor.Loader.loadJs("http://localhost:3000/js/jquery-1.8.3.min.js");
         Meteor.Loader.loadJs("/js/jquery.elevateZoom-3.0.8.min.js");
         TAPi18n.subscribe('Categories');
+        Meteor.subscribe('Carts', getSessionUserID());
     },
     action: function() {
         BlazeLayout.render('mainLayout', {content: "detail"});

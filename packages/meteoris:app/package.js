@@ -15,14 +15,15 @@ Package.onUse(function(api) {
         'meteoris:flash@0.0.0',
         //'mfactory:admin-lte@0.0.0',
         'session@1.1.1',
+        'u2622:persistent-session@0.4.4',
         //'fortawesome:fontawesome@4.0.0',
     ], 'client');
 
     api.use([
         'meteoris:core@0.0.0',
         'meteoris:role@0.0.0',
-//        'deps',
-//        'session',
+        //'deps',
+        //'session',
         'mongo',
         'kadira:flow-router@2.0.0',
         'kadira:blaze-layout@2.0.0',
@@ -44,10 +45,13 @@ Package.onUse(function(api) {
     api.addFiles([
         'lib/controllers/AppController.js',
         'lib/controllers/ProductsController.js',
+        'lib/controllers/OrdersController.js',
         'lib/collections/ThemeAdmin.js',
         'lib/collections/Products.js',
         'lib/collections/Categories.js',
         'lib/collections/Images.js',
+        'lib/collections/Carts.js',
+        'lib/collections/Orders.js',
         'lib/router.js',
     ], ['client', 'server']);
 
@@ -55,6 +59,8 @@ Package.onUse(function(api) {
         'server/ThemeAdminServer.js',
         'server/profile.js',
         'server/Products.js',
+        'server/Carts.js',
+        'server/Orders.js',
         'server/Publish.js'
     ], 'server');
 
@@ -72,8 +78,17 @@ Package.onUse(function(api) {
         'client/views/products/category.html',
         'client/views/profile/profile.html',
         'client/views/profile/changepassword.html',
+        'client/views/cart/cart.html',
+        'client/views/orders/chooseAddress.html',
+        'client/views/orders/addressDetails.html',
+        'client/views/orders/shippingMethod.html',
+        'client/views/orders/orderReview.html',
+        'client/views/orders/paymentDetails.html',
+        
+        'client/apps/Cart.js',
         'client/apps/profile.js',
         'client/apps/Products.js',
+        'client/apps/Orders.js',
         'client/apps/helper.js',
 
     ], 'client');

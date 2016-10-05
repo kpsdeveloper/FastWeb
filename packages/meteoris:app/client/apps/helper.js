@@ -1,4 +1,5 @@
 var ctrl = new Meteoris.ProductsController();
+var ordercl = new Meteoris.OrdersController();
 Session.set('SUBSCRIBELISTPRO', '');
 Session.set('TOTALPRODUCT', 0);
 Template.mainLayout.events({
@@ -42,32 +43,30 @@ Template.mainLayout.events({
 	},
     'click #addToCart': function(e, tpl){
         e.preventDefault();
-        var title = unslugTitle(FlowRouter.getParam("title"));  
-        var product = Meteoris.Products.findOne({title:title});
+        ordercl.addToCart(tpl);
         
-        
-        var id_product = ( product )? product._id:$(e.currentTarget).parent().attr('id');
-        var qty = (tpl.$("#qty").val())? tpl.$("#qty").val():$('#qty'+id_product).val();
-        var attrid = $('.attrwrapper .active').attr('data-attr');
-        var attribute = '';
-        if( attrid )
-             attribute = attrid;
-        else{
-            var pro = Meteoris.Products.findOne({_id:id_product});
-            if( pro ){
-                var attr = Meteoris.Attributes.find({product:pro.oldId}).fetch();
-                if( attribute == '')
-                    attribute = attr[0]._id;
-            }
-        }
+    },
+    'click .delete': function(e){
+        e.preventDefault();
+        var par = $(e.currentTarget).parent().parent().attr('id');
         var userId = getSessionUserID();
-
-        console.log('Id Product:', id_product);
-        console.log('Id attribute:', attribute);
-        console.log('Id userId:', userId);
-        console.log('qty:', qty);
-        var data = {id_product:id_product, attribute:attribute, userId:userId, qty:qty};
-        Meteor.call('Meteoris.Products.addToCart', data);
+        console.log('str:', par);
+        Meteor.call('Meteoris.Cart.Delete', par, userId);
+    },
+    'change .updateQty': function(e){
+        e.preventDefault();
+        var par = $(e.currentTarget).parent().parent().attr('id');
+        var qty = $(e.currentTarget).val();
+        var userId = getSessionUserID();
+        Meteor.call('Meteoris.Cart.Update', par, qty, userId);
+    },
+    'click #proceedOrder': function(){
+        if( Meteor.userId() ){
+            FlowRouter.go('/chooseAddress');
+        }else{
+            Session.set("REDIRECTURL", '/chooseAddress');
+            FlowRouter.go('/meteoris/user/login');    
+        }
         
     }
 });
@@ -93,8 +92,8 @@ window.listProductHtml = function( data , thumb){
 	html += 	'<a href="/details/'+slugTitle(data.title)+'"><img src="'+src+'" style="width:201px;height:201px"></a>';
 	html += 	'<a href="/details/'+slugTitle(data.title)+'"><h3 class="title">'+data.title+'</h3></a>';
     html +=     '<p>ریال  <span class="price">'+data.price+'</span></p>';
-    //html +=     '<label class="quantity" for="select">Quantity</label><select id="qty'+data._id+'" name="select" class="quantity" size="1"><option value="1">1</option></select>';
-    //html +=     '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>';
+    html +=     '<label class="quantity" for="select">Quantity</label><select id="qty'+data._id+'" name="select" class="quantity" size="1"><option value="1">1</option></select>';
+    html +=     '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>';
     html += '</div>';
     return html;
 }
@@ -154,6 +153,31 @@ Template.registerHelper('getNumPage', function(  ) {
 	*/
 	//return {name:name, prev:prev, next:next};
 });
+Template.registerHelper('getCart', function() {
+    var userId = getSessionUserID();
+    var cart = '';
+    var cart = Meteoris.Carts.findOne({userId:userId});
+    if( cart ){
+        cart.items = cart.items.map( function(data, index){
+            data.index = index +1;
+            return data;
+        })
+        return {hasCart:true, cart:cart};
+    }else
+        return {hasCart:true}
+});
+Template.registerHelper('getProductInfo', function(id_product) {
+    var data = Meteoris.Products.findOne({_id:id_product});
+    return data;
+});
+Template.registerHelper('getTotalItem', function(id_product) {
+    var userId = getSessionUserID();
+    
+    var cart = Meteoris.Carts.findOne({userId:userId});
+    if( cart ) return cart.items.length;
+    else return 0;
+});
+
 function Pagination(data, limit, current, adjacents )
 {
 	var result = [];
@@ -360,7 +384,7 @@ window.unslugTitle = function(title) {
 }
 window.getTimestamp = function(){
 	var date = new Date();
-   	var timestamp = date.getTime() / 1000;
+   	var timestamp = date.getTime();
    	return timestamp;
 }
 Template.registerHelper('getHumanDate', function( timestamp ) {
@@ -419,5 +443,49 @@ window.getSessionUserID = function(){
             Session.setPersistent('userId', Random.id());
             return Session.get('userId');
         }
+    }
+}
+Template.registerHelper('isCurrentLangEng', function() {
+    var currentLang = TAPi18n.getLanguage();
+
+    if( currentLang == 'en') return true;
+    return false;
+});
+Template.registerHelper('directionContainer', function() {
+    var currentLang = TAPi18n.getLanguage();
+    if( currentLang == 'en') return 'container-en';
+    else return 'container-fa';
+});
+Template.registerHelper('directionButton', function() {
+    var currentLang = TAPi18n.getLanguage();
+    if( currentLang == 'en') return 'pull-right';
+    else return 'pull-left';
+});
+Template.registerHelper('alignright', function() {
+    var currentLang = TAPi18n.getLanguage();
+    if( currentLang == 'en') return;
+    else return 'align-right';
+});
+Template.registerHelper('checkIsUserLoggedIn', function() {
+    if( Meteor.userId() ) return true;
+    else return false;
+});
+window.emailValidate = function(email) {
+    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (email.match(mailformat)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+window.phonenoValidate = function(phoneno) {
+    var phoneFormat = /^\(?([0-9]{4})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+    var phoneFormat1 = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+    if(phoneno=="" || phoneno==null || phoneno==undefined){
+        return false;
+    }else{
+        if (phoneno.match(phoneFormat) || phoneno.match(phoneFormat1)) {
+            return true;
+        } else return false;
     }
 }
