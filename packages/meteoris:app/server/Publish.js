@@ -85,10 +85,33 @@ Meteor.publish('Accounts', function( userId ) {
 Meteor.publish('searchproduct', function(keyword, groupid) {
     if (keyword != "") {
         if (groupid == 1) {
-            return products.find({ $or: [{ $and: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }, { $and: [{ description: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }] });
-        } else if (groupid != 5 && groupid != 4) {
-            return products.find({ $or: [{ $and: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }, { tag_quizz: { $regex: new RegExp(keyword, "i") } }, { "tags.value": { $regex: new RegExp(keyword, "i") } }, { $and: [{ description: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }] });
+            var data = Meteoris.Products.find({ $or: [{ $and: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }, { $and: [{ description: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }] },{fields:{_id:1, title:1,price:1,category:1, oldId:1,image:1}});
+            var attrId = data.map(function(p) { return p.oldId });
+            var imgId = data.map(function(n) { 
+                if (n.image instanceof Array)
+                    return n.image[0];
+                else
+                    return n.image;
+            });
+            //var datafav = Meteoris.Favorites.find({proId:currentPro._id, userId:userId});
+            var dataattr = Meteoris.Attributes.find({product: {$in: attrId}});
+            var dataimg = Meteoris.Images.find({_id: {$in: imgId}});
+            console.log('product:', data.count());
+            console.log('attribute::', dataattr.count());
+            console.log('Image:', dataimg.count());
+            return [dataimg, data, dataattr];
+        } else if (groupid == 2) {
+            var webzine = Meteoris.ContentType.findOne({ type: "Webzine" });
+            return Meteoris.Contents.find({ $or: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }, { content: { $regex: new RegExp(keyword, "i") } }], typeid: webzine._id });
+        } else if (groupid == 3) {
+            var tuto = Meteoris.ContentType.findOne({ type: "Tuto" });
+            return Meteoris.Contents.find({ $or: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }, { content: { $regex: new RegExp(keyword, "i") } }], typeid: tuto._id });
+        }else{
+            var list = Meteoris.Products.find({ $or: [{ $and: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }, { $and: [{ description: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }] }, {fields:{_id:1, title:1,price:1,category:1, oldId:1,image:1}});
+            var content = Meteoris.Contents.find({ $or: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }, { content: { $regex: new RegExp(keyword, "i") } }]});
+            return [list, content];
         }
+        console.log('list:', list.count());
     } else return this.ready();
 });
 publishAttributeProducts = function(allpro) {

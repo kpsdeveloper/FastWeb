@@ -13,12 +13,16 @@ function authenticating() {
     }
 }
 FlowRouter.route('/searchproduct/:slug', {
-    template: 'searchproduct',
     subscriptions: function(){
         TAPi18n.subscribe('Categories');
+        var keyword = Session.get('keyward');
+        var groupId = $('.search-option .active a').attr('data-group');
+        console.log('search:', keyword);
+        console.log('group:', groupId);
+        Meteor.subscribe('searchproduct', keyword, groupId);
     },
     action: function() {
-        BlazeLayout.render('mainLayout', {content: "detail"});
+        BlazeLayout.render('mainLayout', {content: "searchproduct"});
     }
 });
 groupRoutes.route('/products/list', {
