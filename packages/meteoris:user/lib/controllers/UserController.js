@@ -51,11 +51,14 @@ Meteoris.UserController = Meteoris.Controller.extend({
     login: function(t) {
         var email = t.find('#email').value;
         var password = t.find('#password').value;
-
+        var SessionID =  getSessionUserID();
         Meteor.loginWithPassword(email, password, function(err) {
             if (err) {
                 Meteoris.Flash.set('danger', err.message);
             } else {
+                var currentUserID = Meteor.userId();
+                Meteor.call('Meteoris.Orders.UpdateOrderUserID', currentUserID, SessionID );
+
                 Meteoris.Flash.set('success', 'login success');
                 if( redirecturl = Session.get('REDIRECTURL') ){
                     Session.set('REDIRECTURL','')

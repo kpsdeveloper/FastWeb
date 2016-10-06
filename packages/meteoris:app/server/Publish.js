@@ -89,8 +89,11 @@ Meteor.publish('Provinces', function() {
 Meteor.publish('Cities', function( provinceId ) {
     return Meteoris.Cities.find({provinceId: provinceId});
 });
-Meteor.publish('Accounts', function( userId ) {
-    return Meteoris.Accounts.find({userId: userId});
+Meteor.publish('Accounts', function( userId, addressId ) {
+    if( addressId )
+        return Meteoris.Accounts.find({_id: addressId});
+    else
+        return Meteoris.Accounts.find({userId: userId});
 });
 Meteor.publish('ParentAttribute', function( ) {
     return Meteoris.ParentAttributes.find({});

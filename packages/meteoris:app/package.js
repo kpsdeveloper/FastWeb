@@ -86,7 +86,8 @@ Package.onUse(function(api) {
         'client/views/orders/shippingMethod.html',
         'client/views/orders/orderReview.html',
         'client/views/orders/paymentDetails.html',
-         'client/views/orders/completedOrder.html',
+        'client/views/orders/completedOrder.html',
+        'client/views/orders/editAddress.html',
         'client/views/search/searchproduct.html',
         
         'client/apps/cart.js',

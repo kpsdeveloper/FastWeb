@@ -38,9 +38,8 @@ groupRoutes.route('/products/add', {
 });
 FlowRouter.route('/category/:name/:page', {
     subscriptions: function(){
-       
         TAPi18n.subscribe('Categories');
-        Meteor.subscribe('Carts', getSessionUserID());
+        //Meteor.subscribe('Carts', getSessionUserID());
     },
     action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "category"});
@@ -50,7 +49,6 @@ FlowRouter.route('/category/:name/:page', {
 FlowRouter.route('/checkout', {
     subscriptions: function(){
         TAPi18n.subscribe('Categories');
-        Meteor.subscribe('Carts', getSessionUserID());
     },
     action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "showCart"});
@@ -58,7 +56,6 @@ FlowRouter.route('/checkout', {
 });
 FlowRouter.route('/chooseAddress', {
     subscriptions: function(){
-        this.register('myCart', Meteor.subscribe('Carts', getSessionUserID()) );
         Meteor.subscribe('Accounts', Meteor.userId());
     },
     action: function( params ) {
@@ -67,34 +64,32 @@ FlowRouter.route('/chooseAddress', {
 });
 FlowRouter.route('/addnewAddress', {
     subscriptions: function(){
-        this.register('myCart', Meteor.subscribe('Carts', getSessionUserID()) );
-        Meteor.subscribe('Accounts', Meteor.userId());
+        //this.register('myCart', Meteor.subscribe('Carts', getSessionUserID()) );
+        Meteor.subscribe('Accounts', Meteor.userId() );
 
     },
     action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "addressDetails"});
     }
 });
+FlowRouter.route('/editaddress/:id', {
+    action: function( params ) {
+        BlazeLayout.render('mainLayout', {content: "editAddress"});
+    }
+});
+
 FlowRouter.route('/orderReview', {
-    subscriptions: function(){
-        this.register('myCart', Meteor.subscribe('Carts', getSessionUserID()) );
-    },
     action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "orderReview"});
     }
 });
 FlowRouter.route('/payment', {
-    subscriptions: function(){
-        this.register('myCart', Meteor.subscribe('Carts', getSessionUserID()) );
-        Meteor.subscribe('ParentAttribute');
-    },
     action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "paymentDetails"});
     }
 });
 FlowRouter.route('/saman', {
     subscriptions: function(){
-        Meteor.subscribe('Carts', getSessionUserID());
         Meteor.call('Meteoris.Order.completedOrder', Meteor.userId());
     },
     action: function( params ) {
@@ -114,7 +109,6 @@ FlowRouter.route('/details/:title', {
         //Meteor.Loader.loadJs("http://localhost:3000/js/jquery-1.8.3.min.js");
         Meteor.Loader.loadJs("/js/jquery.elevateZoom-3.0.8.min.js");
         TAPi18n.subscribe('Categories');
-        Meteor.subscribe('Carts', getSessionUserID());
     },
     action: function() {
         BlazeLayout.render('mainLayout', {content: "detail"});

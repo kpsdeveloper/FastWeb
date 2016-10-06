@@ -112,6 +112,71 @@ Meteoris.OrdersController = Meteoris.Controller.extend({
 			
 		}
 	},
+	editAddress: function(e){
+		var fullname = e.target.fullName.value;
+		var email = e.target.email.value;
+		var mphone = e.target.mphone.value;
+		var hphone = e.target.hphone.value;
+		var address1 = e.target.address1.value;
+		var address2 = e.target.address2.value;
+		var province = e.target.province.value;
+		var city = e.target.city.value;
+		var postal = e.target.postal.value;
+		
+		if( $('#isShippingDefault').prop('checked') )
+			var isShippingDefault = true;
+		else
+			var isShippingDefault = false;
+		
+		var msg = '';
+		if( fullname == "" || email == "" || emailValidate( email ) == false || mphone == "" || phonenoValidate(mphone) == false || address1 == "" || province == "" || city == "" || postal==""){
+			if( fullname == "")
+				msg += 'Full name is require.';
+			else if( email == "")
+				msg += 'Email is require.';
+			else if( emailValidate( email ) == false )
+				msg += 'Email is invalid.';
+			else if( mphone == "")
+				msg += 'Mobile number is require.';
+			else if( phonenoValidate(mphone) == false )
+				msg += 'Mobile number is invalide.';
+			else if( address1 == "")
+				msg += 'Address is require.';
+			else if( province == "")
+				msg += 'Province is require.';
+			else if( city == "")
+				msg += 'City is require.';
+			else if( postal == "")
+				msg += 'Postal is require.';
+
+			Meteoris.Flash.set("danger", msg);
+		}else{
+			var obj = {
+				"province" : province,
+                "email" : email,
+                "fullName" : fullname,
+                "address1" : address1,
+                "address2" : address2,
+                "postal" : postal,
+                "province" : city,
+                "mobilephone" : mphone,
+                "homephone" : hphone,
+                "isShippingDefault" : isShippingDefault,
+                "userId" : Meteor.userId()
+			}
+			var addressId = FlowRouter.getParam("id");
+			Meteor.call('Meteoris.Order.editAddress', obj, addressId, function(err, data){
+				if(!err){
+					Meteoris.Flash.set("success", "Address has been updated.");
+					FlowRouter.go('/chooseAddress');
+				}
+			})
+			
+		}
+	},
+	getAddressById: function( addressId ){
+		return Meteoris.Accounts.findOne({_id:addressId});
+	},
 	chooseaddressBook: function(e){
 		var shippingAddress = e.target.shippingAddress.value;
 		var shipping_method = e.target.shippingmethod.value;

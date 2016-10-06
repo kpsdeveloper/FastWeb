@@ -16,6 +16,12 @@ Meteor.methods({
 
 		Meteoris.Carts.update({userId:obj.userId},{$set:databuying});
 	},
+	'Meteoris.Order.editAddress': function( obj, addressId){
+		if( obj.isShippingDefault == true)
+			Meteoris.Accounts.update({userId:obj.userId},{$set:{isShippingDefault:false}}, { multi: true});
+
+		Meteoris.Accounts.update({_id:addressId},{$set:obj});
+	},
 	'Meteoris.Order.chooseAddress': function( userId, addressId, shipping_method, deliverytime){
 
 		Meteoris.Accounts.update({userId:userId},{$set:{isShippingDefault:false}},{ multi: true});
@@ -37,7 +43,11 @@ Meteor.methods({
 	'Meteoris.Order.completedOrder': function(paymentmethod, userId, items){
 		addPaymentMethod( paymentmethod, userId);
 		completedOrder( userId, items );
-	}
+	},
+	'Meteoris.Orders.UpdateOrderUserID':function(userID, sessionID){
+		Meteoris.Carts.remove({userId:userID});
+    	Meteoris.Carts.update({ userId: sessionID }, { $set: {userId:userID} });
+    }
 });
 addPaymentMethod = function(paymentmethod, userId){
 	var databuying = {};
