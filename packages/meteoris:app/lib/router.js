@@ -113,3 +113,4 @@ FlowRouter.route('/changepassword', {
         BlazeLayout.render('mainLayout', {content: "meteoris_changepassword"});
     },   
 });
+
