@@ -43,7 +43,7 @@ Template.mainLayout.events({
 	},
     'click #addToCart': function(e, tpl){
         e.preventDefault();
-        ordercl.addToCart(tpl);
+        ordercl.addToCart(e, tpl);
         
     },
     'click .delete': function(e){
@@ -160,16 +160,17 @@ Template.registerHelper('getNumPage', function(  ) {
 });
 Template.registerHelper('getCart', function() {
     var userId = getSessionUserID();
-    var cart = '';
     var cart = Meteoris.Carts.findOne({userId:userId});
     if( cart ){
         cart.items = cart.items.map( function(data, index){
             data.index = index +1;
             return data;
         })
-        return {hasCart:true, cart:cart};
+        var obj = {hasCart:true, cart:cart};
     }else
-        return {hasCart:true}
+         var obj = {hasCart:false}
+    console.log(obj);
+    return obj;
 });
 Template.registerHelper('getProductInfo', function(id_product) {
     var data = Meteoris.Products.findOne({_id:id_product});
@@ -493,4 +494,66 @@ window.phonenoValidate = function(phoneno) {
             return true;
         } else return false;
     }
+}
+window.isEmptyCart = function(router){
+    router.subsReady("myCart", function() {
+        var cart = Meteoris.Carts.findOne({userId:getSessionUserID()});
+        if( !cart )
+            FlowRouter.go('/checkout');
+    });
+}
+window.getOrderItemsByID = function( userId ){
+    var myorder = Meteoris.Carts.findOne({userId:userId});
+    if( myorder ){
+        var items = myorder.items;
+        var myitems = [];
+        if (items.length > 0) {
+            for (i = 0; i < items.length; i++) {
+                var myproduct = Meteoris.Products.findOne({ _id: items[i].id_product });
+                var myattr = Meteoris.Attributes.findOne({ _id: items[i].attribute });
+                var src = '';
+                var absoluteurl = Meteor.absoluteUrl();
+                var baseurl = (absoluteurl == 'http://localhost:3000/') ? 'http://54.71.1.92/upload/' : absoluteurl + 'uploads/';
+                var myattrValue = '';
+                var parentName = '';
+                var price = 0;
+                if ( myattr && myattr.hasOwnProperty('productImage') ) {
+                    myattrValue = myattr.value;
+                    price = myattr.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    var parentvalu = getParentAttrByID(myattr.parent);
+                    var parentName = (parentvalu) ? parentvalu.name : '';
+                    var myimage = getImgCDNv2(myattr.productImage, 'true');
+                    if (myimage) 
+                        src = myimage; //absoluteurl+'uploads/'+myimage;
+                    else 
+                        src = myattr.productImage;
+                
+                } else {
+                    price = myproduct.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    var myproductimg = getImgCDNv2(myproduct.image[0], 'true');
+                    if (myproductimg) {
+                        src = myproductimg;
+                    } else {
+                        src = myproduct.image[0];
+                    }
+                }
+                var obj = {
+                    "img": src,
+                    "qty": items[i].quantity,
+                    "name": myproduct.title,
+                    "attr": myattrValue,
+                    "parentattr": parentName,
+                    "price": price,
+                    "subtotal": items[i].subtotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                myitems.push(obj);
+            }
+            var total = myorder.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+         
+            return { total: total, items: myitems };
+        } else return;
+    }
+}
+window.getParentAttrByID = function(parentId) {
+    return Meteoris.ParentAttributes.findOne({ _id: parentId });
 }

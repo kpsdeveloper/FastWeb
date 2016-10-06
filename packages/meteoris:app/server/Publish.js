@@ -52,21 +52,32 @@ Meteor.publish('Carts', function( userId ) {
             id_product.push(item.id_product);
         })
         var product = Meteoris.Products.find({_id:{$in:id_product}});
-        var imgId = product.map(function(n) { 
+        var attrId = product.map(function(p) { return p.oldId });
+
+        var proimgId = product.map(function(n) { 
             if (n.image instanceof Array)
                 return n.image[0];
             else
                 return n.image;
         });
+        var dataattr = Meteoris.Attributes.find({product: {$in: attrId}});
+        var imgattrId = dataattr.map(function(p) { return p.productImage });
+        var imgId = proimgId.concat(imgattrId);
         var image = Meteoris.Images.find({_id: {$in: imgId}})
         console.log('cart:', data.count());
         console.log('product:', product.count());
+        console.log('attribute:', dataattr.count());
         console.log('image:', image.count());
 
-        return [data, image, product];
+        return [data, image, product, dataattr];
     }
     else return [];
     
+});
+
+Meteor.publish('Orders', function(userId) {
+    var data = Meteoris.Carts.find({userId:userId});
+    return data;
 });
 TAPi18n.publish('Categories', function() {
     var data = Meteoris.Categories.find({});
@@ -80,6 +91,9 @@ Meteor.publish('Cities', function( provinceId ) {
 });
 Meteor.publish('Accounts', function( userId ) {
     return Meteoris.Accounts.find({userId: userId});
+});
+Meteor.publish('ParentAttribute', function( ) {
+    return Meteoris.ParentAttributes.find({});
 });
 
 Meteor.publish('searchproduct', function(keyword, groupid) {

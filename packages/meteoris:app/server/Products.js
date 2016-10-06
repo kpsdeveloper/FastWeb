@@ -1,6 +1,10 @@
 /* create default setting collection */
 Meteor.startup(function() {
     //Kadira.connect('D4a9doAABnffBDdkK', '760b6ada-3f01-47d6-9e84-8e9b69a15aab');
+    return Mandrill.config({
+      username: "chroeng",
+      key: "axr2dyh_xL7Kt0uexa5KQQ"
+    });
 })
 
 

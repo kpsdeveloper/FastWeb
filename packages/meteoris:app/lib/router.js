@@ -58,7 +58,7 @@ FlowRouter.route('/checkout', {
 });
 FlowRouter.route('/chooseAddress', {
     subscriptions: function(){
-        Meteor.subscribe('Carts', getSessionUserID());
+        this.register('myCart', Meteor.subscribe('Carts', getSessionUserID()) );
         Meteor.subscribe('Accounts', Meteor.userId());
     },
     action: function( params ) {
@@ -67,8 +67,9 @@ FlowRouter.route('/chooseAddress', {
 });
 FlowRouter.route('/addnewAddress', {
     subscriptions: function(){
-        Meteor.subscribe('Carts', getSessionUserID());
+        this.register('myCart', Meteor.subscribe('Carts', getSessionUserID()) );
         Meteor.subscribe('Accounts', Meteor.userId());
+
     },
     action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "addressDetails"});
@@ -76,7 +77,7 @@ FlowRouter.route('/addnewAddress', {
 });
 FlowRouter.route('/orderReview', {
     subscriptions: function(){
-        Meteor.subscribe('Carts', getSessionUserID());
+        this.register('myCart', Meteor.subscribe('Carts', getSessionUserID()) );
     },
     action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "orderReview"});
@@ -84,10 +85,28 @@ FlowRouter.route('/orderReview', {
 });
 FlowRouter.route('/payment', {
     subscriptions: function(){
-        Meteor.subscribe('Carts', getSessionUserID());
+        this.register('myCart', Meteor.subscribe('Carts', getSessionUserID()) );
+        Meteor.subscribe('ParentAttribute');
     },
     action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "paymentDetails"});
+    }
+});
+FlowRouter.route('/saman', {
+    subscriptions: function(){
+        Meteor.subscribe('Carts', getSessionUserID());
+        Meteor.call('Meteoris.Order.completedOrder', Meteor.userId());
+    },
+    action: function( params ) {
+        BlazeLayout.render('mainLayout', {content: "completedOrder"});
+    }
+});
+FlowRouter.route('/ordersuccess', {
+    subscriptions: function(){
+        Meteor.subscribe('Orders', getSessionUserID());
+    },
+    action: function( params ) {
+        BlazeLayout.render('mainLayout', {content: "completedOrder"});
     }
 });
 FlowRouter.route('/details/:title', {

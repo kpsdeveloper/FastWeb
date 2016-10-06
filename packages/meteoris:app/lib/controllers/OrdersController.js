@@ -1,7 +1,7 @@
 Namespace('Meteoris.OrdersController');
 
 Meteoris.OrdersController = Meteoris.Controller.extend({
-	addToCart: function(tpl){
+	addToCart: function(e, tpl){
 		var title = unslugTitle(FlowRouter.getParam("title"));  
         var product = Meteoris.Products.findOne({title:title});
         var id_product = ( product )? product._id:$(e.currentTarget).parent().attr('id');
@@ -161,7 +161,7 @@ Meteoris.OrdersController = Meteoris.Controller.extend({
     		}
     	})
 	},
-	completeOrder: function(){
+	completeOrder: function(e){
 		var paymentnum = Session.get('PAYMENTMETHOD');
     	var paymentoption = [ {num:1,title:'Online Payment'},{ num:2, title:"From Cart to Cart"}, { num:3, title:"Pay Cash in Place"}];
     	var currentPaymentMethod = [];
@@ -173,10 +173,11 @@ Meteoris.OrdersController = Meteoris.Controller.extend({
    
     	$(e.currentTarget).hide();
     	$('.btn-loading').show();
-    
-    	Meteor.call('Meteoris.Order.addPaymentMethod', currentPaymentMethod, Meteor.userId(), function(err, data){
+    	var items = getOrderItemsByID( Meteor.userId() );
+    	console.log( items );
+    	Meteor.call('Meteoris.Order.completedOrder', currentPaymentMethod, Meteor.userId(), items, function(err, data){
     		if(!err){
-    			Router.go('/completeorder');
+    			FlowRouter.go('/ordersuccess');
     		}
     	})
     	

@@ -1,4 +1,20 @@
 var ctrl = new Meteoris.OrdersController();
+Template.paymentDetails.onCreated(function() {
+	var router = FlowRouter;
+	isEmptyCart( router );
+})
+Template.addressDetails.onCreated(function() {
+	var router = FlowRouter;
+	isEmptyCart( router );
+})
+Template.chooseAddress.onCreated(function() {
+	var router = FlowRouter;
+	isEmptyCart( router );
+})
+Template.orderReview.onCreated(function() {
+	var router = FlowRouter;
+	isEmptyCart( router );
+})
 Template.shippingMethod.helpers({
 	shippingMethods: function(){
 		if (TAPi18n.getLanguage() == 'fa') 

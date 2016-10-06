@@ -36,6 +36,7 @@ Package.onUse(function(api) {
         'tap:i18n-db@0.4.0',
         'mrt:fs@0.1.5',
         'cfs:filesystem@0.0.0',
+        'wylio:mandrill@1.0.1',
         //'kadira:debug@3.2.2',
         //'kadira:runtime-dev@0.0.1',
         //'meteorhacks:kadira@2.23.4',
@@ -85,6 +86,7 @@ Package.onUse(function(api) {
         'client/views/orders/shippingMethod.html',
         'client/views/orders/orderReview.html',
         'client/views/orders/paymentDetails.html',
+         'client/views/orders/completedOrder.html',
         'client/views/search/searchproduct.html',
         
         'client/apps/cart.js',
