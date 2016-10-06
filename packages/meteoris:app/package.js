@@ -95,6 +95,7 @@ Package.onUse(function(api) {
         'client/apps/Products.js',
         'client/apps/Orders.js',
         'client/apps/helper.js',
+        'client/apps/menu.js',
 
     ], 'client');
     api.export([
