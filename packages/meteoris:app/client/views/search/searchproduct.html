@@ -110,7 +110,7 @@
         <div style="min-height:100px; padding:25px;" class="col-md-8 col-md-offset-4">
             <form role="form" class="form-horizontal">
                 <div class="form-group ">
-                <label class="col-sm-3 text-right" for="selectSort">{{_"Sort By"}}:</label>
+                <label class="col-sm-3 text-right" for="selectSort">{{_"Sort Bys"}}:</label>
                 <div class="col-sm-3">
                   <select class="form-control myinput" id="selectSort">
                     <option value="title">{{_"Title"}}</option>
@@ -140,25 +140,14 @@
             });
         })
         </script>
-
-            <!-- <div class="hold_result">
-                <h1>{{_"Products"}}</h1><br>
-                <p>{{nbproducts}}/{{dataCount}} {{_"Products result"}}</p>
-            </div> -->
             <div class="pro_re">
-                {{#if statusproduct}}
+                
                 <div class="all-product" style="">
-                    <ul class="list-inline">
-                        {{#each product}}
-                        {{{oneProductv2 this showquickview "tester" "small"}}}
-                        {{/each}}
-                    </ul>
+                    
                 </div>
-                {{else}}
-                <h3 class="text-center">{{_"No Product result"}}</h3>
-                {{/if}}
+
             </div>
-            
+            {{#with searchResult}}{{/with}}
         </div>      
     </div>
     

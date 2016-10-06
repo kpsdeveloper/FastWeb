@@ -19,7 +19,8 @@ FlowRouter.route('/searchproduct/:slug', {
         var groupId = $('.search-option .active a').attr('data-group');
         console.log('search:', keyword);
         console.log('group:', groupId);
-        Meteor.subscribe('searchproduct', keyword, groupId);
+        if( keyword )
+            this.register('myProduct', Meteor.subscribe('searchproduct', keyword, groupId));
     },
     action: function() {
         BlazeLayout.render('mainLayout', {content: "searchproduct"});
