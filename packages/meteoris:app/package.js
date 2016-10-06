@@ -52,6 +52,7 @@ Package.onUse(function(api) {
         'lib/collections/Images.js',
         'lib/collections/Carts.js',
         'lib/collections/Orders.js',
+        'lib/collections/Contents.js',
         'lib/router.js',
     ], ['client', 'server']);
 

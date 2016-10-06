@@ -102,16 +102,60 @@ Meteor.publish('searchproduct', function(keyword, groupid) {
             return [dataimg, data, dataattr];
         } else if (groupid == 2) {
             var webzine = Meteoris.ContentType.findOne({ type: "Webzine" });
-            return Meteoris.Contents.find({ $or: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }, { content: { $regex: new RegExp(keyword, "i") } }], typeid: webzine._id });
+            var data = Meteoris.Contents.find({ title: { $regex: new RegExp(keyword, "i") }, category: { $ne: 'tester' } ,typeid: webzine._id });
+            var imgId = data.map(function(n) { 
+                if (n.image instanceof Array)
+                    return n.image[0];
+                else
+                    return n.image;
+            });
+            var dataimg = Meteoris.Images.find({_id: {$in: imgId}});
+            console.log('webzine:', data.count());
+            console.log('Image:', dataimg.count());
+            return [dataimg, data];
         } else if (groupid == 3) {
             var tuto = Meteoris.ContentType.findOne({ type: "Tuto" });
-            return Meteoris.Contents.find({ $or: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }, { content: { $regex: new RegExp(keyword, "i") } }], typeid: tuto._id });
+            var data = Meteoris.Contents.find({ title: { $regex: new RegExp(keyword, "i") }, category: { $ne: 'tester' } ,typeid:tuto._id});
+            var imgId = data.map(function(n) { 
+                if (n.image instanceof Array)
+                    return n.image[0];
+                else
+                    return n.image;
+            });
+            var dataimg = Meteoris.Images.find({_id: {$in: imgId}});
+            console.log('Tuto:', data.count());
+            console.log('Image:', dataimg.count());
+            return [dataimg, data];
         }else{
             var list = Meteoris.Products.find({ $or: [{ $and: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }, { $and: [{ description: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }] }, {fields:{_id:1, title:1,price:1,category:1, oldId:1,image:1}});
-            var content = Meteoris.Contents.find({ $or: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }, { content: { $regex: new RegExp(keyword, "i") } }]});
-            return [list, content];
+            var content = Meteoris.Contents.find({ title: { $regex: new RegExp(keyword, "i") }, category: { $ne: 'tester' }});
+            if( list.count() > 0 || content.count() > 0){
+                var attrId = list.map(function(p) { return p.oldId });
+                var imgIdPro = list.map(function(n) { 
+                    if (n.image instanceof Array)
+                        return n.image[0];
+                    else
+                        return n.image;
+                });
+                var imgIdCont = content.map(function(n) { 
+                    if (n.image instanceof Array)
+                        return n.image[0];
+                    else
+                        return n.image;
+                });
+                var imgId = imgIdPro.concat( imgIdCont );
+        
+                var dataattr = Meteoris.Attributes.find({product: {$in: attrId}});
+                var dataimg = Meteoris.Images.find({_id: {$in: imgId}});
+                console.log('product:', list.count());
+                console.log('content:', content.count());
+                console.log('attribute::', dataattr.count());
+                console.log('Image:', dataimg.count());
+                return [dataimg, list, content, dataattr];
+
+            }else return []
         }
-        console.log('list:', list.count());
+       
     } else return this.ready();
 });
 publishAttributeProducts = function(allpro) {
