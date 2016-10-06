@@ -52,6 +52,43 @@ Template.detail.helpers({
     	return ctrl.getRecommendProducts( recommended );
     }
 });
+Template.searchproduct.helpers({
+    searchResult:function(){
+        //var keyword = unslugTitle(FlowRouter.current().params.slug);
+       FlowRouter.subsReady('myProduct', function(){
+            var keyword = Session.get('keyward');
+            console.log('key:', keyword )
+            var groupid = 1;
+            if(keyword !=""){
+                if (groupid == 1) {
+                    var data = Meteoris.Products.find({ $or: [{ $and: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }, { $and: [{ description: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }] },{fields:{_id:1, title:1,price:1,category:1, oldId:1,image:1}});
+                    /*var attrId = data.map(function(p) { return p.oldId });
+                    var imgId = data.map(function(n) { 
+                        if (n.image instanceof Array)
+                            return n.image[0];
+                        else
+                            return n.image;
+                    });
+                    var dataattr = Meteoris.Attributes.find({product: {$in: attrId}});
+                    var dataimg = Meteoris.Images.find({_id: {$in: imgId}});
+                    console.log('products:', data.count());
+                    console.log('attributes::', dataattr.count());
+                    console.log('Images:', dataimg.count());
+                    //return [dataimg, data, dataattr];*/
+                }
+                var html = '';
+                if( data.count() > 0 ){
+                    data.forEach( function(da, index){
+                        
+                        html += listProductHtml(da, 'true');
+                    })
+                }
+                console.log(html)
+                return {html:html};
+            }
+        })
+    }
+});
 Template.detail.events({
 	'click .attribute': function(e){
 		e.preventDefault();
