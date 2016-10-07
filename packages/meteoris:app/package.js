@@ -40,6 +40,7 @@ Package.onUse(function(api) {
 
     api.addFiles([
         'lib/controllers/AppController.js',
+        'lib/controllers/BannersController.js',
         'lib/controllers/ProductsController.js',
         'lib/collections/ThemeAdmin.js',
         'lib/collections/Products.js',
@@ -51,6 +52,7 @@ Package.onUse(function(api) {
         'server/ThemeAdminServer.js',
         'server/profile.js',
         'server/Products.js',
+        'server/Banner.js',
         'server/Publish.js'
     ], 'server');
 
@@ -64,10 +66,15 @@ Package.onUse(function(api) {
         'client/views/sidebar.html',
         'client/views/admin/products/index.html',
         'client/views/admin/products/insert.html',
+        'client/views/detail.html',
         'client/views/category.html',
         'client/views/profile/profile.html',
         'client/views/profile/changepassword.html',
         'client/apps/profile.js',
+        'client/views/admin/banner/addbanner.html',
+        'client/views/admin/banner/allbanner.html',
+        'client/views/admin/banner/editbanner.html',
+        'client/apps/banner.js',
         /*'client/views/login.html',
         'client/views/login.js',
         'client/views/register.html',

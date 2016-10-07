@@ -36,6 +36,13 @@ FlowRouter.route('/category/:name/:page', {
     },   
 });
 
+FlowRouter.route('/detail/:title', {
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "detail"});
+    },   
+});
+
+/*Start Profile*/
 FlowRouter.route('/profile', {
     action: function() {
         BlazeLayout.render('mainLayout', {content: "meteoris_profile"});
@@ -53,3 +60,37 @@ FlowRouter.route('/changepassword', {
         checkIsLogin();
     }]
 });
+/*EOF profile*/
+
+/*Start banner admin*/
+var groupBannerRoutes = FlowRouter.group({
+    prefix: '/banner',
+    name: 'banner',
+    //triggersEnter: [authenticating]
+});
+
+groupBannerRoutes.route('/add', {
+    subscriptions:function(){
+        Meteor.subscribe("allproducts");
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "meteoris_addbanner"});
+    },
+});
+groupBannerRoutes.route('/all', {
+    subscriptions:function(){
+        Meteor.subscribe("allBanner");
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "meteoris_allbanner"});
+    },
+});
+groupBannerRoutes.route('/edit/:id', {
+    subscriptions:function(params){
+        Meteor.subscribe("editBanner",params.id);
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "meteoris_editbanner"});
+    },
+});
+/*End banner admin*/

@@ -10,6 +10,15 @@ Meteor.publish('Products', function(categoryId, page , limit) {
     return [data, dataattr];
     
 });
+Meteor.publish('detailTitle', function(title) {
+    var data = Meteoris.Products.find({"title":title});
+    var oneCategory = data.fetch()[0];
+    var categoryId = oneCategory.category;
+    console.log("CatID:",categoryId);
+    var dataCat = Meteoris.Categories.find({_id:'DfwSwoSezQetwuGYy'});
+    console.log("dataCat:",dataCat);
+    return data;
+});
 TAPi18n.publish('Categories', function() {
     var data = Meteoris.Categories.find({});
     return data;
@@ -30,3 +39,24 @@ publishAttributeProducts = function(allpro) {
     var allattr = Meteoris.Attributes.find({ _id: { $in: attrlist } });
     return allattr;
 }
+Meteor.publish('allproducts', function(limit) {
+
+    if (limit != -1) {
+        return Meteoris.Products.find({}, { limit: limit });
+    } else {
+        return Meteoris.Products.find({});
+    }
+});
+Meteor.publish('allBanner', function(limit) {
+
+    if (limit != -1) {
+        return Banners.find({}, { limit: limit });
+    } else {
+        return Banners.find({});
+    }
+});
+Meteor.publish('editBanner', function(id) {
+    var banner=Banners.find({_id:id});
+    
+    return banner;
+});
