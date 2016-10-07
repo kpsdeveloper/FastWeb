@@ -13,16 +13,17 @@ Package.onUse(function(api) {
     api.use([
         'templating',
         'meteoris:flash@0.0.0',
-        'mfactory:admin-lte@0.0.0',
+        //'mfactory:admin-lte@0.0.0',
         'session@1.1.1',
+        'u2622:persistent-session@0.4.4',
         //'fortawesome:fontawesome@4.0.0',
     ], 'client');
 
     api.use([
         'meteoris:core@0.0.0',
         'meteoris:role@0.0.0',
-//        'deps',
-//        'session',
+        //'deps',
+        //'session',
         'mongo',
         'kadira:flow-router@2.0.0',
         'kadira:blaze-layout@2.0.0',
@@ -33,18 +34,27 @@ Package.onUse(function(api) {
         'cfs:standard-packages@0.0.0',
         'tap:i18n@1.2.1',
         'tap:i18n-db@0.4.0',
+        'mrt:fs@0.1.5',
+        'cfs:filesystem@0.0.0',
+        'wylio:mandrill@1.0.1',
         //'kadira:debug@3.2.2',
         //'kadira:runtime-dev@0.0.1',
-        //'meteorhacks:kadira@2.23.4'
+        //'meteorhacks:kadira@2.23.4',
+        //'meteorhacks:kadira-profiler@1.2.1'
     ], ['client', 'server']);
 
     api.addFiles([
         'lib/controllers/AppController.js',
         'lib/controllers/BannersController.js',
         'lib/controllers/ProductsController.js',
+        'lib/controllers/OrdersController.js',
         'lib/collections/ThemeAdmin.js',
         'lib/collections/Products.js',
         'lib/collections/Categories.js',
+        'lib/collections/Images.js',
+        'lib/collections/Carts.js',
+        'lib/collections/Orders.js',
+        'lib/collections/Contents.js',
         'lib/router.js',
     ], ['client', 'server']);
 
@@ -53,6 +63,8 @@ Package.onUse(function(api) {
         'server/profile.js',
         'server/Products.js',
         'server/Banner.js',
+        'server/Carts.js',
+        'server/Orders.js',
         'server/Publish.js'
     ], 'server');
 
@@ -66,10 +78,20 @@ Package.onUse(function(api) {
         'client/views/sidebar.html',
         'client/views/admin/products/index.html',
         'client/views/admin/products/insert.html',
-        'client/views/detail.html',
-        'client/views/category.html',
+        'client/views/products/detail.html',
+        'client/views/products/category.html',
         'client/views/profile/profile.html',
         'client/views/profile/changepassword.html',
+        'client/views/cart/cart.html',
+        'client/views/orders/chooseAddress.html',
+        'client/views/orders/addressDetails.html',
+        'client/views/orders/shippingMethod.html',
+        'client/views/orders/orderReview.html',
+        'client/views/orders/paymentDetails.html',
+        'client/views/orders/completedOrder.html',
+        'client/views/orders/editAddress.html',
+        'client/views/search/searchproduct.html',
+        'client/apps/cart.js',
         'client/apps/profile.js',
         'client/views/admin/banner/addbanner.html',
         'client/views/admin/banner/allbanner.html',
@@ -90,8 +112,9 @@ Package.onUse(function(api) {
         'client/views/setting-menu.html',
         'client/views/setting-menu.js',*/
         'client/apps/Products.js',
+        'client/apps/Orders.js',
         'client/apps/helper.js',
-        'client/assets/main.css',
+        'client/apps/menu.js',
 
     ], 'client');
     api.export([

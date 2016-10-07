@@ -7,14 +7,9 @@
                   	<div class="form-group">
                         <label for="logoLarge" class="control-label">Fragrance</label>
                     </div>
-                    {{#each getListProducts}}
-
-                        <div class="col-md-3 col-xs-12">
-                            <img src="/images/images-2dwrLTJiwmTYsYffR-Mascara-Volume-Effet-Faux-Cils-Shocking-Small.jpg" class="img-responsive">
-                            <h3 class="title">{{title}}</h3>
-                            <p class="price">{{price}}</p>
-                        </div>
-                    {{/each}}
+                    {{#with getCategoryIdChildren}}
+                        {{{getListProductsHelper list "true"}}}
+                    {{/with}}
                     <div class="col-md-12 col-xs-12">
                         <ul class="pagination">
                             {{#with getCurrentCategorySlug}}
