@@ -90,15 +90,41 @@ Template.registerHelper('getListProductsHelper', function( categoryId, thumb) {
 	return html;
 	
 });
+Template.registerHelper('getOneProductHelper', function(data, thumb ){
+    return listProductHtml(data, thumb);
+})
+
 window.listProductHtml = function( data , thumb){
 	var html = '';
-	var src = getImgForProductCDNv2( data._id , thumb)
+	var src = getImgForProductCDNv2( data._id , thumb);
+    var attr = Meteoris.Attributes.find({product:data.oldId});
+    var price = (attr.count() > 0)? attr.fetch()[0].price:data.price;
+
 	html += '<div class="col-md-3 col-xs-12" id="'+data._id+'">';
 	html += 	'<a href="/details/'+slugTitle(data.title)+'"><img src="'+src+'" style="width:201px;height:201px"></a>';
 	html += 	'<a href="/details/'+slugTitle(data.title)+'"><h3 class="title">'+data.title+'</h3></a>';
-    html +=     '<p>ریال  <span class="price">'+data.price+'</span></p>';
+    html +=     '<p>ریال  <span class="price">'+price+'</span></p>';
     html +=     '<label class="quantity" for="select">Quantity</label><select id="qty'+data._id+'" name="select" class="quantity" size="1"><option value="1">1</option></select>';
     html +=     '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>';
+    html += '</div>';
+    return html;
+}
+Template.registerHelper('getOneContentHelper', function(data){
+    return listContentHtml(data);
+})
+window.listContentHtml = function( data ){
+    var html = '';
+    var thumb = '';
+    if( data.hasOwnProperty('url') ){
+        thumb = '<video src="'+data.url+'" />';
+    }else{
+        var src = getImgCDNv2( data._id , 'true');
+        thumb = '<img src="'+src+'" style="width:201px;height:201px">';
+        
+    }
+    html += '<div class="col-md-3 col-xs-12" id="'+data._id+'">';
+    html +=     '<a href="/content/'+slugTitle(data.title)+'">'+thumb+'</a>';
+    html +=     '<a href="/content/'+slugTitle(data.title)+'"><h3 class="title">'+data.title+'</h3></a>';
     html += '</div>';
     return html;
 }

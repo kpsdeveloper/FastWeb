@@ -13,6 +13,10 @@ Meteor.methods({
         var total = Meteoris.Products.find({category:{$in:categoryId}},{fields:{_id:1}});
         return total.count();
     },
+    "Meteoris.Count.ProductsSearch": function( keyword ) {
+        var total = Meteoris.Products.find({ $or: [{ $and: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }, { $and: [{ description: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }] },{fields:{_id:1}});
+        return total.count();
+    },
     "Meteoris.Products.addReview": function( productId, obj){
         var product = Meteoris.Products.findOne({_id:productId});
         if( product ){

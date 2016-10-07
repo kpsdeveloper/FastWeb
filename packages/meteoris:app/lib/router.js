@@ -14,13 +14,7 @@ function authenticating() {
 }
 FlowRouter.route('/searchproduct/:slug', {
     subscriptions: function(){
-        TAPi18n.subscribe('Categories');
-        var keyword = Session.get('keyward');
-        var groupId = $('.search-option .active a').attr('data-group');
-        console.log('search:', keyword);
-        console.log('group:', groupId);
-        if( keyword )
-            this.register('myProduct', Meteor.subscribe('searchproduct', keyword, groupId));
+        
     },
     action: function() {
         BlazeLayout.render('mainLayout', {content: "searchproduct"});
