@@ -100,8 +100,7 @@ Meteor.publish('ParentAttribute', function( ) {
 });
 
 Meteor.publish('searchproduct', function(keyword, groupid, limit) {
-    console.log('limit:', limit);
-    console.log('group:', groupid);
+
     if (keyword != "") {
         if (groupid == 1) {
             var data = Meteoris.Products.find({ $or: [{ $and: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }, { $and: [{ description: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }] },{fields:{_id:1, title:1,price:1,category:1, oldId:1,image:1,description:1}, limit:limit});

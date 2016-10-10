@@ -2,6 +2,7 @@ var ctrl = new Meteoris.ProductsController();
 var ordercl = new Meteoris.OrdersController();
 Session.set('SUBSCRIBELISTPRO', '');
 Session.set('TOTALPRODUCT', 0);
+var limit = 16;
 Template.mainLayout.events({
 	'click .unlike': function(e) {
 		e.preventDefault();
@@ -116,10 +117,10 @@ window.listContentHtml = function( data ){
     var html = '';
     var thumb = '';
     if( data.hasOwnProperty('url') ){
-        thumb = '<video src="'+data.url+'" />';
+        thumb = '<video  class="img-responsive" src="/videos/'+data.url+'" />';
     }else{
         var src = getImgCDNv2( data._id , 'true');
-        thumb = '<img src="'+src+'" style="width:201px;height:201px">';
+        thumb = '<img  class="img-responsive" src="'+src+'" style="width:201px;height:201px">';
         
     }
     html += '<div class="col-md-3 col-xs-12" id="'+data._id+'">';
@@ -147,15 +148,23 @@ Template.registerHelper('getCurrentCategorySlug', function() {
 	var prev = parseInt(page) - 1;
 	var next = parseInt(page) + 1;
 	var prevStatus = (page<=1)? false:true;
-	var limit = 16;
-	var total = Session.get('TOTALPRODUCT') / limit;
-	var numpage = Math.ceil(total);
-	var nextStatus = (page>=numpage)? false:true;
+    var categoryId = getCategoryIdChildren( name );
+
+	
+
+	/*var total = Math.ceil(Session.get('TOTALPRODUCT') / limit);
+    console.log('total:', total);
+	var nextStatus = (page>=total)? false:true;
 	return {name:name, prev:prev, next:next, prevstatus:prevStatus, nextstatus: nextStatus };
+    */
 });
+
+start = 1;
+end = 9;
+step = 4;
 Template.registerHelper('getNumPage', function(  ) {
 	var name = FlowRouter.current().params.name;
-	//var page = Session.get('PAGE');
+	var page = Session.get('PAGE');
     var categoryId = getCategoryIdChildren( name );
 	var limit = 16;
 	Meteor.call('Meteoris.Count.Products', categoryId, function(err, count){
@@ -166,12 +175,27 @@ Template.registerHelper('getNumPage', function(  ) {
 	var total = Session.get('TOTALPRODUCT') / limit;
 	var numpage = Math.ceil(total);
 	var totalpage = [];
+    /*
+    if(page >= start + step){
+        if((page - start) >= step){ 
+            start = start + step;
+            end = end + step; 
+        }
+    }else{
+        //if( (page - start) < step ){
+
+        }
+        //start  = page < (end - start)? start - step : start;
+        //end    = page < (end - start)? end - step : start; 
+    }
+    */
 	if( numpage > 0 ){
-		for(i=1; i <= numpage; i++){
+		for(i=start; i <= numpage; i++){
 			totalpage.push({num:i});
 		}
 	}
 	return totalpage;
+    
 	
 	/*var total = Math.ceil(Session.get('TOTALPRODUCT') / limit);
 	var per_page = 10;
@@ -582,4 +606,27 @@ window.getOrderItemsByID = function( userId ){
 }
 window.getParentAttrByID = function(parentId) {
     return Meteoris.ParentAttributes.findOne({ _id: parentId });
+}
+window.clickMyPage = function( page ){
+    //Session.set('RELOADCATEGORYPAGE', 0);
+    //Session.set('PAGE', page);
+
+    var name = FlowRouter.current().params.name;
+    var categoryId = getCategoryIdChildren( name );
+    var limit = 16;
+    console.log('page:', page);
+    console.log('categoryId:', categoryId);
+    console.log('limit:', limit);
+    Meteor.autorun(function() {
+        if( itemSub ) {
+            itemSub.stop();
+        }
+        itemSub = Meteor.subscribe('Products', categoryId, page, limit);
+    });  
+}
+window.getPaginationData = function(){
+    //var total = Math.ceil(Session.get('TOTALPRODUCT') / limit);
+    var total = Session.get('TOTALPRODUCT');
+    return { items: total, itemsOnPage: 10, hrefTextPrefix:'', cssStyle: 'light-theme' }
+
 }

@@ -4,6 +4,7 @@ var ctrl = new Meteoris.ProductsController();
 Session.set('SUBSCRIBELISTPRO', '');
 Session.set('SORTKEY','title');
 Session.set('VIEWCOUNT', 20);
+itemSub = '';
 Template.category.onCreated(function() {
 	Session.set('PAGE', FlowRouter.current().params.page);
 	Session.set('RELOADCATEGORYPAGE',1);
@@ -15,6 +16,11 @@ Template.category.onCreated(function() {
     self.autorun(function() {
         itemSub = self.subscribe('Products', categoryId, page, limit,function(){
         	Session.set('SUBSCRIBELISTPRO', 1);
+        })
+        Meteor.call('Meteoris.Count.Products', categoryId, function(err, count){
+            if(!err){
+                Session.set('TOTALPRODUCT', count);
+            }
         })
     });  
 });
@@ -78,7 +84,7 @@ Template.searchproduct.helpers({
         var count = Session.get('VIEWCOUNT');
         var groupId = $('.search-option .active a').attr('data-group');
         groupId = (groupId)? groupId:1;
-        console.log('group:', groupId);
+    
         var groupHtml = '';
         var productActive = '';
         var webzActive = '';
@@ -124,8 +130,7 @@ Template.searchproduct.helpers({
                 var data = Meteoris.Products.find({ $or: [{ $and: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }, { $and: [{ description: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }] }, {fields:{_id:1, title:1,price:1,category:1, oldId:1,image:1,description:1}, limit:count});
                 var webzine = Meteoris.Contents.find({ title: { $regex: new RegExp(keyword, "i") }, category: { $ne: 'tester' }, typeid:Meteoris.ContentType.findOne({ type: "Webzine" })._id},{limit:count});
                 var tuto = Meteoris.Contents.find({ title: { $regex: new RegExp(keyword, "i") }, category: { $ne: 'tester' }, typeid:Meteoris.ContentType.findOne({ type: "Tuto" })._id},{limit:count});
-                console.log('webzine:', webzine.count() );
-                console.log('tuto:', tuto.count() );
+            
                 groupHtml += '<li role="presentation" class="active"><a href="#product" aria-controls="home" role="tab" data-toggle="tab">'+Session.get('COUNTPRODUCTS')+' Products</a></li>';
                 groupHtml += '<li role="presentation"><a href="#webzine" aria-controls="profile" role="tab" data-toggle="tab">'+webzine.count()+' Webzine</a></li>';
                 groupHtml += '<li role="presentation"><a href="#tuto" aria-controls="messages" role="tab" data-toggle="tab">'+tuto.count()+' Tuto</a></li>';
@@ -188,7 +193,7 @@ Template.detail.events({
         $(e.currentTarget).parent().nextAll('div').children('i').removeClass('yellow-star');
     },
 })
-var itemSub;
+/*var itemSub;
 Template.category.events({
 	'click .pager': function(e){
 		//e.preventDefault();
@@ -199,7 +204,7 @@ Template.category.events({
 	    var name = FlowRouter.current().params.name;
     	var categoryId = getCategoryIdChildren( name );
 	    var limit = 16;
-	    //var page = Session.get('PAGE');
+	    
 	    Meteor.autorun(function() {
 	    	if( itemSub) {
 	    		itemSub.stop();
@@ -208,6 +213,7 @@ Template.category.events({
 	    });    
 	}
 });
+*/
 /**Seyha search function**/
 Template.app_header.events({
     'click .kesearch':function(e){

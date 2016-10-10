@@ -11,8 +11,11 @@
                         {{{getListProductsHelper list "true"}}}
                     {{/with}}
                     <div class="col-md-12 col-xs-12">
-                        <ul class="pagination">
-                            {{#with getCurrentCategorySlug}}
+                        <ul id="pagination">
+                            
+                        </ul>
+                        <!--<ul class="pagination">
+                        {{#with getCurrentCategorySlug}}
                                 {{#if prevstatus}}
                                     <li><a class="pager" href="/category/{{name}}/{{prev}}" data-page="{{prev}}">&laquo;</a></li>
                                 {{/if}}
@@ -23,8 +26,16 @@
                                     <li><a class="pager" href="/category/{{name}}/{{next}}" data-page="{{next}}">&raquo;</a></li>
                                 {{/if}}
                             {{/with}}
-                        </ul>
+                        </ul>-->
                     </div>
+                   
+                   <script type="text/javascript">
+                    $(function() {
+                       $('#pagination').pagination(getPaginationData());
+                    
+                    });
+                    </script>
+                   
 				{{/if}}
             </div>
         </div>

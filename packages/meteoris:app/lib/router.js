@@ -33,8 +33,12 @@ groupRoutes.route('/products/add', {
 });
 FlowRouter.route('/category/:name/:page', {
     subscriptions: function(){
+        //Meteor.Loader.loadJs("/js/jquery.min.js");
+        //Meteor.Loader.loadJs("/js/jquery.simplePagination.js");
         TAPi18n.subscribe('Categories');
         //Meteor.subscribe('Carts', getSessionUserID());
+        
+
     },
     action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "category"});

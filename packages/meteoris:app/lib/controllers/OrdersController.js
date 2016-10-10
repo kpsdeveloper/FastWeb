@@ -14,7 +14,7 @@ Meteoris.OrdersController = Meteoris.Controller.extend({
             var pro = Meteoris.Products.findOne({_id:id_product});
             if( pro ){
                 var attr = Meteoris.Attributes.find({product:pro.oldId}).fetch();
-                if( attribute == '')
+                if( attr.length > 0 )
                     attribute = attr[0]._id;
             }
         }
