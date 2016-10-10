@@ -2,6 +2,7 @@ var ctrl = new Meteoris.ProductsController();
 var ordercl = new Meteoris.OrdersController();
 Session.set('SUBSCRIBELISTPRO', '');
 Session.set('TOTALPRODUCT', 0);
+Session.set('QUICKVIEWPRODUCT','');
 var limit = 16;
 Template.mainLayout.events({
 	'click .unlike': function(e) {
@@ -74,7 +75,18 @@ Template.mainLayout.events({
         e.preventDefault();
         $('.search-option li').removeClass('active');
         $(e.currentTarget).addClass('active');
+    },
+    'click .btn-quickview': function(e){
+        Session.set('QUICKVIEWPRODUCT', $(e.currentTarget).parent().parent().attr('id'));
     }
+    /*
+    ,
+    'mouseover .product-grid': function(e, tmp){
+        console.log(this);
+        $('.btn-quickview').css('display','none');
+        $(e.target).find('.btn-quickview').css('display','block');
+
+    }*/
 });
 Template.registerHelper('getListProductsHelper', function( categoryId, thumb) {
 	var limit = 16;
@@ -101,15 +113,51 @@ window.listProductHtml = function( data , thumb){
     var attr = Meteoris.Attributes.find({product:data.oldId});
     var price = (attr.count() > 0)? attr.fetch()[0].price:data.price;
 
-	html += '<div class="col-md-3 col-xs-12" id="'+data._id+'">';
-	html += 	'<a href="/details/'+slugTitle(data.title)+'"><img src="'+src+'" style="width:201px;height:201px"></a>';
-	html += 	'<a href="/details/'+slugTitle(data.title)+'"><h3 class="title">'+data.title+'</h3></a>';
+	html += '<div class="col-md-3 col-xs-12 product-grid" id="'+data._id+'">';
+    html +=     '<div class="product-picture">';
+    html +=       '<a class="btn btn-success btn-quickview" href="#" data-toggle="modal" data-target="#quickView">Quick View</a>';
+	html += 	  '<a href="/details/'+slugTitle(data.title)+'"><img src="'+src+'" style="width:201px;height:201px"></a>';
+	html +=     '</div>';
+    html += 	'<a href="/details/'+slugTitle(data.title)+'"><h3 class="title">'+data.title+'</h3></a>';
     html +=     '<p>ریال  <span class="price">'+price+'</span></p>';
-    html +=     '<label class="quantity" for="select">Quantity</label><select id="qty'+data._id+'" name="select" class="quantity" size="1"><option value="1">1</option></select>';
-    html +=     '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>';
+    //html +=     '<label class="quantity" for="select">Quantity</label><select id="qty'+data._id+'" name="select" class="quantity" size="1"><option value="1">1</option></select>';
+    //html +=     '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>';
     html += '</div>';
     return html;
 }
+Template.registerHelper('quickView', function( thumb ){
+    var id_product = Session.get('QUICKVIEWPRODUCT');
+
+    if( id_product ){
+        var data = Meteoris.Products.findOne({_id:id_product});
+    
+        return quickViewProduct(data, thumb);
+    }
+})
+window.quickViewProduct = function( data , thumb){
+    var html = '';
+    var src = getImgForProductCDNv2( data._id , thumb);
+    var attr = Meteoris.Attributes.find({product:data.oldId});
+    var price = (attr.count() > 0)? attr.fetch()[0].price:data.price;
+
+    html += '<div class="col-md-6 col-xs-12">';
+    html +=     '<a href="/details/'+slugTitle(data.title)+'"><img src="'+src+'" style="width:201px;height:201px"></a>';
+    html += '</div>';
+    html += '<div class="col-md-6 col-xs-12">';
+    html +=     '<a href="/details/'+slugTitle(data.title)+'"><h3 class="title">'+data.title+'</h3></a>';
+    html +=     '<p>'+data.description+'</p>';
+    html +=     '<div class="col-md-6 col-xs-6">';
+    html +=         '<label class="quantity" for="select">Quantity</label><select id="qty'+data._id+'" name="select" class="quantity" size="1"><option value="1">1</option></select>';
+    html +=         '<p>ریال  <span class="price">'+price+'</span></p>';
+    html +=     '</div>';
+    html +=     '<div class="col-md-6 col-xs-6">';
+    html +=         '<button class="btn btn-details"><span class="pull-left"></span> MORE DETAILS</button>';
+    html +=         '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>';
+    html +=     '</div>';
+    html += '</div>';
+    return html;
+}
+
 Template.registerHelper('getOneContentHelper', function(data){
     return listContentHtml(data);
 })
@@ -608,15 +656,9 @@ window.getParentAttrByID = function(parentId) {
     return Meteoris.ParentAttributes.findOne({ _id: parentId });
 }
 window.clickMyPage = function( page ){
-    //Session.set('RELOADCATEGORYPAGE', 0);
-    //Session.set('PAGE', page);
-
     var name = FlowRouter.current().params.name;
     var categoryId = getCategoryIdChildren( name );
     var limit = 16;
-    console.log('page:', page);
-    console.log('categoryId:', categoryId);
-    console.log('limit:', limit);
     Meteor.autorun(function() {
         if( itemSub ) {
             itemSub.stop();

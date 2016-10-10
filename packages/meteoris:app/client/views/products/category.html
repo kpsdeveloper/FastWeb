@@ -32,8 +32,12 @@
                    <script type="text/javascript">
                     $(function() {
                        $('#pagination').pagination(getPaginationData());
-                    
+                       $('.product-grid').hover( function(){
+                            $('.btn-quickview').css('display','none');
+                            $(this).find('.btn-quickview').css('display','block');
+                       }) 
                     });
+
                     </script>
                    
 				{{/if}}
