@@ -45,6 +45,7 @@ Package.onUse(function(api) {
 
     api.addFiles([
         'lib/controllers/AppController.js',
+        'lib/controllers/BannersController.js',
         'lib/controllers/ProductsController.js',
         'lib/controllers/OrdersController.js',
         'lib/collections/ThemeAdmin.js',
@@ -61,6 +62,7 @@ Package.onUse(function(api) {
         'server/ThemeAdminServer.js',
         'server/profile.js',
         'server/Products.js',
+        'server/Banner.js',
         'server/Carts.js',
         'server/Orders.js',
         'server/Publish.js'
@@ -89,9 +91,26 @@ Package.onUse(function(api) {
         'client/views/orders/completedOrder.html',
         'client/views/orders/editAddress.html',
         'client/views/search/searchproduct.html',
-        
         'client/apps/cart.js',
         'client/apps/profile.js',
+        'client/views/admin/banner/addbanner.html',
+        'client/views/admin/banner/allbanner.html',
+        'client/views/admin/banner/editbanner.html',
+        'client/apps/banner.js',
+        /*'client/views/login.html',
+        'client/views/login.js',
+        'client/views/register.html',
+        'client/views/register.js',
+        'client/views/header.html',
+        'client/views/header.js',
+        'client/views/sidebar.html',
+        'client/views/control-sidebar.html',
+        'client/views/footer.html',
+        'client/views/footer.js',
+        'client/views/setting.html',
+        'client/views/setting.js',
+        'client/views/setting-menu.html',
+        'client/views/setting-menu.js',*/
         'client/apps/Products.js',
         'client/apps/Orders.js',
         'client/apps/helper.js',

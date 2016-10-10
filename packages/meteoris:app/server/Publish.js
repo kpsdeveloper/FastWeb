@@ -182,3 +182,24 @@ publishAttributeProducts = function(allpro) {
     var allattr = Meteoris.Attributes.find({ _id: { $in: attrlist } });
     return allattr;
 }
+Meteor.publish('allproducts', function(limit) {
+
+    if (limit != -1) {
+        return Meteoris.Products.find({}, { limit: limit });
+    } else {
+        return Meteoris.Products.find({});
+    }
+});
+Meteor.publish('allBanner', function(limit) {
+
+    if (limit != -1) {
+        return Banners.find({}, { limit: limit });
+    } else {
+        return Banners.find({});
+    }
+});
+Meteor.publish('editBanner', function(id) {
+    var banner=Banners.find({_id:id});
+    
+    return banner;
+});
