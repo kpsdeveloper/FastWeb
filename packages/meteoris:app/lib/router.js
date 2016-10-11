@@ -172,5 +172,13 @@ groupBannerRoutes.route('/edit/:id', {
         BlazeLayout.render('mainLayout', {content: "meteoris_editbanner"});
     },
 });
-
+groupBannerRoutes.route('/view', {
+    subscriptions:function(){
+        var pagename='webzine/favorite';
+        [Meteor.subscribe("bannerBypage",pagename),Meteor.subscribe("productInbanner",pagename)]
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "meteoris_viewbanner"});
+    },
+});
 /*End banner admin*/
