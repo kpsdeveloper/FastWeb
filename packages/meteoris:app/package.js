@@ -91,7 +91,8 @@ Package.onUse(function(api) {
         'client/views/orders/paymentDetails.html',
         'client/views/orders/completedOrder.html',
         'client/views/orders/editAddress.html',
-        'client/views/search/searchproduct.html', 
+        'client/views/search/searchproduct.html',
+        'client/views/tuto/tutonew.html', 
         'client/apps/cart.js',
         'client/apps/profile.js',
         'client/views/admin/banner/addbanner.html',
@@ -116,7 +117,7 @@ Package.onUse(function(api) {
         'client/apps/Orders.js',
         'client/apps/helper.js',
         'client/apps/menu.js',
-
+        'client/apps/tuto.js',
     ], 'client');
     api.export([
         'UserController',

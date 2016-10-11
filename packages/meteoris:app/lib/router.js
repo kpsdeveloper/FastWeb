@@ -21,7 +21,7 @@ function checkIsLogin(){
 }
 FlowRouter.route('/searchproduct/:slug', {
     subscriptions: function(){
-        
+        TAPi18n.subscribe('Categories');    
     },
     action: function() {
         BlazeLayout.render('mainLayout', {content: "searchproduct"});
@@ -174,3 +174,13 @@ groupBannerRoutes.route('/edit/:id', {
 });
 
 /*End banner admin*/
+/*Start tuto page*/
+FlowRouter.route('/tuto', {
+    subscriptions: function(){
+        TAPi18n.subscribe('Categories');
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "tutonew"});
+    }
+});
+/*End of tuto page*/
