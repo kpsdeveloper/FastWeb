@@ -13,5 +13,12 @@ Template.app_header.helpers({
             return document;
         });
         return children;
-    }
+    },
+    haveBaby: function(id) {
+        var babies = Meteoris.Categories.find({ parent: id }).count();
+        if (babies == 0)
+            return false;
+        else
+            return true;
+    },
 });
