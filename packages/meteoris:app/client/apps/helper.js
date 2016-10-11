@@ -79,14 +79,15 @@ Template.mainLayout.events({
     'click .btn-quickview': function(e){
         Session.set('QUICKVIEWPRODUCT', $(e.currentTarget).parent().parent().attr('id'));
     }
-    /*
     ,
     'mouseover .product-grid': function(e, tmp){
-        console.log(this);
         $('.btn-quickview').css('display','none');
-        $(e.target).find('.btn-quickview').css('display','block');
-
-    }*/
+        $(e.currentTarget).find('.btn-quickview').css('display','block');
+        //$(e.currentTarget).parent().find('.btn-quickview').css('display','block');
+    },
+    'mouseleave .product-list': function(e, tmp){
+        $('.btn-quickview').css('display','none');
+    }
 });
 Template.registerHelper('getListProductsHelper', function( categoryId, thumb) {
 	var limit = 16;
@@ -669,6 +670,6 @@ window.clickMyPage = function( page ){
 window.getPaginationData = function(){
     //var total = Math.ceil(Session.get('TOTALPRODUCT') / limit);
     var total = Session.get('TOTALPRODUCT');
-    return { items: total, itemsOnPage: 10, hrefTextPrefix:'', cssStyle: 'light-theme' }
+    return { items: total, itemsOnPage: limit, hrefTextPrefix:'', cssStyle: 'light-theme' }
 
 }

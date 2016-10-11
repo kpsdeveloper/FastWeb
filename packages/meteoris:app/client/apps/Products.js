@@ -17,6 +17,7 @@ Template.category.onCreated(function() {
         itemSub = self.subscribe('Products', categoryId, page, limit,function(){
         	Session.set('SUBSCRIBELISTPRO', 1);
         })
+        //Meteor.Loader.loadJs("/js/script-category.js");
         Meteor.call('Meteoris.Count.Products', categoryId, function(err, count){
             if(!err){
                 Session.set('TOTALPRODUCT', count);

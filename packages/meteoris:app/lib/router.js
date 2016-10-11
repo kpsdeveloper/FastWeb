@@ -112,8 +112,8 @@ FlowRouter.route('/ordersuccess', {
 });
 FlowRouter.route('/details/:title', {
     subscriptions: function(){
-        //Meteor.Loader.loadJs("http://localhost:3000/js/jquery-1.8.3.min.js");
         Meteor.Loader.loadJs("/js/jquery.elevateZoom-3.0.8.min.js");
+
         TAPi18n.subscribe('Categories');
     },
     action: function() {
