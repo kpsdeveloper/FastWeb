@@ -1,4 +1,20 @@
 var ctrl = new Meteoris.OrdersController();
+Template.paymentDetails.onCreated(function() {
+	var router = FlowRouter;
+	isEmptyCart( router );
+})
+Template.addressDetails.onCreated(function() {
+	var router = FlowRouter;
+	isEmptyCart( router );
+})
+Template.chooseAddress.onCreated(function() {
+	var router = FlowRouter;
+	isEmptyCart( router );
+})
+Template.orderReview.onCreated(function() {
+	var router = FlowRouter;
+	isEmptyCart( router );
+})
 Template.shippingMethod.helpers({
 	shippingMethods: function(){
 		if (TAPi18n.getLanguage() == 'fa') 
@@ -47,6 +63,13 @@ Template.addressDetails.onCreated(function() {
 	var self = this;
 	self.autorun(function() {
 		Meteor.subscribe('Provinces');
+	})
+})
+Template.editAddress.onCreated(function() {
+	var self = this;
+	self.autorun(function() {
+		Meteor.subscribe('Provinces');
+		Meteor.subscribe('Accounts', Meteor.userId(), FlowRouter.getParam("id"));
 	})
 })
 Template.addressDetails.helpers({
@@ -109,6 +132,51 @@ Template.chooseAddress.events({
 		Meteor.call('removeAddress', id);
 	}
 });
+Template.editAddress.helpers({
+	editAddressMsg: function(){
+		return Session.get('editAddressMsg');
+	}
+})
+Template.editAddress.events({
+	'submit .editAddressBookForm': function(e, tmp){
+		e.preventDefault();
+		ctrl.editAddress(e);
+	},
+	"change #province":function(e){
+		e.preventDefault();
+        var province=$(e.currentTarget).val();
+        Meteor.subscribe('Cities', province);
+        Session.set("PROVINCE",province);
+    }
+})
+Template.editAddress.helpers({
+	getAddressById: function(){
+		var addressId = FlowRouter.getParam("id");
+		return ctrl.getAddressById(addressId);
+	},
+	getallProvince:function(){
+    	return Meteoris.Provinces.find({province:{$ne:null}});
+    },
+    getCity:function( province ){
+    	if(Session.get("PROVINCE")){
+            return Meteoris.Cities.findOne({provinceId:Session.get("PROVINCE")});
+        }else{
+        	console.log('current city');
+        	var subcity = Meteor.subscribe('Cities', province, function(){
+        		
+        	});
+        	if( subcity ){
+        		var city = Meteoris.Cities.findOne({provinceId:province});
+        		console.log('city:', city);
+        		return city;
+        	}
+        }
+    },
+    getProvinceById: function(id){
+    	return Meteoris.Provinces.findOne({_id:id});
+    }
+})
+
 Template.paymentDetails.helpers({
 	isOnlinePayment: function(){
 		var pmethod = parseInt(Session.get('PAYMENTMETHOD'));

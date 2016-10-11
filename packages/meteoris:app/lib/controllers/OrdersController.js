@@ -1,7 +1,7 @@
 Namespace('Meteoris.OrdersController');
 
 Meteoris.OrdersController = Meteoris.Controller.extend({
-	addToCart: function(tpl){
+	addToCart: function(e, tpl){
 		var title = unslugTitle(FlowRouter.getParam("title"));  
         var product = Meteoris.Products.findOne({title:title});
         var id_product = ( product )? product._id:$(e.currentTarget).parent().attr('id');
@@ -14,7 +14,7 @@ Meteoris.OrdersController = Meteoris.Controller.extend({
             var pro = Meteoris.Products.findOne({_id:id_product});
             if( pro ){
                 var attr = Meteoris.Attributes.find({product:pro.oldId}).fetch();
-                if( attribute == '')
+                if( attr.length > 0 )
                     attribute = attr[0]._id;
             }
         }
@@ -112,6 +112,71 @@ Meteoris.OrdersController = Meteoris.Controller.extend({
 			
 		}
 	},
+	editAddress: function(e){
+		var fullname = e.target.fullName.value;
+		var email = e.target.email.value;
+		var mphone = e.target.mphone.value;
+		var hphone = e.target.hphone.value;
+		var address1 = e.target.address1.value;
+		var address2 = e.target.address2.value;
+		var province = e.target.province.value;
+		var city = e.target.city.value;
+		var postal = e.target.postal.value;
+		
+		if( $('#isShippingDefault').prop('checked') )
+			var isShippingDefault = true;
+		else
+			var isShippingDefault = false;
+		
+		var msg = '';
+		if( fullname == "" || email == "" || emailValidate( email ) == false || mphone == "" || phonenoValidate(mphone) == false || address1 == "" || province == "" || city == "" || postal==""){
+			if( fullname == "")
+				msg += 'Full name is require.';
+			else if( email == "")
+				msg += 'Email is require.';
+			else if( emailValidate( email ) == false )
+				msg += 'Email is invalid.';
+			else if( mphone == "")
+				msg += 'Mobile number is require.';
+			else if( phonenoValidate(mphone) == false )
+				msg += 'Mobile number is invalide.';
+			else if( address1 == "")
+				msg += 'Address is require.';
+			else if( province == "")
+				msg += 'Province is require.';
+			else if( city == "")
+				msg += 'City is require.';
+			else if( postal == "")
+				msg += 'Postal is require.';
+
+			Meteoris.Flash.set("danger", msg);
+		}else{
+			var obj = {
+				"province" : province,
+                "email" : email,
+                "fullName" : fullname,
+                "address1" : address1,
+                "address2" : address2,
+                "postal" : postal,
+                "province" : city,
+                "mobilephone" : mphone,
+                "homephone" : hphone,
+                "isShippingDefault" : isShippingDefault,
+                "userId" : Meteor.userId()
+			}
+			var addressId = FlowRouter.getParam("id");
+			Meteor.call('Meteoris.Order.editAddress', obj, addressId, function(err, data){
+				if(!err){
+					Meteoris.Flash.set("success", "Address has been updated.");
+					FlowRouter.go('/chooseAddress');
+				}
+			})
+			
+		}
+	},
+	getAddressById: function( addressId ){
+		return Meteoris.Accounts.findOne({_id:addressId});
+	},
 	chooseaddressBook: function(e){
 		var shippingAddress = e.target.shippingAddress.value;
 		var shipping_method = e.target.shippingmethod.value;
@@ -161,7 +226,7 @@ Meteoris.OrdersController = Meteoris.Controller.extend({
     		}
     	})
 	},
-	completeOrder: function(){
+	completeOrder: function(e){
 		var paymentnum = Session.get('PAYMENTMETHOD');
     	var paymentoption = [ {num:1,title:'Online Payment'},{ num:2, title:"From Cart to Cart"}, { num:3, title:"Pay Cash in Place"}];
     	var currentPaymentMethod = [];
@@ -173,10 +238,11 @@ Meteoris.OrdersController = Meteoris.Controller.extend({
    
     	$(e.currentTarget).hide();
     	$('.btn-loading').show();
-    
-    	Meteor.call('Meteoris.Order.addPaymentMethod', currentPaymentMethod, Meteor.userId(), function(err, data){
+    	var items = getOrderItemsByID( Meteor.userId() );
+    	console.log( items );
+    	Meteor.call('Meteoris.Order.completedOrder', currentPaymentMethod, Meteor.userId(), items, function(err, data){
     		if(!err){
-    			Router.go('/completeorder');
+    			FlowRouter.go('/ordersuccess');
     		}
     	})
     	

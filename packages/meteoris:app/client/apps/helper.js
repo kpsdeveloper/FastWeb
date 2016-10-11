@@ -2,6 +2,8 @@ var ctrl = new Meteoris.ProductsController();
 var ordercl = new Meteoris.OrdersController();
 Session.set('SUBSCRIBELISTPRO', '');
 Session.set('TOTALPRODUCT', 0);
+Session.set('QUICKVIEWPRODUCT','');
+var limit = 16;
 Template.mainLayout.events({
 	'click .unlike': function(e) {
 		e.preventDefault();
@@ -43,7 +45,7 @@ Template.mainLayout.events({
 	},
     'click #addToCart': function(e, tpl){
         e.preventDefault();
-        ordercl.addToCart(tpl);
+        ordercl.addToCart(e, tpl);
         
     },
     'click .delete': function(e){
@@ -73,6 +75,18 @@ Template.mainLayout.events({
         e.preventDefault();
         $('.search-option li').removeClass('active');
         $(e.currentTarget).addClass('active');
+    },
+    'click .btn-quickview': function(e){
+        Session.set('QUICKVIEWPRODUCT', $(e.currentTarget).parent().parent().attr('id'));
+    }
+    ,
+    'mouseover .product-grid': function(e, tmp){
+        $('.btn-quickview').css('display','none');
+        $(e.currentTarget).find('.btn-quickview').css('display','block');
+        //$(e.currentTarget).parent().find('.btn-quickview').css('display','block');
+    },
+    'mouseleave .product-list': function(e, tmp){
+        $('.btn-quickview').css('display','none');
     }
 });
 Template.registerHelper('getListProductsHelper', function( categoryId, thumb) {
@@ -90,15 +104,77 @@ Template.registerHelper('getListProductsHelper', function( categoryId, thumb) {
 	return html;
 	
 });
+Template.registerHelper('getOneProductHelper', function(data, thumb ){
+    return listProductHtml(data, thumb);
+})
+
 window.listProductHtml = function( data , thumb){
 	var html = '';
-	var src = getImgForProductCDNv2( data._id , thumb)
-	html += '<div class="col-md-3 col-xs-12" id="'+data._id+'">';
-	html += 	'<a href="/details/'+slugTitle(data.title)+'"><img src="'+src+'" style="width:201px;height:201px"></a>';
-	html += 	'<a href="/details/'+slugTitle(data.title)+'"><h3 class="title">'+data.title+'</h3></a>';
-    html +=     '<p>ریال  <span class="price">'+data.price+'</span></p>';
-    html +=     '<label class="quantity" for="select">Quantity</label><select id="qty'+data._id+'" name="select" class="quantity" size="1"><option value="1">1</option></select>';
-    html +=     '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>';
+	var src = getImgForProductCDNv2( data._id , thumb);
+    var attr = Meteoris.Attributes.find({product:data.oldId});
+    var price = (attr.count() > 0)? attr.fetch()[0].price:data.price;
+
+	html += '<div class="col-md-3 col-xs-12 product-grid" id="'+data._id+'">';
+    html +=     '<div class="product-picture">';
+    html +=       '<a class="btn btn-success btn-quickview" href="#" data-toggle="modal" data-target="#quickView">Quick View</a>';
+	html += 	  '<a href="/details/'+slugTitle(data.title)+'"><img src="'+src+'" style="width:201px;height:201px"></a>';
+	html +=     '</div>';
+    html += 	'<a href="/details/'+slugTitle(data.title)+'"><h3 class="title">'+data.title+'</h3></a>';
+    html +=     '<p>ریال  <span class="price">'+price+'</span></p>';
+    //html +=     '<label class="quantity" for="select">Quantity</label><select id="qty'+data._id+'" name="select" class="quantity" size="1"><option value="1">1</option></select>';
+    //html +=     '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>';
+    html += '</div>';
+    return html;
+}
+Template.registerHelper('quickView', function( thumb ){
+    var id_product = Session.get('QUICKVIEWPRODUCT');
+
+    if( id_product ){
+        var data = Meteoris.Products.findOne({_id:id_product});
+    
+        return quickViewProduct(data, thumb);
+    }
+})
+window.quickViewProduct = function( data , thumb){
+    var html = '';
+    var src = getImgForProductCDNv2( data._id , thumb);
+    var attr = Meteoris.Attributes.find({product:data.oldId});
+    var price = (attr.count() > 0)? attr.fetch()[0].price:data.price;
+
+    html += '<div class="col-md-6 col-xs-12">';
+    html +=     '<a href="/details/'+slugTitle(data.title)+'"><img src="'+src+'" style="width:201px;height:201px"></a>';
+    html += '</div>';
+    html += '<div class="col-md-6 col-xs-12">';
+    html +=     '<a href="/details/'+slugTitle(data.title)+'"><h3 class="title">'+data.title+'</h3></a>';
+    html +=     '<p>'+data.description+'</p>';
+    html +=     '<div class="col-md-6 col-xs-6">';
+    html +=         '<label class="quantity" for="select">Quantity</label><select id="qty'+data._id+'" name="select" class="quantity" size="1"><option value="1">1</option></select>';
+    html +=         '<p>ریال  <span class="price">'+price+'</span></p>';
+    html +=     '</div>';
+    html +=     '<div class="col-md-6 col-xs-6">';
+    html +=         '<button class="btn btn-details"><span class="pull-left"></span> MORE DETAILS</button>';
+    html +=         '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>';
+    html +=     '</div>';
+    html += '</div>';
+    return html;
+}
+
+Template.registerHelper('getOneContentHelper', function(data){
+    return listContentHtml(data);
+})
+window.listContentHtml = function( data ){
+    var html = '';
+    var thumb = '';
+    if( data.hasOwnProperty('url') ){
+        thumb = '<video  class="img-responsive" src="/videos/'+data.url+'" />';
+    }else{
+        var src = getImgCDNv2( data._id , 'true');
+        thumb = '<img  class="img-responsive" src="'+src+'" style="width:201px;height:201px">';
+        
+    }
+    html += '<div class="col-md-3 col-xs-12" id="'+data._id+'">';
+    html +=     '<a href="/content/'+slugTitle(data.title)+'">'+thumb+'</a>';
+    html +=     '<a href="/content/'+slugTitle(data.title)+'"><h3 class="title">'+data.title+'</h3></a>';
     html += '</div>';
     return html;
 }
@@ -121,15 +197,23 @@ Template.registerHelper('getCurrentCategorySlug', function() {
 	var prev = parseInt(page) - 1;
 	var next = parseInt(page) + 1;
 	var prevStatus = (page<=1)? false:true;
-	var limit = 16;
-	var total = Session.get('TOTALPRODUCT') / limit;
-	var numpage = Math.ceil(total);
-	var nextStatus = (page>=numpage)? false:true;
+    var categoryId = getCategoryIdChildren( name );
+
+	
+
+	/*var total = Math.ceil(Session.get('TOTALPRODUCT') / limit);
+    console.log('total:', total);
+	var nextStatus = (page>=total)? false:true;
 	return {name:name, prev:prev, next:next, prevstatus:prevStatus, nextstatus: nextStatus };
+    */
 });
+
+start = 1;
+end = 9;
+step = 4;
 Template.registerHelper('getNumPage', function(  ) {
 	var name = FlowRouter.current().params.name;
-	//var page = Session.get('PAGE');
+	var page = Session.get('PAGE');
     var categoryId = getCategoryIdChildren( name );
 	var limit = 16;
 	Meteor.call('Meteoris.Count.Products', categoryId, function(err, count){
@@ -140,12 +224,27 @@ Template.registerHelper('getNumPage', function(  ) {
 	var total = Session.get('TOTALPRODUCT') / limit;
 	var numpage = Math.ceil(total);
 	var totalpage = [];
+    /*
+    if(page >= start + step){
+        if((page - start) >= step){ 
+            start = start + step;
+            end = end + step; 
+        }
+    }else{
+        //if( (page - start) < step ){
+
+        }
+        //start  = page < (end - start)? start - step : start;
+        //end    = page < (end - start)? end - step : start; 
+    }
+    */
 	if( numpage > 0 ){
-		for(i=1; i <= numpage; i++){
+		for(i=start; i <= numpage; i++){
 			totalpage.push({num:i});
 		}
 	}
 	return totalpage;
+    
 	
 	/*var total = Math.ceil(Session.get('TOTALPRODUCT') / limit);
 	var per_page = 10;
@@ -160,16 +259,17 @@ Template.registerHelper('getNumPage', function(  ) {
 });
 Template.registerHelper('getCart', function() {
     var userId = getSessionUserID();
-    var cart = '';
     var cart = Meteoris.Carts.findOne({userId:userId});
     if( cart ){
         cart.items = cart.items.map( function(data, index){
             data.index = index +1;
             return data;
         })
-        return {hasCart:true, cart:cart};
+        var obj = {hasCart:true, cart:cart};
     }else
-        return {hasCart:true}
+         var obj = {hasCart:false}
+    console.log(obj);
+    return obj;
 });
 Template.registerHelper('getProductInfo', function(id_product) {
     var data = Meteoris.Products.findOne({_id:id_product});
@@ -493,4 +593,83 @@ window.phonenoValidate = function(phoneno) {
             return true;
         } else return false;
     }
+}
+window.isEmptyCart = function(router){
+    router.subsReady("myCart", function() {
+        var cart = Meteoris.Carts.findOne({userId:getSessionUserID()});
+        if( !cart )
+            FlowRouter.go('/checkout');
+    });
+}
+window.getOrderItemsByID = function( userId ){
+    var myorder = Meteoris.Carts.findOne({userId:userId});
+    if( myorder ){
+        var items = myorder.items;
+        var myitems = [];
+        if (items.length > 0) {
+            for (i = 0; i < items.length; i++) {
+                var myproduct = Meteoris.Products.findOne({ _id: items[i].id_product });
+                var myattr = Meteoris.Attributes.findOne({ _id: items[i].attribute });
+                var src = '';
+                var absoluteurl = Meteor.absoluteUrl();
+                var baseurl = (absoluteurl == 'http://localhost:3000/') ? 'http://54.71.1.92/upload/' : absoluteurl + 'uploads/';
+                var myattrValue = '';
+                var parentName = '';
+                var price = 0;
+                if ( myattr && myattr.hasOwnProperty('productImage') ) {
+                    myattrValue = myattr.value;
+                    price = myattr.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    var parentvalu = getParentAttrByID(myattr.parent);
+                    var parentName = (parentvalu) ? parentvalu.name : '';
+                    var myimage = getImgCDNv2(myattr.productImage, 'true');
+                    if (myimage) 
+                        src = myimage; //absoluteurl+'uploads/'+myimage;
+                    else 
+                        src = myattr.productImage;
+                
+                } else {
+                    price = myproduct.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    var myproductimg = getImgCDNv2(myproduct.image[0], 'true');
+                    if (myproductimg) {
+                        src = myproductimg;
+                    } else {
+                        src = myproduct.image[0];
+                    }
+                }
+                var obj = {
+                    "img": src,
+                    "qty": items[i].quantity,
+                    "name": myproduct.title,
+                    "attr": myattrValue,
+                    "parentattr": parentName,
+                    "price": price,
+                    "subtotal": items[i].subtotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                myitems.push(obj);
+            }
+            var total = myorder.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+         
+            return { total: total, items: myitems };
+        } else return;
+    }
+}
+window.getParentAttrByID = function(parentId) {
+    return Meteoris.ParentAttributes.findOne({ _id: parentId });
+}
+window.clickMyPage = function( page ){
+    var name = FlowRouter.current().params.name;
+    var categoryId = getCategoryIdChildren( name );
+    var limit = 16;
+    Meteor.autorun(function() {
+        if( itemSub ) {
+            itemSub.stop();
+        }
+        itemSub = Meteor.subscribe('Products', categoryId, page, limit);
+    });  
+}
+window.getPaginationData = function(){
+    //var total = Math.ceil(Session.get('TOTALPRODUCT') / limit);
+    var total = Session.get('TOTALPRODUCT');
+    return { items: total, itemsOnPage: limit, hrefTextPrefix:'', cssStyle: 'light-theme' }
+
 }

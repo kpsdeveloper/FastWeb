@@ -55,7 +55,10 @@ Meteoris.ProductsController = Meteoris.Controller.extend({
     	//if(  reloadpage ===  1)
     		//var data =  Meteoris.Products.find({category:categoryId},{ fields:{_id:1, title:1,price:1}, limit:limit});
     	//else
-        var data =  Meteoris.Products.find({category:{$in:categoryId}},{ fields:{_id:1, title:1,price:1, category:1, oldId:1}, limit:limit});
+        var userId = getSessionUserID();
+        var cart = Meteoris.Carts.findOne({userId:userId});
+        var ProductInCart = (cart)? cart.items.map( function(pid){ return pid.id_product;}):[];
+        var data =  Meteoris.Products.find({category:{$in:categoryId}, _id:{$nin:ProductInCart}},{ fields:{_id:1, title:1,price:1, category:1, oldId:1}, limit:limit});
         return data;
     },
     addReview: function(t, product_title){

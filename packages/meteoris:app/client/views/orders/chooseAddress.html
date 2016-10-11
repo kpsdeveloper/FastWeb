@@ -11,7 +11,7 @@
 	      	<div class="col-md-12 form-group {{alignright}}"><strong>{{_"Choose Shipping Address"}}</strong></div>
 	      	<div class="col-md-12 form-group"><div style="height:3px;background:#333;"></div></div>
 	      	<div class="col-md-6 form-group">
-	  		 	<a href="/addressDetails" class="selectAddress" data-i18n="app.cancel">{{_"Add default address"}}</a>
+	  		 	<a href="/addnewAddress" class="selectAddress" data-i18n="app.cancel">{{_"Add default address"}}</a>
 	  		</div>
 	  		<div class="col-md-6 form-group" style="text-align:right">
 	  			
@@ -25,13 +25,13 @@
 								<tr>
 									<td><input type="radio" value="{{_id}}" name="shippingAddress" {{isDefaultAddress isShippingDefault}}> </td>
 									<td style="text-align:left"><p>{{fullName}}</p><p>{{address1}}</p><p>{{mobilephone}}</p></td>
-									<td><a href="/editAddress/{{_id}}">{{_"Edit"}}</a> | <a href="#delete" id="delete">{{_"Delete"}}</a></td>
+									<td><a href="/editaddress/{{_id}}">{{_"Edit"}}</a> | <a href="#delete" id="delete">{{_"Delete"}}</a></td>
 								</tr>
 			  				{{/each}}
 						{{else}}
 							{{#each getListAddress}}
 								<tr>
-									<td><a href="#delete" id="delete">{{_"Delete"}}</a> | <a href="/editAddress/{{_id}}">{{_"Edit"}}</a> </td>
+									<td><a href="#delete" id="delete">{{_"Delete"}}</a> | <a href="/editaddress/{{_id}}">{{_"Edit"}}</a> </td>
 									<td style="text-align:right"><p>{{fullName}}</p><p>{{address1}}</p><p>{{mobilephone}}</p></td>
 									<td><input type="radio" value="{{_id}}" name="shippingAddress" {{isDefaultAddress isShippingDefault}}> </td>
 								</tr>

@@ -51,7 +51,11 @@
 		        	</div>
 		        {{else}}
 		        	<div class="col-md-7">
-		        		<h3>Your cart is empty!</h3>
+		        		Your basket is currently empty.
+						{{#if checkIsUserLoggedIn}}
+						{{else}}
+							<i>Please <a href="/meteoris/user/login">sign in</a> if you are trying to retrieve a basket created in the past.</i>
+						{{/if}}
 		        	</div>
 		        	<div class="col-md-3"></div>
         		{{/if}}

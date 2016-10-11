@@ -3,6 +3,7 @@ Template.mainLayout.onCreated(function() {
     var self = this;
     self.autorun(function() {
         //self.subscribe('meteoris_themeAdmin', ctrl.getId());
+        Meteor.subscribe('Carts', getSessionUserID());
     });    
 });
 
