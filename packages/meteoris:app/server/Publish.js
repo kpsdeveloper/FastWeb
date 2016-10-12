@@ -197,8 +197,44 @@ Meteor.publish('allBanner', function(limit) {
         return Banners.find({});
     }
 });
+
+Meteor.publish('bannerBypage', function(pname) {
+    var pagename=pname.split("/");
+    var banner=Banners.find({pagename:{$in: pagename}});
+    return banner;
+});
+
+Meteor.publish('productInbanner', function(pname) {
+    var pagename=pname.split("/");
+    var productsId=[];
+    var allbanner=Banners.find({pagename:{$in: pagename}});
+    allbanner.forEach(function(banner){
+        var prod=banner.products;
+        if(prod){
+            productsId=productsId.concat(prod);
+            /*for(var i=0;i<prod.length;i++){
+                productsId.push(prod[i]);
+            }*/
+        }
+    });
+    var data=Meteoris.Products.find({_id:{$in: productsId}});
+    var dataimg= publishImage(data);
+    return [data,dataimg];
+});
 Meteor.publish('editBanner', function(id) {
     var banner=Banners.find({_id:id});
     
     return banner;
 });
+
+
+publishImage = function(listobjPro){
+    var imgId = listobjPro.map(function(n) { 
+        if (n.image instanceof Array)
+            return n.image[0];
+        else
+            return n.image;
+    });
+    var dataimg = Meteoris.Images.find({_id: {$in: imgId}})
+    return dataimg;
+}
