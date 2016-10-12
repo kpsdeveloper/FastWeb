@@ -1,6 +1,8 @@
 Meteor.publish('Products', function(categoryId, page , limit) {
 	//var total = Meteoris.Products.find({category:categoryId},{fields:{_id:1}});
-	//console.log('total:', total.count());
+	console.log('categoryId:', categoryId);
+    console.log('page:', page);
+    console.log('Limit:', limit);
 	var skip = (page<=1)? 0 : (page - 1) * limit;
     var data = Meteoris.Products.find({ category:{$in:categoryId}},{ fields:{_id:1, title:1,price:1,category:1, oldId:1,image:1,description:1}, sort:{price:1},skip: skip, limit:limit});
     //var dataattr = publishAttributeProducts( data );
@@ -11,6 +13,7 @@ Meteor.publish('Products', function(categoryId, page , limit) {
     	else
         	return n.image;
     });
+    console.log('products:', data.count());
     var dataattr = Meteoris.Attributes.find({product: {$in: attrId}});
     var dataimg = Meteoris.Images.find({_id: {$in: imgId}})
     return [dataimg, data, dataattr];
@@ -64,10 +67,6 @@ Meteor.publish('Carts', function( userId ) {
         var imgattrId = dataattr.map(function(p) { return p.productImage });
         var imgId = proimgId.concat(imgattrId);
         var image = Meteoris.Images.find({_id: {$in: imgId}})
-        console.log('cart:', data.count());
-        console.log('product:', product.count());
-        console.log('attribute:', dataattr.count());
-        console.log('image:', image.count());
 
         return [data, image, product, dataattr];
     }
