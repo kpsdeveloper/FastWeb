@@ -98,6 +98,7 @@ Package.onUse(function(api) {
         'client/views/admin/banner/addbanner.html',
         'client/views/admin/banner/allbanner.html',
         'client/views/admin/banner/editbanner.html',
+        'client/views/admin/banner/viewbanner.html',
         'client/apps/banner.js',
         /*'client/views/login.html',
         'client/views/login.js',

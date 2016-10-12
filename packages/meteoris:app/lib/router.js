@@ -172,7 +172,6 @@ groupBannerRoutes.route('/edit/:id', {
         BlazeLayout.render('mainLayout', {content: "meteoris_editbanner"});
     },
 });
-
 /*End banner admin*/
 /*Start tuto page*/
 FlowRouter.route('/tuto', {
@@ -184,3 +183,13 @@ FlowRouter.route('/tuto', {
     }
 });
 /*End of tuto page*/
+groupBannerRoutes.route('/view', {
+    subscriptions:function(){
+        var pagename='webzine/favorite';
+        [Meteor.subscribe("bannerBypage",pagename),Meteor.subscribe("productInbanner",pagename)]
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "meteoris_viewbanner"});
+    },
+});
+/*End banner admin*/

@@ -676,3 +676,4 @@ window.getPaginationData = function(){
     return { items: total, itemsOnPage: limit, hrefTextPrefix:'', cssStyle: 'light-theme' }
 
 }
+
