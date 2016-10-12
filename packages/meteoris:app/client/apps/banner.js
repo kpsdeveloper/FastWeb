@@ -270,3 +270,18 @@ Template.meteoris_editbanner.events = {
     }
 
 };
+
+
+/*===================Vieww Banner ==============================*/
+Template.meteoris_viewbanner.helpers({
+    displayBanner:function(){
+        return Banners.findOne({pagename:'webzine',typebanner:'webzine'});
+    },
+    displayBannerSlide:function(){
+        return Banners.findOne({pagename:'favorite',typebanner:'slidebanner'});
+    },
+    displayProduct:function(listIdpro){
+        return Meteoris.Products.find({ _id: { $in: listIdpro }});
+    }
+
+});

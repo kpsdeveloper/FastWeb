@@ -40,21 +40,20 @@ groupRoutes.route('/products/add', {
 });
 FlowRouter.route('/category/:name/:page', {
     subscriptions: function(){
-        //Meteor.Loader.loadJs("/js/jquery.min.js");
-        //Meteor.Loader.loadJs("/js/jquery.simplePagination.js");
-        TAPi18n.subscribe('Categories');
-        //Meteor.subscribe('Carts', getSessionUserID());
-        
-
+        //TAPi18n.subscribe('Categories');
     },
     action: function( params ) {
+        Session.set('CATEGORYNAME',  unslugTitle(params.name));
+        Session.set('PAGE', params.page );
         BlazeLayout.render('mainLayout', {content: "category"});
+        //ReactLayout.render(CategoryComponent, {name: "category"})
     }
+    
 
 });
 FlowRouter.route('/checkout', {
     subscriptions: function(){
-        TAPi18n.subscribe('Categories');
+       
     },
     action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "showCart"});
@@ -112,9 +111,7 @@ FlowRouter.route('/ordersuccess', {
 });
 FlowRouter.route('/details/:title', {
     subscriptions: function(){
-        //Meteor.Loader.loadJs("http://localhost:3000/js/jquery-1.8.3.min.js");
-        Meteor.Loader.loadJs("/js/jquery.elevateZoom-3.0.8.min.js");
-        TAPi18n.subscribe('Categories');
+        return [Meteor.Loader.loadJs("/js/jquery.elevateZoom-3.0.8.min.js")];
     },
     action: function() {
         BlazeLayout.render('mainLayout', {content: "detail"});
@@ -172,5 +169,13 @@ groupBannerRoutes.route('/edit/:id', {
         BlazeLayout.render('mainLayout', {content: "meteoris_editbanner"});
     },
 });
-
+groupBannerRoutes.route('/view', {
+    subscriptions:function(){
+        var pagename='webzine/favorite';
+        [Meteor.subscribe("bannerBypage",pagename),Meteor.subscribe("productInbanner",pagename)]
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "meteoris_viewbanner"});
+    },
+});
 /*End banner admin*/

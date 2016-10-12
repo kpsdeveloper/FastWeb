@@ -1,9 +1,17 @@
 var ctrl = new Meteoris.AppController();
+Meteor.startup(function() {
+     Session.set('LANG','en');
+});
+Tracker.autorun(function () {
+    TAPi18n.setLanguage(Session.get('LANG'));
+});
+
 Template.mainLayout.onCreated(function() {
     var self = this;
     self.autorun(function() {
         //self.subscribe('meteoris_themeAdmin', ctrl.getId());
-        Meteor.subscribe('Carts', getSessionUserID());
+        //TAPi18n.subscribe('Categories');
+        return [TAPi18n.subscribe('Categories'), , Meteor.subscribe('Carts', getSessionUserID())];
     });    
 });
 

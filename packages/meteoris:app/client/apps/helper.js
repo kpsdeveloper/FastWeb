@@ -3,7 +3,7 @@ var ordercl = new Meteoris.OrdersController();
 Session.set('SUBSCRIBELISTPRO', '');
 Session.set('TOTALPRODUCT', 0);
 Session.set('QUICKVIEWPRODUCT','');
-var limit = 16;
+limit = 16;
 Template.mainLayout.events({
 	'click .unlike': function(e) {
 		e.preventDefault();
@@ -79,14 +79,15 @@ Template.mainLayout.events({
     'click .btn-quickview': function(e){
         Session.set('QUICKVIEWPRODUCT', $(e.currentTarget).parent().parent().attr('id'));
     }
-    /*
     ,
     'mouseover .product-grid': function(e, tmp){
-        console.log(this);
         $('.btn-quickview').css('display','none');
-        $(e.target).find('.btn-quickview').css('display','block');
-
-    }*/
+        $(e.currentTarget).find('.btn-quickview').css('display','block');
+        //$(e.currentTarget).parent().find('.btn-quickview').css('display','block');
+    },
+    'mouseleave .product-list': function(e, tmp){
+        $('.btn-quickview').css('display','none');
+    }
 });
 Template.registerHelper('getListProductsHelper', function( categoryId, thumb) {
 	var limit = 16;
@@ -130,8 +131,8 @@ Template.registerHelper('quickView', function( thumb ){
 
     if( id_product ){
         var data = Meteoris.Products.findOne({_id:id_product});
-    
-        return quickViewProduct(data, thumb);
+        if( data )
+            return quickViewProduct(data, thumb);
     }
 })
 window.quickViewProduct = function( data , thumb){
@@ -186,7 +187,7 @@ Template.registerHelper('isUserLoggedIn', function() {
 });
 
 Template.registerHelper('getCategoryIdChildren', function() {
-	var name = FlowRouter.current().params.name;
+	var name = Session.get('CATEGORYNAME');
 	var list = getCategoryIdChildren( name );
 	return {list:list};
 });
@@ -341,7 +342,7 @@ function buildTree(source, parentId) {
   return dest;
 }
 
-window.getCategoryIdChildren = function( name ){
+getCategoryIdChildren = function( name ){
 	var list = [];
 	if (name != 'undefined' && name != null) {
         var l = Meteoris.Categories.findOne({ title: name });
@@ -370,6 +371,7 @@ window.getCategoryIdChildren = function( name ){
             
             var l = Meteoris.Categories.findOne({ "i18n.en.title": title });
         }
+
         if( l ){
 	        var categories = Meteoris.Categories.find().fetch();
 	        var parentId = l._id;
@@ -402,7 +404,7 @@ window.getImgCDNv2 = function(id, thumb) {
         	if( thumb == 'true')
             	return cdnurl+ "upload/small/" + img.copies.images.key;
         	else
-        	   return cdnurl + "upload/" + img.copies.images.key;
+        	   return cdnurl + "upload/large/" + img.copies.images.key;
         
         }else 
             return id;
@@ -657,8 +659,9 @@ window.getOrderItemsByID = function( userId ){
 window.getParentAttrByID = function(parentId) {
     return Meteoris.ParentAttributes.findOne({ _id: parentId });
 }
+/*
 window.clickMyPage = function( page ){
-    var name = FlowRouter.current().params.name;
+    var name = Session.get('CATEGORYNAME');
     var categoryId = getCategoryIdChildren( name );
     var limit = 16;
     Meteor.autorun(function() {
@@ -667,11 +670,11 @@ window.clickMyPage = function( page ){
         }
         itemSub = Meteor.subscribe('Products', categoryId, page, limit);
     });  
-}
+}*/
 window.getPaginationData = function(){
     //var total = Math.ceil(Session.get('TOTALPRODUCT') / limit);
     var total = Session.get('TOTALPRODUCT');
-    return { items: total, itemsOnPage: 10, hrefTextPrefix:'', cssStyle: 'light-theme' }
+    return { items: total, itemsOnPage: limit, hrefTextPrefix:'', cssStyle: 'light-theme' }
 
 }
 

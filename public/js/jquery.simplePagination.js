@@ -308,7 +308,7 @@
 				$link = $('<a href="' + o.hrefTextPrefix + (pageIndex + 1) + o.hrefTextSuffix + '" class="page-link">' + (options.text) + '</a>');
 				$link.click(function(event){
 					//trigger meteor function
-					clickMyPage( pageIndex + 1 );
+					//clickMyPage( pageIndex + 1 );
 					return methods._selectPage.call(self, pageIndex, event);
 				});
 			}
