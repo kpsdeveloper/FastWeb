@@ -275,6 +275,7 @@ Template.meteoris_editbanner.events = {
 /*===================Vieww Banner ==============================*/
 Template.meteoris_viewbanner.helpers({
     displayBanner:function(){
+        console.log(Meteoris.Images.find({}).count())
         return Banners.findOne({pagename:'webzine',typebanner:'webzine'});
     },
     displayBannerSlide:function(){

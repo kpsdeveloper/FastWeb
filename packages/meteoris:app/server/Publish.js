@@ -230,12 +230,32 @@ Meteor.publish('editBanner', function(id) {
 
 
 publishImage = function(listobjPro){
+    var checkAtrr=[];
+    var dataimgattr=[];
     var imgId = listobjPro.map(function(n) { 
-        if (n.image instanceof Array)
+        if (n.image instanceof Array){
             return n.image[0];
-        else
+        }
+        else if (n.image){
             return n.image;
+        }else{
+            checkAtrr.push(n.oldId)
+            //return n.oldId;
+        }
     });
+    if(checkAtrr.length > 0){
+        console.log("Satrtasadasd");
+        checkAtrr.forEach(function(da){
+            var atrr=Meteoris.Attributes.find({product:da});
+            if(attr){
+                var firstattr=attr[0];
+                if(firstattr.productImage){
+                    imgId.push(firstattr.productImage);
+                }
+            }
+        });
+    }
     var dataimg = Meteoris.Images.find({_id: {$in: imgId}})
+    console.log("countImg"+dataimg.count());
     return dataimg;
 }
