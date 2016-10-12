@@ -131,8 +131,8 @@ Template.registerHelper('quickView', function( thumb ){
 
     if( id_product ){
         var data = Meteoris.Products.findOne({_id:id_product});
-    
-        return quickViewProduct(data, thumb);
+        if( data )
+            return quickViewProduct(data, thumb);
     }
 })
 window.quickViewProduct = function( data , thumb){
@@ -403,7 +403,7 @@ window.getImgCDNv2 = function(id, thumb) {
         	if( thumb == 'true')
             	return cdnurl+ "upload/small/" + img.copies.images.key;
         	else
-        	   return cdnurl + "upload/" + img.copies.images.key;
+        	   return cdnurl + "upload/large/" + img.copies.images.key;
         
         }else 
             return id;

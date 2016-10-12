@@ -40,7 +40,7 @@ groupRoutes.route('/products/add', {
 });
 FlowRouter.route('/category/:name/:page', {
     subscriptions: function(){
-        TAPi18n.subscribe('Categories');
+        //TAPi18n.subscribe('Categories');
     },
     action: function( params ) {
         Session.set('CATEGORYNAME',  unslugTitle(params.name));
@@ -111,7 +111,7 @@ FlowRouter.route('/ordersuccess', {
 });
 FlowRouter.route('/details/:title', {
     subscriptions: function(){
-        Meteor.Loader.loadJs("/js/jquery.elevateZoom-3.0.8.min.js");
+        return [Meteor.Loader.loadJs("/js/jquery.elevateZoom-3.0.8.min.js")];
     },
     action: function() {
         BlazeLayout.render('mainLayout', {content: "detail"});
