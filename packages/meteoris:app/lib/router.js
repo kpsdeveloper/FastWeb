@@ -40,21 +40,20 @@ groupRoutes.route('/products/add', {
 });
 FlowRouter.route('/category/:name/:page', {
     subscriptions: function(){
-        //Meteor.Loader.loadJs("/js/jquery.min.js");
-        //Meteor.Loader.loadJs("/js/jquery.simplePagination.js");
         TAPi18n.subscribe('Categories');
-        //Meteor.subscribe('Carts', getSessionUserID());
-        
-
     },
     action: function( params ) {
+        Session.set('CATEGORYNAME',  unslugTitle(params.name));
+        Session.set('PAGE', params.page );
         BlazeLayout.render('mainLayout', {content: "category"});
+        //ReactLayout.render(CategoryComponent, {name: "category"})
     }
+    
 
 });
 FlowRouter.route('/checkout', {
     subscriptions: function(){
-        TAPi18n.subscribe('Categories');
+       
     },
     action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "showCart"});
@@ -113,8 +112,6 @@ FlowRouter.route('/ordersuccess', {
 FlowRouter.route('/details/:title', {
     subscriptions: function(){
         Meteor.Loader.loadJs("/js/jquery.elevateZoom-3.0.8.min.js");
-
-        TAPi18n.subscribe('Categories');
     },
     action: function() {
         BlazeLayout.render('mainLayout', {content: "detail"});

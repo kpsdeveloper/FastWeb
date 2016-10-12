@@ -1,6 +1,8 @@
 Meteor.publish('Products', function(categoryId, page , limit) {
 	//var total = Meteoris.Products.find({category:categoryId},{fields:{_id:1}});
-	//console.log('total:', total.count());
+	console.log('categoryId:', categoryId);
+    console.log('page:', page);
+    console.log('Limit:', limit);
 	var skip = (page<=1)? 0 : (page - 1) * limit;
     var data = Meteoris.Products.find({ category:{$in:categoryId}},{ fields:{_id:1, title:1,price:1,category:1, oldId:1,image:1,description:1}, sort:{price:1},skip: skip, limit:limit});
     //var dataattr = publishAttributeProducts( data );
@@ -11,6 +13,7 @@ Meteor.publish('Products', function(categoryId, page , limit) {
     	else
         	return n.image;
     });
+    console.log('products:', data.count());
     var dataattr = Meteoris.Attributes.find({product: {$in: attrId}});
     var dataimg = Meteoris.Images.find({_id: {$in: imgId}})
     return [dataimg, data, dataattr];
@@ -64,10 +67,6 @@ Meteor.publish('Carts', function( userId ) {
         var imgattrId = dataattr.map(function(p) { return p.productImage });
         var imgId = proimgId.concat(imgattrId);
         var image = Meteoris.Images.find({_id: {$in: imgId}})
-        console.log('cart:', data.count());
-        console.log('product:', product.count());
-        console.log('attribute:', dataattr.count());
-        console.log('image:', image.count());
 
         return [data, image, product, dataattr];
     }
@@ -220,7 +219,7 @@ Meteor.publish('productInbanner', function(pname) {
     });
     var data=Meteoris.Products.find({_id:{$in: productsId}});
     var dataimg= publishImage(data);
-    return [data,dataimg];
+    return [data,dataimg[0],dataimg[1]];
 });
 Meteor.publish('editBanner', function(id) {
     var banner=Banners.find({_id:id});
@@ -231,31 +230,37 @@ Meteor.publish('editBanner', function(id) {
 
 publishImage = function(listobjPro){
     var checkAtrr=[];
+    var allattr=[];
     var dataimgattr=[];
     var imgId = listobjPro.map(function(n) { 
         if (n.image instanceof Array){
-            return n.image[0];
+            if(n.image[0]){
+                return n.image[0];
+            }
         }
-        else if (n.image){
+        else {
             return n.image;
-        }else{
-            checkAtrr.push(n.oldId)
-            //return n.oldId;
         }
     });
-    if(checkAtrr.length > 0){
-        console.log("Satrtasadasd");
-        checkAtrr.forEach(function(da){
-            var atrr=Meteoris.Attributes.find({product:da});
+
+    if(listobjPro.count() > 0){
+        listobjPro.forEach(function(da){
+           // console.log("OLDIDME"+da.oldId);
+            var attr=Meteoris.Attributes.find({product:da.oldId});
             if(attr){
-                var firstattr=attr[0];
-                if(firstattr.productImage){
+                var firstattr=attr.fetch()[0];
+                if(firstattr){
+                    allattr.push(firstattr._id);
                     imgId.push(firstattr.productImage);
                 }
             }
         });
     }
+    console.log(imgId);
+    console.log(">>>>>>>>>>>>>>");
+    console.log(allattr);
     var dataimg = Meteoris.Images.find({_id: {$in: imgId}})
-    console.log("countImg"+dataimg.count());
-    return dataimg;
+    var dataAttr= Meteoris.Attributes.find({_id: {$in: allattr}});
+
+    return [dataimg,dataAttr];
 }

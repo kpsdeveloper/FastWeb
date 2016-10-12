@@ -3,7 +3,7 @@ var ordercl = new Meteoris.OrdersController();
 Session.set('SUBSCRIBELISTPRO', '');
 Session.set('TOTALPRODUCT', 0);
 Session.set('QUICKVIEWPRODUCT','');
-var limit = 16;
+limit = 16;
 Template.mainLayout.events({
 	'click .unlike': function(e) {
 		e.preventDefault();
@@ -187,7 +187,7 @@ Template.registerHelper('isUserLoggedIn', function() {
 });
 
 Template.registerHelper('getCategoryIdChildren', function() {
-	var name = FlowRouter.current().params.name;
+	var name = Session.get('CATEGORYNAME');
 	var list = getCategoryIdChildren( name );
 	return {list:list};
 });
@@ -342,7 +342,7 @@ function buildTree(source, parentId) {
   return dest;
 }
 
-window.getCategoryIdChildren = function( name ){
+getCategoryIdChildren = function( name ){
 	var list = [];
 	if (name != 'undefined' && name != null) {
         var l = Meteoris.Categories.findOne({ title: name });
@@ -371,6 +371,7 @@ window.getCategoryIdChildren = function( name ){
             
             var l = Meteoris.Categories.findOne({ "i18n.en.title": title });
         }
+
         if( l ){
 	        var categories = Meteoris.Categories.find().fetch();
 	        var parentId = l._id;
@@ -415,11 +416,14 @@ window.getImgForProductCDNv2 = function(id_product, thumb) {
     if (prod) {
         if (!prod.image || prod.image.length == 0) {
 
-            var attr = Meteoris.Attributes.findOne({ product: prod.oldId });
+            var attr = Meteoris.Attributes.find({ product: prod.oldId });
+            console.log(attr.fetch());
             if (!attr) {
                 return id_product;
             } else {
-                return getImgCDNv2(attr.productImage, thumb);
+                var firstattr=attr.fetch()[0];
+                console.log("ATRTTHAM"+firstattr.productImage);
+                return getImgCDNv2(firstattr.productImage, thumb);
             }
         } else {
             if (!prod.image[0]) {
@@ -656,8 +660,9 @@ window.getOrderItemsByID = function( userId ){
 window.getParentAttrByID = function(parentId) {
     return Meteoris.ParentAttributes.findOne({ _id: parentId });
 }
+/*
 window.clickMyPage = function( page ){
-    var name = FlowRouter.current().params.name;
+    var name = Session.get('CATEGORYNAME');
     var categoryId = getCategoryIdChildren( name );
     var limit = 16;
     Meteor.autorun(function() {
@@ -666,7 +671,7 @@ window.clickMyPage = function( page ){
         }
         itemSub = Meteor.subscribe('Products', categoryId, page, limit);
     });  
-}
+}*/
 window.getPaginationData = function(){
     //var total = Math.ceil(Session.get('TOTALPRODUCT') / limit);
     var total = Session.get('TOTALPRODUCT');
