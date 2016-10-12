@@ -389,6 +389,9 @@ window.getOriginalSize = function( src ){
 Template.registerHelper('getImgForProductCDN', function(id, thumb) {
    return getImgForProductCDNv2(id, thumb);
 });
+Template.registerHelper('getImgCDNv2ByHelper', function(id, thumb) {
+   return getImgCDNv2(id, thumb);
+});
 window.getImgCDNv2 = function(id, thumb) {
     if (id.indexOf('http') > -1) {
         return id;
