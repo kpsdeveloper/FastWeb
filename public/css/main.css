@@ -127,6 +127,11 @@ p.text-sm-review {
 .product-grid{
 	overflow: hidden;
 }
+@media (min-width: 768px){
+	.modal-open .modal-dialog {
+	    width: 900px;
+	}
+}
 /**
 * CSS Navigation Menu
 * Author: Kisphly
