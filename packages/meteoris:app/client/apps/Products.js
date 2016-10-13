@@ -5,38 +5,42 @@ Session.set('SUBSCRIBELISTPRO', '');
 Session.set('SORTKEY','title');
 Session.set('VIEWCOUNT', 20);
 itemSub = '';
+Tracker.autorun(function() {
+    var page = Session.get('PAGE');
+    var name = Session.get('CATEGORYNAME');
+    if( name ){
+        var categoryId = getCategoryIdChildren( name );
+        //console.log('catId:',categoryId)
+        itemSub = Meteor.subscribe('Products', categoryId, page, limit,function(){
+            Session.set('SUBSCRIBELISTPRO', 1);
+            Meteor.call('Meteoris.Count.Products', categoryId, function(err, count){
+                if(!err){
+                    //Session.set('TOTALPRODUCT', count);
+                    $('#pagination').pagination({ items: count, itemsOnPage: limit, currentPage:page, hrefTextPrefix:'', cssStyle: 'light-theme' });
+                }
+            })
+        })    
+    }
+})
+
 Template.category.onCreated(function() {
-	Session.set('PAGE', FlowRouter.current().params.page);
+	
 	Session.set('RELOADCATEGORYPAGE',1);
     var self = this;
-    var name = FlowRouter.current().params.name;
-    var categoryId = getCategoryIdChildren( name );
-    var limit = 16;
     var page = Session.get('PAGE');
+    var name = Session.get('CATEGORYNAME'); //FlowRouter.current().params.name;
+    
     self.autorun(function() {
-        itemSub = self.subscribe('Products', categoryId, page, limit,function(){
+        var categoryId = getCategoryIdChildren( name );
+        /*itemSub = self.subscribe('Products', categoryId, page, limit,function(){
         	Session.set('SUBSCRIBELISTPRO', 1);
-        })
+        })*/
         //Meteor.Loader.loadJs("/js/script-category.js");
-        Meteor.call('Meteoris.Count.Products', categoryId, function(err, count){
-            if(!err){
-                Session.set('TOTALPRODUCT', count);
-            }
-        })
+        
     });  
 });
-/*
-Template.category.helpers({
-    getListProducts: function(){
-    	var categoryId = 'DYq5Z8GmZZ6wyMmWj';
-    	var limit = 16;
-    	var page = Session.get('PAGE');
-    	if( Session.get('SUBSCRIBELISTPRO') === 1 ){
-    		var List = ctrl.getListProducts(categoryId, page , limit);
-    		return List;
-    	}
-    }
-});*/
+
+
 Template.detail.onCreated(function() {
     var title = unslugTitle(FlowRouter.current().params.title);
     var self = this;
@@ -48,7 +52,7 @@ Template.detail.onCreated(function() {
 Template.searchproduct.onCreated( function(){
     var self = this;
     self.autorun(function() {
-        TAPi18n.subscribe('Categories');
+        //TAPi18n.subscribe('Categories');
         var key = Session.get('keyword');
         var groupId = $('.search-option .active a').attr('data-group');
         var limit = Session.get('VIEWCOUNT');
@@ -222,5 +226,36 @@ Template.app_header.events({
         var search = $('#textToSearch').val();
         Session.set('keyword', search);
         FlowRouter.go('/searchproduct/'+search);
+    }
+});
+Template.app_header.helpers({
+    getParentCategories: function() {
+        var menu = Meteoris.Categories.find({ "$or": [{ "parent": "0" }, { "parent": " " }] }).map(function(document, index) {
+            var lang = Session.get('LANG');
+            if( lang == 'en'){
+                document.title = document.i18n.en.title;
+                document.slug  = slugTitle(document.i18n.en.title);
+            }
+            document.index = index + 1;
+            return document;
+        });
+        return menu;
+    },
+    getChildrenCategories: function(parent) {
+        var children = Meteoris.Categories.find({ "parent": parent }).map(function(document, index) {
+            var lang = Session.get('LANG');
+            if( lang == 'en'){
+                document.title = document.i18n.en.title;
+                document.slug  = slugTitle(document.i18n.en.title);
+            }
+            document.index = index + 1;
+            var hasChildren = Meteoris.Categories.findOne({ "parent": document._id });
+            if( hasChildren ) document.hasChildren = true;
+            else document.hasChildren = false;
+        
+            return document;
+        });
+
+        return children;
     }
 });
