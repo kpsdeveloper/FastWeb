@@ -101,7 +101,7 @@ Template.mainLayout.events({
         $(e.currentTarget).find('.btn-quickview').css('display','block');
         //$(e.currentTarget).parent().find('.btn-quickview').css('display','block');
     },
-    'mouseleave .product-list': function(e, tmp){
+    'mouseleave .product-grid': function(e, tmp){
         $('.btn-quickview').css('display','none');
     },
     'mouseover .attribute li a': function(e){
