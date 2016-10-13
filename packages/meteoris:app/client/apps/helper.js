@@ -496,6 +496,7 @@ window.getImgCDNv2 = function(id, thumb) {
         return id;
     } else {
         var img = Meteoris.Images.findOne({ _id: id });
+
         //var currentdomain = Session.get('ABSOLUTEURL');
         
         //var localcdn = currentdomain;
@@ -517,11 +518,14 @@ window.getImgForProductCDNv2 = function(id_product, thumb) {
     if (prod) {
         if (!prod.image || prod.image.length == 0) {
 
-            var attr = Meteoris.Attributes.findOne({ product: prod.oldId });
+            var attr = Meteoris.Attributes.find({ product: prod.oldId });
+            console.log(attr.fetch());
             if (!attr) {
                 return id_product;
             } else {
-                return getImgCDNv2(attr.productImage, thumb);
+                var firstattr=attr.fetch()[0];
+                console.log("ATRTTHAM"+firstattr.productImage);
+                return getImgCDNv2(firstattr.productImage, thumb);
             }
         } else {
             if (!prod.image[0]) {
@@ -652,6 +656,7 @@ window.getSessionUserID = function(){
         }
     }
 }
+
 Template.registerHelper('isCurrentLangEng', function() {
     var currentLang = TAPi18n.getLanguage();
 

@@ -102,18 +102,18 @@ p.text-sm-review {
     text-align: center;
 }
 .btn-addtocart{
-	background: #c00;
-    color: #fff;
+	background: #fff;
+    color: #333;
     border-radius: 0px;
     font-size: 14px;
     padding: 0.5rem 1.28rem;
-    border: none;
     cursor: pointer;
     display: inline-block;
     font-weight: 700;
     line-height: 1.42857;
     margin-bottom: 10px;
     text-align: center;
+    border: 1px solid #999;
 }
 .product-picture{
 	position: relative;
@@ -178,6 +178,11 @@ ul.attribute{
 }
 .attribute li img{
 	width: 26px;
+}
+@media (min-width: 768px){
+	.modal-open .modal-dialog {
+	    width: 900px;
+	}
 }
 /**
 * CSS Navigation Menu

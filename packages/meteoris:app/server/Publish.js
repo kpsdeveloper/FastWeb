@@ -1,6 +1,5 @@
 Meteor.publish('Products', function(categoryId, page , limit, userId) {
 	//var total = Meteoris.Products.find({category:categoryId},{fields:{_id:1}});
-
 	var skip = (page<=1)? 0 : (page - 1) * limit;
     var data = Meteoris.Products.find({ category:{$in:categoryId}},{ fields:{_id:1, title:1,price:1,category:1, oldId:1,image:1,description:1,review:1}, sort:{price:1},skip: skip, limit:limit});
     //var dataattr = publishAttributeProducts( data );
@@ -32,7 +31,7 @@ Meteor.publish('detailTitle', function(title, userId) {
     	}
     	id_product.push(currentPro._id);
     	var data = Meteoris.Products.find({_id:{$in:id_product}});
-    	console.log('product:', data.count());
+    
 	    var attrId = data.map(function(p) { return p.oldId });
 	    var imgId = data.map(function(n) { 
 	    	if (n.image instanceof Array)
@@ -127,6 +126,7 @@ Meteor.publish('searchproduct', function(keyword, groupid, limit, userId) {
             var dataimg = Meteoris.Images.find({_id: {$in: imgId}});
             console.log('Favorites:', datafavorite.count());
             return [dataimg, data, dataattr, datafavorite];
+
         } else if (groupid == 2) {
             var webzine = Meteoris.ContentType.findOne({ type: "Webzine" });
             var data = Meteoris.Contents.find({ title: { $regex: new RegExp(keyword, "i") }, category: { $ne: 'tester' } ,typeid: webzine._id }, {limit:limit});
@@ -147,7 +147,7 @@ Meteor.publish('searchproduct', function(keyword, groupid, limit, userId) {
                 else
                     return n.image;
             });
-            var dataimg = Meteoris.Images.find({_id: {$in: imgId}});
+            var dataimg = Meteoris.Images.find({_id: {$in: imgId}}, {fields:{_id:1,copies:1}});
             return [dataimg, data, Meteoris.ContentType.find()];
         }else{
             var list = Meteoris.Products.find({ $or: [{ $and: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }, { $and: [{ description: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }] }, {fields:{_id:1, title:1,price:1,category:1, oldId:1,image:1,description:1}, limit:limit});
@@ -236,7 +236,7 @@ Meteor.publish('productInbanner', function(pname) {
     });
     var data=Meteoris.Products.find({_id:{$in: productsId}});
     var dataimg= publishImage(data);
-    return [data,dataimg];
+    return [data,dataimg[0],dataimg[1]];
 });
 Meteor.publish('editBanner', function(id) {
     var banner=Banners.find({_id:id});
@@ -246,12 +246,38 @@ Meteor.publish('editBanner', function(id) {
 
 
 publishImage = function(listobjPro){
+    var checkAtrr=[];
+    var allattr=[];
+    var dataimgattr=[];
     var imgId = listobjPro.map(function(n) { 
-        if (n.image instanceof Array)
-            return n.image[0];
-        else
+        if (n.image instanceof Array){
+            if(n.image[0]){
+                return n.image[0];
+            }
+        }
+        else {
             return n.image;
+        }
     });
+
+    if(listobjPro.count() > 0){
+        listobjPro.forEach(function(da){
+           // console.log("OLDIDME"+da.oldId);
+            var attr=Meteoris.Attributes.find({product:da.oldId});
+            if(attr){
+                var firstattr=attr.fetch()[0];
+                if(firstattr){
+                    allattr.push(firstattr._id);
+                    imgId.push(firstattr.productImage);
+                }
+            }
+        });
+    }
+    console.log(imgId);
+    console.log(">>>>>>>>>>>>>>");
+    console.log(allattr);
     var dataimg = Meteoris.Images.find({_id: {$in: imgId}})
-    return dataimg;
+    var dataAttr= Meteoris.Attributes.find({_id: {$in: allattr}});
+
+    return [dataimg,dataAttr];
 }
