@@ -1,22 +1,24 @@
-Meteor.publish('Products', function(categoryId, page , limit) {
+Meteor.publish('Products', function(categoryId, page , limit, userId) {
 	//var total = Meteoris.Products.find({category:categoryId},{fields:{_id:1}});
-	console.log('categoryId:', categoryId);
-    console.log('page:', page);
-    console.log('Limit:', limit);
+
 	var skip = (page<=1)? 0 : (page - 1) * limit;
-    var data = Meteoris.Products.find({ category:{$in:categoryId}},{ fields:{_id:1, title:1,price:1,category:1, oldId:1,image:1,description:1}, sort:{price:1},skip: skip, limit:limit});
+    var data = Meteoris.Products.find({ category:{$in:categoryId}},{ fields:{_id:1, title:1,price:1,category:1, oldId:1,image:1,description:1,review:1}, sort:{price:1},skip: skip, limit:limit});
     //var dataattr = publishAttributeProducts( data );
+    var prodID = data.map(function(p) { return p._id });
     var attrId = data.map(function(p) { return p.oldId });
-    var imgId = data.map(function(n) { 
+    var proimgId = data.map(function(n) { 
     	if (n.image instanceof Array)
-        	return n.image[0];
+        	if(n.image[0]) return n.image[0];
     	else
-        	return n.image;
+        	if(n.image) return n.image;
     });
-    console.log('products:', data.count());
+    
     var dataattr = Meteoris.Attributes.find({product: {$in: attrId}});
-    var dataimg = Meteoris.Images.find({_id: {$in: imgId}})
-    return [dataimg, data, dataattr];
+    var datafavorite = Meteoris.Favorites.find({proId: {$in: prodID}, userId:userId});
+    var imgattrId = dataattr.map(function(p) { if( p.productImage ) return p.productImage });
+    var imgId = proimgId.concat(imgattrId);
+    var dataimg = Meteoris.Images.find({_id: {$in: imgId}},{fields:{_id:1, copies:1}})
+    return [dataimg, data, dataattr, datafavorite];
     
 });
 Meteor.publish('detailTitle', function(title, userId) {
@@ -40,7 +42,7 @@ Meteor.publish('detailTitle', function(title, userId) {
 	    });
 	    var datafav = Meteoris.Favorites.find({proId:currentPro._id, userId:userId});
 	    var dataattr = Meteoris.Attributes.find({product: {$in: attrId}});
-    	var dataimg = Meteoris.Images.find({_id: {$in: imgId}});
+    	var dataimg = Meteoris.Images.find({_id: {$in: imgId}} ,{fields:{_id:1, copies:1}});
 	    return [dataimg, data, dataattr, datafav];
 	} else return []
 
@@ -66,7 +68,7 @@ Meteor.publish('Carts', function( userId ) {
         var dataattr = Meteoris.Attributes.find({product: {$in: attrId}});
         var imgattrId = dataattr.map(function(p) { return p.productImage });
         var imgId = proimgId.concat(imgattrId);
-        var image = Meteoris.Images.find({_id: {$in: imgId}})
+        var image = Meteoris.Images.find({_id: {$in: imgId}},{fields:{_id:1, copies:1}})
 
         return [data, image, product, dataattr];
     }
@@ -74,6 +76,11 @@ Meteor.publish('Carts', function( userId ) {
     
 });
 
+Meteor.publish('FavoriteByProduct', function(ProId, userId) {
+    var datafavorite = Meteoris.Favorites.find({proId: {$in: ProId}, userId:userId});
+    if( datafavorite ) return datafavorite;
+    else return [];
+});
 Meteor.publish('Orders', function(userId) {
     var data = Meteoris.Carts.find({userId:userId});
     return data;
@@ -98,13 +105,13 @@ Meteor.publish('ParentAttribute', function( ) {
     return Meteoris.ParentAttributes.find({});
 });
 
-Meteor.publish('searchproduct', function(keyword, groupid, limit) {
+Meteor.publish('searchproduct', function(keyword, groupid, limit, userId) {
 
     if (keyword != "") {
         if (groupid == 1) {
             var data = Meteoris.Products.find({ $or: [{ $and: [{ title: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }, { $and: [{ description: { $regex: new RegExp(keyword, "i") } }, { category: { $ne: 'tester' } }] }] },{fields:{_id:1, title:1,price:1,category:1, oldId:1,image:1,description:1}, limit:limit});
             var attrId = data.map(function(p) { return p.oldId });
-            var imgId = data.map(function(n) { 
+            var proimgId = data.map(function(n) { 
                 if (n.image instanceof Array)
                     return n.image[0];
                 else
@@ -112,9 +119,14 @@ Meteor.publish('searchproduct', function(keyword, groupid, limit) {
             });
             //var datafav = Meteoris.Favorites.find({proId:currentPro._id, userId:userId});
             var dataattr = Meteoris.Attributes.find({product: {$in: attrId}});
+            var prodID = data.map(function(p) { return p._id });
+            var datafavorite = Meteoris.Favorites.find({proId: {$in: prodID}, userId:userId});
+            var imgattrId = dataattr.map(function(p) { if( p.productImage ) return p.productImage });
+            var imgId = proimgId.concat(imgattrId);
+
             var dataimg = Meteoris.Images.find({_id: {$in: imgId}});
-            
-            return [dataimg, data, dataattr];
+            console.log('Favorites:', datafavorite.count());
+            return [dataimg, data, dataattr, datafavorite];
         } else if (groupid == 2) {
             var webzine = Meteoris.ContentType.findOne({ type: "Webzine" });
             var data = Meteoris.Contents.find({ title: { $regex: new RegExp(keyword, "i") }, category: { $ne: 'tester' } ,typeid: webzine._id }, {limit:limit});
@@ -154,11 +166,16 @@ Meteor.publish('searchproduct', function(keyword, groupid, limit) {
                     else
                         return n.image;
                 });
-                var imgId = imgIdPro.concat( imgIdCont );
+                var proimgId = imgIdPro.concat( imgIdCont );
         
                 var dataattr = Meteoris.Attributes.find({product: {$in: attrId}});
+                var prodID = list.map(function(p) { return p._id });
+                var datafavorite = Meteoris.Favorites.find({proId: {$in: prodID}, userId:userId});
+                var imgattrId = dataattr.map(function(p) { if( p.productImage ) return p.productImage });
+                var imgId = proimgId.concat(imgattrId);
                 var dataimg = Meteoris.Images.find({_id: {$in: imgId}});
-                return [Meteoris.ContentType.find(), dataimg, list, content, dataattr];
+                console.log('Favorites:', datafavorite.count());
+                return [Meteoris.ContentType.find(), dataimg, list, content, dataattr, datafavorite];
 
             }else return []
         }

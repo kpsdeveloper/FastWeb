@@ -11,7 +11,7 @@ Template.mainLayout.onCreated(function() {
     self.autorun(function() {
         //self.subscribe('meteoris_themeAdmin', ctrl.getId());
         //TAPi18n.subscribe('Categories');
-        Meteor.subscribe('Carts', getSessionUserID());
+       
     });    
 });
 

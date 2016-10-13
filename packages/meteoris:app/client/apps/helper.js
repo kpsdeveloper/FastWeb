@@ -16,6 +16,14 @@ Template.mainLayout.events({
 	    if (userId) {
 	        Meteor.call('Meteoris.Products.addToFavorite', obj, function(error) {
 	            if (!error) {
+                    /*var name = Session.get('CATEGORYNAME');
+                    var categoryId = getCategoryIdChildren( name );
+                    var ProductId = ctrl.getListProducts(categoryId, Session.get('PAGE') , limit);
+                    if( ProductId.count() > 0){
+                        var arrayProId = ProductId.map( function(data){ return data._id});
+                        Meteor.subscribe('FavoriteByProduct', arrayProId, userId);
+                    }*/
+
 	             	Meteoris.Flash.set("success", "This product has been added to your favorite list.");
 	               
 	            }
@@ -35,7 +43,14 @@ Template.mainLayout.events({
 	    if (userId) {
 	        Meteor.call('Meteoris.Products.removeFavorite', productid, userId, function(error) {
 	            if (!error) {
-	               Meteoris.Flash.set("success", "This product has been removed to your favorite list.");
+                    /*var name = Session.get('CATEGORYNAME');
+                    var categoryId = getCategoryIdChildren( name );
+                    var ProductId = ctrl.getListProducts(categoryId, Session.get('PAGE') , limit);
+                    if( ProductId.count() > 0){
+                        var arrayProId = ProductId.map( function(data){ return data._id});
+                        Meteor.subscribe('FavoriteByProduct', arrayProId, userId);
+                    }*/
+	                Meteoris.Flash.set("success", "This product has been removed to your favorite list.");
 	            } 
 	        });
 	    } else {
@@ -46,6 +61,7 @@ Template.mainLayout.events({
     'click #addToCart': function(e, tpl){
         e.preventDefault();
         ordercl.addToCart(e, tpl);
+        getTotalItem();
         
     },
     'click .delete': function(e){
@@ -80,13 +96,25 @@ Template.mainLayout.events({
         Session.set('QUICKVIEWPRODUCT', $(e.currentTarget).parent().parent().attr('id'));
     }
     ,
-    'mouseover .product-grid': function(e, tmp){
+    'mouseover .product-picture': function(e, tmp){
         $('.btn-quickview').css('display','none');
         $(e.currentTarget).find('.btn-quickview').css('display','block');
         //$(e.currentTarget).parent().find('.btn-quickview').css('display','block');
     },
     'mouseleave .product-list': function(e, tmp){
         $('.btn-quickview').css('display','none');
+    },
+    'mouseover .attribute li a': function(e){
+        var id = $(e.currentTarget).attr('attr');
+        var proid = $(e.currentTarget).parents('.product-grid').attr('id');
+        var dataAttribute = ctrl.getAttributeById( id );
+        if( dataAttribute ){
+            var attsrc = getImgCDNv2( dataAttribute.productImage , 'true');
+            $('#'+proid+' .price').html(dataAttribute.price);
+            $('#'+proid+' .product-picture img').attr('src', attsrc);
+            $('#'+proid+' .attribute li').removeClass('active');
+            $(e.currentTarget).parent().addClass('active');
+        }
     }
 });
 Template.registerHelper('getListProductsHelper', function( categoryId, thumb) {
@@ -97,6 +125,18 @@ Template.registerHelper('getListProductsHelper', function( categoryId, thumb) {
 	var html = '';
 	if( List.count() > 0 ){
 		List.forEach( function(data, index){
+            var fav = Meteoris.Favorites.findOne({proId:data._id, userId:Meteor.userId()});
+            if( fav ) data.favorite = true;
+            else data.favorite = false;
+
+            if( data.hasOwnProperty('review') ){
+                var len = data.review.length;
+                var sum = 0;
+                data.review.forEach( function(val){ sum = (val.grade)? (sum + parseInt(val.grade)):(sum+0);})
+                data.rate = (sum * 100) / (len * 5);
+            }else
+                data.rate = 0;
+
 			html += listProductHtml(data, thumb);
 		})
 	}
@@ -105,24 +145,80 @@ Template.registerHelper('getListProductsHelper', function( categoryId, thumb) {
 	
 });
 Template.registerHelper('getOneProductHelper', function(data, thumb ){
+    var fav = Meteoris.Favorites.findOne({proId:data._id, userId:Meteor.userId()});
+    if( fav ) data.favorite = true;
+    else data.favorite = false;
+
+    if( data.hasOwnProperty('review') ){
+        var len = data.review.length;
+        var sum = 0;
+        data.review.forEach( function(val){ sum = (val.grade)? (sum + parseInt(val.grade)):(sum+0);})
+        data.rate = (sum * 100) / (len * 5);
+    }else
+        data.rate = 0;
+        
     return listProductHtml(data, thumb);
 })
 
 window.listProductHtml = function( data , thumb){
 	var html = '';
 	var src = getImgForProductCDNv2( data._id , thumb);
+    //console.log('pro Id', data._id);
+    //console.log('old Id', data.oldId);
     var attr = Meteoris.Attributes.find({product:data.oldId});
-    var price = (attr.count() > 0)? attr.fetch()[0].price:data.price;
-
+    var listAttribute = '';
+    if( attr.count() > 0 ){
+        var price = attr.fetch()[0].price;
+        //if( attr.count() > 1){
+            var parentId = attr.fetch()[0].parent;
+            var parent = Meteoris.ParentAttributes.findOne({_id:parentId});
+            var liattribute = '';
+            if( parent.name == 'Size'){
+                //var width = 100 / attr.count();
+                attr.forEach( function(at, index){
+                    var active = (index == 0)? 'active':'';
+                    if(index <= 4) liattribute += '<li class="'+active+'"><a href="#" attr="'+at._id+'">'+at.value+'</a></li>';
+                })
+            }else{
+                attr.forEach( function(at, index){
+                    var attsrc = getImgCDNv2( at.productImage , 'true');
+                    var active = (index == 0)? 'active':'';
+                    if(index <= 4) liattribute += '<li class="'+active+'"><a href="#" attr="'+at._id+'"><img src="'+attsrc+'"/></a></li>';
+                    
+                })
+            }
+            listAttribute += liattribute;
+        //}
+        //console.log('price attribute:', price);
+    }else{
+        var price = data.price;
+        //console.log('price product:', price);
+    }
+    
 	html += '<div class="col-md-3 col-xs-12 product-grid" id="'+data._id+'">';
     html +=     '<div class="product-picture">';
     html +=       '<a class="btn btn-success btn-quickview" href="#" data-toggle="modal" data-target="#quickView">Quick View</a>';
 	html += 	  '<a href="/details/'+slugTitle(data.title)+'"><img src="'+src+'" style="width:201px;height:201px"></a>';
 	html +=     '</div>';
     html += 	'<a href="/details/'+slugTitle(data.title)+'"><h3 class="title">'+data.title+'</h3></a>';
-    html +=     '<p>ریال  <span class="price">'+price+'</span></p>';
+    html +=     '<div class="clear"></div>';
+    html +=     '<div class="rating-container rating-md rating-animate">';
+    html +=         '<div class="rating"><span class="empty-stars"><span class="star"><i class="glyphicon glyphicon-star-empty"></i></span><span class="star"><i class="glyphicon glyphicon-star-empty"></i></span><span class="star"><i class="glyphicon glyphicon-star-empty"></i></span><span class="star"><i class="glyphicon glyphicon-star-empty"></i></span><span class="star"><i class="glyphicon glyphicon-star-empty"></i></span></span><span class="filled-stars" style="width: '+data.rate+'%;"><span class="star"><i class="glyphicon glyphicon-star"></i></span><span class="star"><i class="glyphicon glyphicon-star"></i></span><span class="star"><i class="glyphicon glyphicon-star"></i></span><span class="star"><i class="glyphicon glyphicon-star"></i></span><span class="star"><i class="glyphicon glyphicon-star"></i></span></span></div>';
+    html +=     '</div>';
+    html +=     '<div class="fav-wrapper">';
+    if( data.favorite == false)
+        html +=     '<a href="#" data-id="'+data._id+'" class="heart  unlike unlike'+data._id+'"><span class="fa fa-heart-o btn-unlike"></span></a>';
+    else 
+        html +=     '<a href="#" data-id="'+data._id+'" class="heart  like like'+data._id+'"><span class="fa fa-heart fa-heart-full btn-like"></span></a>';
+    html +=     '</div>';
+    html +=     '<div class="clear"></div>';
+    html +=     '<ul class="attribute">'+listAttribute+'</ul>';
+    html +=     '<div class="clear"></div>';
+    html +=     '<div class="price-wrapper"><p>ریال  <span class="price">'+price+'</span></p></div>';
+    html +=     '<div class="addtocart-wrapper">';
     //html +=     '<label class="quantity" for="select">Quantity</label><select id="qty'+data._id+'" name="select" class="quantity" size="1"><option value="1">1</option></select>';
-    //html +=     '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>';
+    html +=     '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>';
+    html +=     '</div>';
     html += '</div>';
     return html;
 }
@@ -131,8 +227,8 @@ Template.registerHelper('quickView', function( thumb ){
 
     if( id_product ){
         var data = Meteoris.Products.findOne({_id:id_product});
-    
-        return quickViewProduct(data, thumb);
+        if( data )
+            return quickViewProduct(data, thumb);
     }
 })
 window.quickViewProduct = function( data , thumb){
@@ -141,17 +237,17 @@ window.quickViewProduct = function( data , thumb){
     var attr = Meteoris.Attributes.find({product:data.oldId});
     var price = (attr.count() > 0)? attr.fetch()[0].price:data.price;
 
-    html += '<div class="col-md-6 col-xs-12">';
+    html += '<div class="col-md-4 col-xs-12">';
     html +=     '<a href="/details/'+slugTitle(data.title)+'"><img src="'+src+'" style="width:201px;height:201px"></a>';
     html += '</div>';
-    html += '<div class="col-md-6 col-xs-12">';
+    html += '<div class="col-md-8 col-xs-12">';
     html +=     '<a href="/details/'+slugTitle(data.title)+'"><h3 class="title">'+data.title+'</h3></a>';
     html +=     '<p>'+data.description+'</p>';
     html +=     '<div class="col-md-6 col-xs-6">';
     html +=         '<label class="quantity" for="select">Quantity</label><select id="qty'+data._id+'" name="select" class="quantity" size="1"><option value="1">1</option></select>';
     html +=         '<p>ریال  <span class="price">'+price+'</span></p>';
     html +=     '</div>';
-    html +=     '<div class="col-md-6 col-xs-6">';
+    html +=     '<div class="col-md-6 col-xs-6" id="'+data._id+'">';
     html +=         '<button class="btn btn-details"><span class="pull-left"></span> MORE DETAILS</button>';
     html +=         '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>';
     html +=     '</div>';
@@ -268,7 +364,7 @@ Template.registerHelper('getCart', function() {
         var obj = {hasCart:true, cart:cart};
     }else
          var obj = {hasCart:false}
-    console.log(obj);
+    
     return obj;
 });
 Template.registerHelper('getProductInfo', function(id_product) {
@@ -276,13 +372,18 @@ Template.registerHelper('getProductInfo', function(id_product) {
     return data;
 });
 Template.registerHelper('getTotalItem', function(id_product) {
-    var userId = getSessionUserID();
-    
-    var cart = Meteoris.Carts.findOne({userId:userId});
-    if( cart ) return cart.items.length;
+    getTotalItem();
+    //var cart = Meteoris.Carts.findOne({userId:userId});
+    var count = Session.get('TOTALITEMS');
+    if( count ) return count;
     else return 0;
 });
-
+getTotalItem = function(){
+    var userId = getSessionUserID();
+    Meteor.call('Meteoris.Cart.getTotalItem', userId, function(err, total){
+        if(!err) Session.set('TOTALITEMS', total);
+    })
+}
 function Pagination(data, limit, current, adjacents )
 {
 	var result = [];
@@ -403,7 +504,7 @@ window.getImgCDNv2 = function(id, thumb) {
         	if( thumb == 'true')
             	return cdnurl+ "upload/small/" + img.copies.images.key;
         	else
-        	   return cdnurl + "upload/" + img.copies.images.key;
+        	   return cdnurl + "upload/large/" + img.copies.images.key;
         
         }else 
             return id;
