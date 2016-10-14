@@ -10,8 +10,7 @@ Tracker.autorun(function() {
     var name = Session.get('CATEGORYNAME');
     if( name ){
         var categoryId = getCategoryIdChildren( name );
-        //console.log('catId:',categoryId)
-        itemSub = Meteor.subscribe('Products', categoryId, page, limit,function(){
+        itemSub = Meteor.subscribe('Products', categoryId, page, limit, Meteor.userId(),function(){
             Session.set('SUBSCRIBELISTPRO', 1);
             Meteor.call('Meteoris.Count.Products', categoryId, function(err, count){
                 if(!err){
@@ -61,7 +60,7 @@ Template.searchproduct.onCreated( function(){
         else
             var keyword = unslugTitle(FlowRouter.getParam("slug"));
         
-        Meteor.subscribe('searchproduct', keyword, groupId, limit);
+        Meteor.subscribe('searchproduct', keyword, groupId, limit, Meteor.userId());
     });
 })
 

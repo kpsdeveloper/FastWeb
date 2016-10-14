@@ -21,7 +21,7 @@ function checkIsLogin(){
 }
 FlowRouter.route('/searchproduct/:slug', {
     subscriptions: function(){
-        
+        return [TAPi18n.subscribe('Categories'), Meteor.subscribe('ParentAttribute')];
     },
     action: function() {
         BlazeLayout.render('mainLayout', {content: "searchproduct"});
@@ -40,7 +40,7 @@ groupRoutes.route('/products/add', {
 });
 FlowRouter.route('/category/:name/:page', {
     subscriptions: function(){
-        //TAPi18n.subscribe('Categories');
+        return [TAPi18n.subscribe('Categories'), Meteor.subscribe('ParentAttribute')];
     },
     action: function( params ) {
         Session.set('CATEGORYNAME',  unslugTitle(params.name));
@@ -53,7 +53,7 @@ FlowRouter.route('/category/:name/:page', {
 });
 FlowRouter.route('/checkout', {
     subscriptions: function(){
-       
+        Meteor.subscribe('Carts', getSessionUserID());
     },
     action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "showCart"});
@@ -111,7 +111,7 @@ FlowRouter.route('/ordersuccess', {
 });
 FlowRouter.route('/details/:title', {
     subscriptions: function(){
-        return [Meteor.Loader.loadJs("/js/jquery.elevateZoom-3.0.8.min.js")];
+        return [TAPi18n.subscribe('Categories'),Meteor.subscribe('ParentAttribute'), Meteor.Loader.loadJs("/js/jquery.elevateZoom-3.0.8.min.js")];
     },
     action: function() {
         BlazeLayout.render('mainLayout', {content: "detail"});
