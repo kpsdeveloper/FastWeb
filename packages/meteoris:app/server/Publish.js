@@ -223,7 +223,15 @@ Meteor.publish('editBanner', function(id) {
     
     return banner;
 });
-
+Meteor.publish('alldiscount', function() {
+    return Discount.find({}); 
+});
+Meteor.publish('oneProduct', function(id) {
+    return Meteoris.Products.find({_id:id}); 
+});
+Meteor.publish('onediscount', function(id) {
+    return Discount.find({_id:id}); 
+});
 
 publishImage = function(listobjPro){
     var checkAtrr=[];
@@ -253,9 +261,6 @@ publishImage = function(listobjPro){
             }
         });
     }
-    console.log(imgId);
-    console.log(">>>>>>>>>>>>>>");
-    console.log(allattr);
     var dataimg = Meteoris.Images.find({_id: {$in: imgId}})
     var dataAttr= Meteoris.Attributes.find({_id: {$in: allattr}});
 

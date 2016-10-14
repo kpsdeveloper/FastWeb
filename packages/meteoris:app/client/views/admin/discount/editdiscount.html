@@ -1,0 +1,49 @@
+<template name="editdiscountBrand">
+	<div class="container">
+	{{#with getOnediscountBrand}}
+		<div class="form-group">
+		    <label for="">Discount(%)</label>
+		    <input type="number" class="form-control" id="discount" value="{{discount}}">
+		    
+		</div>
+		<div class="form-group">
+		    <label for="">Start Date</label>
+		    <input type="text" class="form-control" id="startdate" value="{{startdate}}">
+		    
+		</div>
+		<div class="form-group">
+		    <label for="">End Date</label>
+		    <input type="text" class="form-control" id="enddate" value="{{enddate}}">
+		    
+		</div>
+		<button class="btn btn-success" id="btnupdatebrand"> Update Discount</button>
+	{{/with}}
+	</div>
+	
+</template>
+
+<template name="editdiscountProduct">
+	<div class="container">
+	{{#with getOnediscountProduct}}
+		<div class="form-group">
+		    <label for="">Discount(%)</label>
+		    <input type="number" class="form-control" id="discount" value="{{discount.discount}}">
+		    
+		</div>
+		<div class="form-group">
+		    <label for="">Start Date</label>
+		    <input type="text" class="form-control" id="startdate" value="{{discount.startdate}}">
+		    
+		</div>
+		<div class="form-group">
+		    <label for="">End Date</label>
+		    <input type="text" class="form-control" id="enddate" value="{{discount.enddate}}">
+		    
+		</div>
+
+	
+		<button class="btn btn-success" id="btnupdateprod"> Update Discount</button>
+	{{/with}}
+	<h2>WELCOME EDIT</h2>
+	</div>
+</template>

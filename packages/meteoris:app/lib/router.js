@@ -179,3 +179,36 @@ groupBannerRoutes.route('/view', {
     },
 });
 /*End banner admin*/
+
+var groupDiscountRoutes = FlowRouter.group({
+    prefix: '/discount',
+    name: 'banner',
+    //triggersEnter: [authenticating]
+});
+groupDiscountRoutes.route('/add', {
+    subscriptions:function(){
+        [Meteor.subscribe("allproducts"),Meteor.subscribe("alldiscount")]
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "meteoris_adddiscount"});
+    },
+});
+
+groupDiscountRoutes.route('/edit-brand/:id', {
+    subscriptions:function(params){
+       Meteor.subscribe("onediscount",params.id);
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "editdiscountBrand"});
+    },
+});
+groupDiscountRoutes.route('/edit-product/:id', {
+    subscriptions:function(params){
+        //Meteor.subscribe("allproducts")
+        Meteor.subscribe("oneProduct",params.id);
+        
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "editdiscountProduct"});
+    },
+});

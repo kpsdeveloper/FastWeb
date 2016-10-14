@@ -38,3 +38,4 @@ cfs:gridfs
 cfs:filesystem
 mrt:external-file-loader
 msavin:mongol
+meteorhacks:aggregate

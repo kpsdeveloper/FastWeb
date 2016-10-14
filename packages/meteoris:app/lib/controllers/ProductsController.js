@@ -117,5 +117,118 @@ Meteoris.ProductsController = Meteoris.Controller.extend({
 	    	}
 	    	return html;
     	}
+    },
+
+    //=================FOR DISCOUNT FUNCTION=================
+    hiddenForm:function(t){
+        var typediscount=t.find('#typedis').value;
+        if(typediscount=='bybrand'){
+            $("#hideBrand").removeClass("hidden");
+            $("#hidetxtpro").addClass("hidden");
+        }else if(typediscount=='byprod'){
+            $("#hidetxtpro").removeClass("hidden");
+            $("#hideBrand").addClass("hidden");
+        }else{
+            //alert ()
+        }
+    },
+    keyuplistproduct:function(e,t){
+        var key = $(e.currentTarget).val();
+        if( key.length > 3){
+            var data = Meteoris.Products.find({ "title": { $regex: new RegExp(key, "i") } });
+            var text = '';
+            if( data.count() > 0){
+                data.forEach( function(data, index){
+                    text += '<a href=""><li data-id="'+data._id+'" class="listpro">'+data.title+'</li></a>';
+                })  
+            }
+            if( text!='')
+                $('#result').html( '<div style="border:1px solid #ddd;padding:5px">'+text+'</div>' );
+            else
+                $('#result').html( '<li>No result.</li>' );
+        }
+    },
+    clickOnKeyup:function(e){
+        var title = $(e.currentTarget).html();
+        var id = $(e.currentTarget).attr('data-id');
+        $('#txtaddproduct').val(title);
+        $('#txtaddproduct').attr('data-id', id);
+        $('#result').html('');
+    },
+    addDiscount:function(t){
+        var typedis=t.find('#typedis').value;
+        var brand=t.find('#selBrand').value;
+        var idproduct=$('#txtaddproduct').attr('data-id');
+       /* var discount=t.find('#discount').value;
+        var startdate=t.find('#startdate').value;
+        var enddate=t.find('#enddate').value;*/
+        var doc = this.getDatadiscount(t);
+        if(typedis=='byprod'){
+            var data={
+                discount:doc
+            }
+            if(idproduct==''||doc.discount=='' || doc.startdate=='' || doc.enddate==''){
+                Meteoris.Flash.set('danger', 'fields is required !!!'); 
+            }else{
+                Meteor.call("updateProductDis",idproduct,data,function(err){
+                    if(!err){
+                        Meteoris.Flash.set('success', "discount saved ");
+                    }
+                });
+            }
+        }else if(typedis=='bybrand'){
+            var data={
+                brand:brand,
+                discount:doc.discount,
+                startdate:doc.startdate,
+                enddate:doc.enddate
+            }
+            if(brand=='' || doc.discount=='' || doc.startdate=='' || doc.enddate==''){
+                Meteoris.Flash.set('danger', 'fields is required !!!'); 
+            }else{
+                Meteor.call("insertdiscount",data,function(err){
+                    if(err){
+                        Meteoris.Flash.set('danger', err.message);
+                    }else{
+                        Meteoris.Flash.set('success', "discount saved ");
+                    }
+                });
+            }
+        }else{
+            Meteoris.Flash.set('danger', 'Please select type of discount'); 
+        }
+    },
+    updatediscountByProduct:function(e,t,id){
+        var doc=this.getDatadiscount(t);
+        var data={
+            discount:doc    
+        }
+        Meteor.call("updatediscountByProduct",id,data,function(err){
+            if(err){
+                Meteoris.Flash.set('danger', err.reason); 
+            }else{
+                FlowRouter.go('/discount/add');
+            }
+        });
+    },
+    updatediscountByBrand:function(e,t,id){
+        var id=id;
+        var doc=this.getDatadiscount(t);
+        Meteor.call("updatediscountByBrand",id,doc,function(err){
+            if(err){
+                Meteoris.Flash.set('danger', err.reason); 
+            }else{
+                FlowRouter.go('/discount/add');
+            }
+        });
+    },
+    getDatadiscount: function(t) {
+        data= {
+            discount:t.find('#discount').value,
+            startdate:t.find('#startdate').value,
+            enddate:t.find('#enddate').value,
+        };
+
+        return data
     }
 });
