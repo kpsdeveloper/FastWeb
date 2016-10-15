@@ -1,5 +1,21 @@
 var ctrl = new Meteoris.ProductsController();
-
+Template.meteoris_adddiscount.onRendered(function() {
+    this.$('.datetimepicker').datetimepicker();
+});
+Template.editdiscountProduct.onRendered(function() {
+    //this.$('.datetimepicker').datetimepicker();
+    $('.datetimepicker').datetimepicker({
+      useCurrent: false,
+      format: 'YYYY/MM/DD, hh:mm A'
+    });
+});
+Template.editdiscountBrand.onRendered(function() {
+     $('.datetimepicker').datetimepicker({
+      useCurrent: false,
+      format: 'YYYY/MM/DD, hh:mm A'
+    });
+    
+});
 Template.meteoris_adddiscount.events = {
     'change #typedis':function(e,t){
     	ctrl.hiddenForm(t);

@@ -201,6 +201,23 @@ window.listProductHtml = function( data , thumb){
 	html += 	  '<a href="/details/'+slugTitle(data.title)+'"><img src="'+src+'" style="width:201px;height:201px"></a>';
 	html +=     '</div>';
     html += 	'<a href="/details/'+slugTitle(data.title)+'"><h3 class="title">'+data.title+'</h3></a>';
+    //discount html
+    var curdate=new Date();
+    var timestp=curdate.getTime();
+    if(data.hasOwnProperty("discount")){
+        if(timestp >= parseInt(data.discount.startdate) && timestp <= parseInt(data.discount.enddate)){
+            html+='<h4>'+data.discount.discount+'%</h4>';
+        }
+    }else{
+        var disc=Discount.findOne({brand:data.Brand});
+        if(disc){ 
+            if(timestp>=parseInt(disc.startdate) && timestp<=parseInt(disc.enddate)){
+                html+='<h4>'+disc.discount+'%</h4>';
+             }
+        }
+    }
+   
+    //end discount
     html +=     '<div class="clear"></div>';
     html +=     '<div class="rating-container rating-md rating-animate">';
     html +=         '<div class="rating"><span class="empty-stars"><span class="star"><i class="glyphicon glyphicon-star-empty"></i></span><span class="star"><i class="glyphicon glyphicon-star-empty"></i></span><span class="star"><i class="glyphicon glyphicon-star-empty"></i></span><span class="star"><i class="glyphicon glyphicon-star-empty"></i></span><span class="star"><i class="glyphicon glyphicon-star-empty"></i></span></span><span class="filled-stars" style="width: '+data.rate+'%;"><span class="star"><i class="glyphicon glyphicon-star"></i></span><span class="star"><i class="glyphicon glyphicon-star"></i></span><span class="star"><i class="glyphicon glyphicon-star"></i></span><span class="star"><i class="glyphicon glyphicon-star"></i></span><span class="star"><i class="glyphicon glyphicon-star"></i></span></span></div>';
@@ -782,3 +799,35 @@ window.getPaginationData = function(){
 
 }
 
+Template.registerHelper("convertMsTimeStamp", function(tms) {
+    var d = new Date(tms), // Convert the passed timestamp to milliseconds
+        yyyy = d.getFullYear(),
+        mm = ('0' + (d.getMonth() + 1)).slice(-2), // Months are zero based. Add leading 0.
+        dd = ('0' + d.getDate()).slice(-2), // Add leading 0.
+        hh = d.getHours(),
+        h = hh,
+        min = ('0' + d.getMinutes()).slice(-2), // Add leading 0.
+        ampm = 'AM',
+        hTime;
+
+    if (hh > 12) {
+        h = hh - 12;
+        ampm = 'PM';
+    } else if (hh === 12) {
+        h = 12;
+        ampm = 'PM';
+    } else if (hh == 0) {
+        h = 12;
+    }
+    // ie: 2013-02-18, 8:35 AM 
+    hTime = yyyy + '/' + mm + '/' + dd + ', ' + h + ':' + min + ' ' + ampm;
+    return hTime;
+});
+/*window.checkalldiscount = function(idprod){
+    var oneprod=Meteoris.Products.findOne({_id:idprod});
+    if(oneprod.hasOwnProperty('discount')){
+        return true;
+    }else{
+        if()
+    }
+}*/

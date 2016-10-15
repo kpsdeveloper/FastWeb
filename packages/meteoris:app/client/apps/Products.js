@@ -77,6 +77,12 @@ Template.detail.helpers({
     },
     getRecommendProducts: function( recommended ){
     	return ctrl.getRecommendProducts( recommended );
+    },
+    checkdiscount:function(oneproduct){
+        return ctrl.checkdiscount(oneproduct);
+    },
+    getPriceAfterDiscount:function(oldprice){
+        return ctrl.getPriceAfterDiscount(oldprice);
     }
 });
 Template.searchproduct.helpers({

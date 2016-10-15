@@ -20,7 +20,11 @@ Meteoris.OrdersController = Meteoris.Controller.extend({
             }
         }
         var userId = getSessionUserID();
-
+       /* var discount=tpl.$("#discount").val();
+        if(discount==undefined){
+        	discount=0;
+        }*/
+        console.log('discount'+discount);
         console.log('Id Product:', id_product);
         console.log('Id attribute:', attribute);
         console.log('Id userId:', userId);

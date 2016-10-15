@@ -58,7 +58,7 @@ Meteoris.ProductsController = Meteoris.Controller.extend({
         var userId = getSessionUserID();
         //var cart = Meteoris.Carts.findOne({userId:userId});
         //var ProductInCart = (cart)? cart.items.map( function(pid){ return pid.id_product;}):[];
-        var data =  Meteoris.Products.find({category:{$in:categoryId}},{ fields:{_id:1, title:1,price:1, category:1, oldId:1,review:1}, limit:limit});
+        var data =  Meteoris.Products.find({category:{$in:categoryId}},{ fields:{_id:1, title:1,price:1, category:1,discount:1,Brand:1 ,oldId:1,review:1}, limit:limit});
         return data;
     },
     addReview: function(t, product_title){
@@ -118,7 +118,35 @@ Meteoris.ProductsController = Meteoris.Controller.extend({
 	    	return html;
     	}
     },
-
+    checkdiscount:function(oneproduct){
+        var curtime=new Date();
+        var timetoday=curtime.getTime();
+        //var oneproduct=Meteoris.Products.findOne({title:title});
+        if(oneproduct.hasOwnProperty("discount")){
+            console.log("ENTER ONE COND");
+            if(timetoday >= parseInt(oneproduct.discount.startdate) && timetoday <= parseInt(oneproduct.discount.enddate)){
+                Session.set("DISCOUNTVALUE",oneproduct.discount.discount);
+                return oneproduct.discount.discount;
+            }
+        }else{
+            var disc=Discount.findOne({brand:oneproduct.Brand});
+            if(disc){
+                if(timetoday >= parseInt(disc.startdate) && timetoday <= parseInt(disc.enddate)){
+                    Session.set("DISCOUNTVALUE",disc.discount);
+                    return disc.discount;
+                }
+                 
+            }
+        }
+    },
+    getPriceAfterDiscount:function(oldprice){
+        var disc=Session.get("DISCOUNTVALUE");
+        console.log("DISCOUNT AND OLDPRICE "+disc+'==='+oldprice)
+        var realdis=parseInt(disc)/100;
+        var pricediscount=parseInt(oldprice)*realdis;
+        var lastprice=parseInt(oldprice)-parseInt(pricediscount);
+        return lastprice;
+    },
     //=================FOR DISCOUNT FUNCTION=================
     hiddenForm:function(t){
         var typediscount=t.find('#typedis').value;
@@ -223,10 +251,16 @@ Meteoris.ProductsController = Meteoris.Controller.extend({
         });
     },
     getDatadiscount: function(t) {
+        var startdate=t.find('#startdate').value;
+        var getstartdate=new Date(startdate);
+        var timestart=getstartdate.getTime();
+        var enddate=t.find('#enddate').value
+        var getenddate=new Date(enddate);
+        var timeend=getenddate.getTime();
         data= {
             discount:t.find('#discount').value,
-            startdate:t.find('#startdate').value,
-            enddate:t.find('#enddate').value,
+            startdate:timestart,
+            enddate:timeend,
         };
 
         return data
