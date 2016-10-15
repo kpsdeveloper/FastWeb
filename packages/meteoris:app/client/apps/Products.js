@@ -6,19 +6,46 @@ Session.set('SORTKEY','title');
 Session.set('VIEWCOUNT', 20);
 itemSub = '';
 Tracker.autorun(function() {
-    var page = Session.get('PAGE');
-    var name = Session.get('CATEGORYNAME');
-    if( name ){
-        var categoryId = getCategoryIdChildren( name );
-        itemSub = Meteor.subscribe('Products', categoryId, page, limit, Meteor.userId(),function(){
-            Session.set('SUBSCRIBELISTPRO', 1);
-            Meteor.call('Meteoris.Count.Products', categoryId, function(err, count){
-                if(!err){
-                    //Session.set('TOTALPRODUCT', count);
-                    $('#pagination').pagination({ items: count, itemsOnPage: limit, currentPage:page, hrefTextPrefix:'', cssStyle: 'light-theme' });
-                }
-            })
-        })    
+    var path = Session.get('PATH');
+    if( path ){
+        
+        var categorydata = Session.get('CATEGORYDATA');
+        var categoryId = getCategoryIdChildren( categorydata.name );
+        var page = categorydata.page;
+        if( path == 'category'){
+            if( categorydata ){
+                itemSub = Meteor.subscribe('Products', categoryId, page, limit, Meteor.userId(),function(){
+                    Session.set('SUBSCRIBELISTPRO', 1);
+                    
+                    Meteor.call('Meteoris.Count.Products', categoryId, function(err, count){
+                        if(!err){
+                            //Session.set('TOTALPRODUCT', count);
+                            $('#pagination').pagination({ items: count, itemsOnPage: limit, currentPage:page, hrefTextPrefix:'', cssStyle: 'light-theme' });
+                        }
+                    })
+                })    
+            }
+        }else if( path == 'filter-product'){
+            if( categorydata ){
+                categorydata.categoryId = categoryId;
+                categorydata.limit      = limit;
+                categorydata.userId     = Meteor.userId();
+                categorydata.price      = (categorydata.hasOwnProperty('price'))? categorydata.price:0;
+                categorydata.parent        = (categorydata.hasOwnProperty('parent'))? categorydata.parent:0;
+                categorydata.child   = (categorydata.hasOwnProperty('child'))? categorydata.child:'';
+
+                itemSub = Meteor.subscribe('FilterProducts', categorydata,function(){
+                    Session.set('SUBSCRIBELISTPRO', 1);
+                    
+                    Meteor.call('Meteoris.Count.Products', categoryId, function(err, count){
+                        if(!err){
+                            
+                            //$('#pagination').pagination({ items: count, itemsOnPage: limit, currentPage:page, hrefTextPrefix:'', cssStyle: 'light-theme' });
+                        }
+                    })
+                })    
+            }
+        }
     }
 })
 
@@ -26,11 +53,11 @@ Template.category.onCreated(function() {
 	
 	Session.set('RELOADCATEGORYPAGE',1);
     var self = this;
-    var page = Session.get('PAGE');
-    var name = Session.get('CATEGORYNAME'); //FlowRouter.current().params.name;
+    //var page = Session.get('PAGE');
+    //var name = Session.get('CATEGORYNAME'); //FlowRouter.current().params.name;
     
     self.autorun(function() {
-        var categoryId = getCategoryIdChildren( name );
+        //var categoryId = getCategoryIdChildren( name );
         /*itemSub = self.subscribe('Products', categoryId, page, limit,function(){
         	Session.set('SUBSCRIBELISTPRO', 1);
         })*/
@@ -258,3 +285,8 @@ Template.app_header.helpers({
         return children;
     }
 });
+Template.filterProduct.helpers({
+    getParentTags: function(){
+        var parent = Meteoris.ParentTags.find({});
+    }
+})

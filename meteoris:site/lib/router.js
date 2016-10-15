@@ -7,6 +7,9 @@ FlowRouter.route('/admin', {
     },   
 });
 FlowRouter.route('/', {
+	subscriptions: function(){
+        return [TAPi18n.subscribe('Categories'), Meteor.subscribe('Carts', getSessionUserID())];
+    },
     action: function() {
         BlazeLayout.render('mainLayout', {content: "index"});
     },   

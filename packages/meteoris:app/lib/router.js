@@ -43,17 +43,32 @@ FlowRouter.route('/category/:name/:page', {
         return [TAPi18n.subscribe('Categories'), Meteor.subscribe('ParentAttribute')];
     },
     action: function( params ) {
-        Session.set('CATEGORYNAME',  unslugTitle(params.name));
-        Session.set('PAGE', params.page );
+        var path = FlowRouter.current().path;
+        var pageslug = path.split('/')
+        Session.set('CATEGORYDATA',  {name:unslugTitle(params.name), page:params.page});
+        Session.set('PATH', pageslug[1] );
         BlazeLayout.render('mainLayout', {content: "category"});
-        //ReactLayout.render(CategoryComponent, {name: "category"})
     }
-    
 
 });
+FlowRouter.route('/filter-product/:name?', {
+    subscriptions: function(){
+        return [TAPi18n.subscribe('Categories'), Meteor.subscribe('ParentAttribute'), Meteor.subscribe('ParentTags')];
+    },
+    action: function( params, queryParams ) {
+        var path = FlowRouter.current().path;
+        var pageslug = path.split('/')
+        var myparam = queryParams;
+        myparam.name = unslugTitle(params.name);
+        Session.set('CATEGORYDATA',  myparam);
+        Session.set('PATH', pageslug[1] );
+        BlazeLayout.render('mainLayout', {content: "filterProduct"});
+    }
+});
+
 FlowRouter.route('/checkout', {
     subscriptions: function(){
-        Meteor.subscribe('Carts', getSessionUserID());
+        return [TAPi18n.subscribe('Categories'), Meteor.subscribe('Carts', getSessionUserID())];
     },
     action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "showCart"});

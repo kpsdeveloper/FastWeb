@@ -7,7 +7,6 @@ limit = 16;
 Template.mainLayout.events({
 	'click .unlike': function(e) {
 		e.preventDefault();
-		console.log(FlowRouter.current().path);
 	    var productid = $(e.currentTarget).attr('data-id');
 	    $('#like' + productid).removeClass('nonelike');
 	    $('#unlike' + productid).addClass('nonelike');
@@ -68,7 +67,7 @@ Template.mainLayout.events({
         e.preventDefault();
         var par = $(e.currentTarget).parent().parent().attr('id');
         var userId = getSessionUserID();
-        console.log('str:', par);
+
         Meteor.call('Meteoris.Cart.Delete', par, userId);
     },
     'change .updateQty': function(e){
@@ -283,8 +282,8 @@ Template.registerHelper('isUserLoggedIn', function() {
 });
 
 Template.registerHelper('getCategoryIdChildren', function() {
-	var name = Session.get('CATEGORYNAME');
-	var list = getCategoryIdChildren( name );
+	var catdata = Session.get('CATEGORYDATA');
+	var list = getCategoryIdChildren( catdata.name );
 	return {list:list};
 });
 Template.registerHelper('getCurrentCategorySlug', function() {
@@ -519,13 +518,13 @@ window.getImgForProductCDNv2 = function(id_product, thumb) {
         if (!prod.image || prod.image.length == 0) {
 
             var attr = Meteoris.Attributes.find({ product: prod.oldId });
-            console.log(attr.fetch());
-            if (!attr) {
-                return id_product;
-            } else {
+           
+            if (attr.count() > 0 ) {
                 var firstattr=attr.fetch()[0];
-                console.log("ATRTTHAM"+firstattr.productImage);
                 return getImgCDNv2(firstattr.productImage, thumb);
+                
+            } else {
+                return id_product;
             }
         } else {
             if (!prod.image[0]) {
