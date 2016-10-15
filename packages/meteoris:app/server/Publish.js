@@ -1,7 +1,7 @@
 Meteor.publish('Products', function(categoryId, page , limit, userId) {
 	//var total = Meteoris.Products.find({category:categoryId},{fields:{_id:1}});
 	var skip = (page<=1)? 0 : (page - 1) * limit;
-    var data = Meteoris.Products.find({ category:{$in:categoryId}},{ fields:{_id:1, title:1,price:1,category:1, oldId:1,image:1,description:1,review:1}, sort:{price:1},skip: skip, limit:limit});
+    var data = Meteoris.Products.find({ category:{$in:categoryId}},{ fields:{_id:1, title:1,price:1,category:1,discount:1,Brand:1, oldId:1,image:1,description:1,review:1}, sort:{price:1},skip: skip, limit:limit});
     //var dataattr = publishAttributeProducts( data );
     var prodID = data.map(function(p) { return p._id });
     var attrId = data.map(function(p) { return p.oldId });
@@ -317,7 +317,15 @@ Meteor.publish('editBanner', function(id) {
     
     return banner;
 });
-
+Meteor.publish('alldiscount', function() {
+    return Discount.find({}); 
+});
+Meteor.publish('oneProduct', function(id) {
+    return Meteoris.Products.find({_id:id}); 
+});
+Meteor.publish('onediscount', function(id) {
+    return Discount.find({_id:id}); 
+});
 
 publishImage = function(listobjPro){
     var checkAtrr=[];
@@ -347,9 +355,6 @@ publishImage = function(listobjPro){
             }
         });
     }
-    console.log(imgId);
-    console.log(">>>>>>>>>>>>>>");
-    console.log(allattr);
     var dataimg = Meteoris.Images.find({_id: {$in: imgId}})
     var dataAttr= Meteoris.Attributes.find({_id: {$in: allattr}});
 

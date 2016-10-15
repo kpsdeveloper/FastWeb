@@ -7,6 +7,7 @@
 
 //Namespace('Meteoris.Docs');
 Banners = new Mongo.Collection("banner");
+Discount=new Mongo.Collection("discount");
 Posts = new Mongo.Collection("posts");
 Posts.attachSchema(new SimpleSchema({
   name: {

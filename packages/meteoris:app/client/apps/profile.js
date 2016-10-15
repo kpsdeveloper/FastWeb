@@ -3,6 +3,12 @@ var ctrlUser = new Meteoris.UserController();
 Template.meteoris_profile.onCreated(function() {
     Meteor.Loader.loadJs("//api.filestackapi.com/filestack.js");
 });
+Template.meteoris_profile.onRendered(function() {
+    $('.datetimepicker').datetimepicker({
+      useCurrent: false,
+      format: 'YYYY/MM/DD'
+    });
+});
 
 Template.meteoris_profile.helpers({
    getProfileInfo:function(params) {

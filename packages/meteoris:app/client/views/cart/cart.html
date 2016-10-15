@@ -12,6 +12,7 @@
 		        			<th>Product Name</th>
 		        			<th>Price</th>
 		    				<th>Qty</th>
+		    				<th>discount</th>
 		    				<th>Subtotal</th>
 		    				</tr>
 		        		</thead>
@@ -27,6 +28,7 @@
 		    						</td>
 		    						<td class="col-md-2">{{../price}}</td>
 		    						<td class="col-md-1"><input type="text" value="{{../quantity}}" class="updateQty form-control input-number"></td>
+		    						<td>500%</td>
 		    						<td class="col-md-2">{{../subtotal}}&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-remove-circle delete" ></span></td>
 		        				{{/with}}
 		        				</tr>
@@ -36,18 +38,19 @@
 		        					<td colspan="3"></td>
 		        					<td>Total:</td>
 		        					<td>{{total}}</td>
+		        					<button type="button" class="btn btn-danger" id="proceedOrder">Proceed Order</button>
 		        				</tr>
 		        		</tbody>
 		        		</table>
 		        		{{/with}}
 		        	</div>
 		        	<div class="col-md-3">
-		        		<h3>Order Summary</h3>
+		        		<!-- <h3>Order Summary</h3> -->
 		        		<hr>
-		        		{{#with cart}}
+		        		<!-- {{#with cart}}
 		        			<p>Total : <span>{{total}}</span></p>
-		        		{{/with}}
-		        		<button type="button" class="btn btn-danger" id="proceedOrder">Proceed Order</button>
+		        		{{/with}} -->
+		        		<!-- <button type="button" class="btn btn-danger" id="proceedOrder">Proceed Order</button> -->
 		        	</div>
 		        {{else}}
 		        	<div class="col-md-7">

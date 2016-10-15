@@ -58,7 +58,7 @@ Meteoris.ProductsController = Meteoris.Controller.extend({
         var userId = getSessionUserID();
         //var cart = Meteoris.Carts.findOne({userId:userId});
         //var ProductInCart = (cart)? cart.items.map( function(pid){ return pid.id_product;}):[];
-        var data =  Meteoris.Products.find({category:{$in:categoryId}},{ fields:{_id:1, title:1,price:1, category:1, oldId:1,review:1}, limit:limit});
+        var data =  Meteoris.Products.find({category:{$in:categoryId}},{ fields:{_id:1, title:1,price:1, category:1,discount:1,Brand:1 ,oldId:1,review:1}, limit:limit});
         return data;
     },
     addReview: function(t, product_title){
@@ -118,7 +118,155 @@ Meteoris.ProductsController = Meteoris.Controller.extend({
 	    	return html;
     	}
     },
+    checkdiscount:function(oneproduct){
+        var curtime=new Date();
+        var timetoday=curtime.getTime();
+        //var oneproduct=Meteoris.Products.findOne({title:title});
+        if(oneproduct.hasOwnProperty("discount")){
+            console.log("ENTER ONE COND");
+            if(timetoday >= parseInt(oneproduct.discount.startdate) && timetoday <= parseInt(oneproduct.discount.enddate)){
+                Session.set("DISCOUNTVALUE",oneproduct.discount.discount);
+                return oneproduct.discount.discount;
+            }
+        }else{
+            var disc=Discount.findOne({brand:oneproduct.Brand});
+            if(disc){
+                if(timetoday >= parseInt(disc.startdate) && timetoday <= parseInt(disc.enddate)){
+                    Session.set("DISCOUNTVALUE",disc.discount);
+                    return disc.discount;
+                }
+                 
+            }
+        }
+    },
+    getPriceAfterDiscount:function(oldprice){
+        var disc=Session.get("DISCOUNTVALUE");
+        console.log("DISCOUNT AND OLDPRICE "+disc+'==='+oldprice)
+        var realdis=parseInt(disc)/100;
+        var pricediscount=parseInt(oldprice)*realdis;
+        var lastprice=parseInt(oldprice)-parseInt(pricediscount);
+        return lastprice;
+    },
+    //=================FOR DISCOUNT FUNCTION=================
+    hiddenForm:function(t){
+        var typediscount=t.find('#typedis').value;
+        if(typediscount=='bybrand'){
+            $("#hideBrand").removeClass("hidden");
+            $("#hidetxtpro").addClass("hidden");
+        }else if(typediscount=='byprod'){
+            $("#hidetxtpro").removeClass("hidden");
+            $("#hideBrand").addClass("hidden");
+        }else{
+            //alert ()
+        }
+    },
+    keyuplistproduct:function(e,t){
+        var key = $(e.currentTarget).val();
+        if( key.length > 3){
+            var data = Meteoris.Products.find({ "title": { $regex: new RegExp(key, "i") } });
+            var text = '';
+            if( data.count() > 0){
+                data.forEach( function(data, index){
+                    text += '<a href=""><li data-id="'+data._id+'" class="listpro">'+data.title+'</li></a>';
+                })  
+            }
+            if( text!='')
+                $('#result').html( '<div style="border:1px solid #ddd;padding:5px">'+text+'</div>' );
+            else
+                $('#result').html( '<li>No result.</li>' );
+        }
+    },
+    clickOnKeyup:function(e){
+        var title = $(e.currentTarget).html();
+        var id = $(e.currentTarget).attr('data-id');
+        $('#txtaddproduct').val(title);
+        $('#txtaddproduct').attr('data-id', id);
+        $('#result').html('');
+    },
+    addDiscount:function(t){
+        var typedis=t.find('#typedis').value;
+        var brand=t.find('#selBrand').value;
+        var idproduct=$('#txtaddproduct').attr('data-id');
+       /* var discount=t.find('#discount').value;
+        var startdate=t.find('#startdate').value;
+        var enddate=t.find('#enddate').value;*/
+        var doc = this.getDatadiscount(t);
+        if(typedis=='byprod'){
+            var data={
+                discount:doc
+            }
+            if(idproduct==''||doc.discount=='' || doc.startdate=='' || doc.enddate==''){
+                Meteoris.Flash.set('danger', 'fields is required !!!'); 
+            }else{
+                Meteor.call("updateProductDis",idproduct,data,function(err){
+                    if(!err){
+                        Meteoris.Flash.set('success', "discount saved ");
+                    }
+                });
+            }
+        }else if(typedis=='bybrand'){
+            var data={
+                brand:brand,
+                discount:doc.discount,
+                startdate:doc.startdate,
+                enddate:doc.enddate
+            }
+            if(brand=='' || doc.discount=='' || doc.startdate=='' || doc.enddate==''){
+                Meteoris.Flash.set('danger', 'fields is required !!!'); 
+            }else{
+                Meteor.call("insertdiscount",data,function(err){
+                    if(err){
+                        Meteoris.Flash.set('danger', err.message);
+                    }else{
+                        Meteoris.Flash.set('success', "discount saved ");
+                    }
+                });
+            }
+        }else{
+            Meteoris.Flash.set('danger', 'Please select type of discount'); 
+        }
+    },
+    updatediscountByProduct:function(e,t,id){
+        var doc=this.getDatadiscount(t);
+        var data={
+            discount:doc    
+        }
+        Meteor.call("updatediscountByProduct",id,data,function(err){
+            if(err){
+                Meteoris.Flash.set('danger', err.reason); 
+            }else{
+                FlowRouter.go('/discount/add');
+            }
+        });
+    },
+    updatediscountByBrand:function(e,t,id){
+        var id=id;
+        var doc=this.getDatadiscount(t);
+        Meteor.call("updatediscountByBrand",id,doc,function(err){
+            if(err){
+                Meteoris.Flash.set('danger', err.reason); 
+            }else{
+                FlowRouter.go('/discount/add');
+            }
+        });
+    },
+    getDatadiscount: function(t) {
+        var startdate=t.find('#startdate').value;
+        var getstartdate=new Date(startdate);
+        var timestart=getstartdate.getTime();
+        var enddate=t.find('#enddate').value
+        var getenddate=new Date(enddate);
+        var timeend=getenddate.getTime();
+        data= {
+            discount:t.find('#discount').value,
+            startdate:timestart,
+            enddate:timeend,
+        };
+
+        return data
+    },
     getAttributeById: function( id ){
         return Meteoris.Attributes.findOne({_id:id});
+
     }
 });
