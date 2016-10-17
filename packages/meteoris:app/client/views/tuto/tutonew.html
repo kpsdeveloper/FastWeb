@@ -14,9 +14,9 @@
                 {{#each getTutoCategory }}
                 <div class="col-lg-4 col-sm-4 {{getStyleFa}}">
                     <a href="/tutolisting/{{slugTitle title}}" id="linkTotulisting" class="tutoImg">
-    					{{#with getCategoryImg _id}}
-    				        <img src="{{getImgCDNv2ByHelper this 'true'}}" width="220px" height="220px" style="margin-left: 20px; margin-top:20px; padding-bottom: 15px;">
-    					{{/with}}
+    					
+    				        <img src="{{src}}" width="220px" height="220px" style="margin-left: 20px; margin-top:20px; padding-bottom: 15px;">
+    					
                     </a>
                     <a href="/tutolisting/{{slugTitle title}}" id="linkTotulisting">
                         <h1 class="text-center txt-color bold">{{title}}</h1>

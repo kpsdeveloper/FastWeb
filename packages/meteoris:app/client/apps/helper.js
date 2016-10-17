@@ -469,7 +469,7 @@ window.slugTitle = function(title) {
     //title = title.toLowerCase();
     return title;
 }
-window.unslugTitle = function(title) {
+unslugTitle = function(title) {
 	if (!title)
         return;
     title = title.replace(/\-/g, " ");

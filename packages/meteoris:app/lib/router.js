@@ -40,7 +40,7 @@ groupRoutes.route('/products/add', {
 });
 FlowRouter.route('/category/:name/:page', {
     subscriptions: function(){
-        //TAPi18n.subscribe('Categories');
+        TAPi18n.subscribe('Categories');
     },
     action: function( params ) {
         Session.set('CATEGORYNAME',  unslugTitle(params.name));
@@ -177,6 +177,28 @@ FlowRouter.route('/tuto', {
     },
     action: function() {
         BlazeLayout.render('mainLayout', {content: "tutonew"});
+    }
+});
+FlowRouter.route('/tutolisting/:_id', {
+    subscriptions: function(){
+        return [TAPi18n.subscribe('Categories')];
+    },
+    action: function(params) {
+        var name = params._id;
+        var catId = getCategoryIdChildren(unslugTitle(name));
+        Session.set('TUTOCATEGORYNAME', catId);
+        BlazeLayout.render('mainLayout', {content: "tutolisting"});
+    }
+});
+FlowRouter.route('/tutodetails/:_id', {
+    subscriptions: function(){
+        return [TAPi18n.subscribe('Categories')];
+    },
+    action: function(params) {
+        var name = params._id;
+        var myTitle = unslugTitle(name);
+        Session.set('TUTODETAILID', myTitle);
+        BlazeLayout.render('mainLayout', {content: "tutodetails"});
     }
 });
 /*End of tuto page*/

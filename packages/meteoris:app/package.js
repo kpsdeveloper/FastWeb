@@ -93,6 +93,8 @@ Package.onUse(function(api) {
         'client/views/orders/editAddress.html',
         'client/views/search/searchproduct.html',
         'client/views/tuto/tutonew.html', 
+        'client/views/tuto/tutolisting.html',
+        'client/views/tuto/tutodetails.html',
         'client/apps/cart.js',
         'client/apps/profile.js',
         'client/views/admin/banner/addbanner.html',

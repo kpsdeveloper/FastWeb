@@ -77,7 +77,15 @@ Meteor.publish('Orders', function(userId) {
 });
 TAPi18n.publish('Categories', function() {
     var data = Meteoris.Categories.find({});
-    return data;
+    var dataParent = Meteoris.Categories.find({ "$or": [{ "parent": "0" }, { "parent": " " }] });
+    var imgId = dataParent.map(function(n) { 
+        if (n.image instanceof Array)
+            return n.image[0];
+        else
+            return n.image;
+    });
+    var dataimg = Meteoris.Images.find({_id: {$in: imgId}});
+    return [data, dataimg];
 });
 Meteor.publish('Provinces', function() {
     return Meteoris.Provinces.find({});
@@ -223,7 +231,32 @@ Meteor.publish('editBanner', function(id) {
     
     return banner;
 });
+Meteor.publish('TutoContent',function(id){
+    var type = Meteoris.ContentType.find({ type: "Tuto" });
+    var tutoid = type.fetch()[0]._id;
+    var myData =  Meteoris.Contents.find({ category:{$in: id} ,typeid: tutoid },{sort: {_id:-1}});
+    var imgId = myData.map(function(n) {
+        if (n.image instanceof Array)
+            return n.image[0];
+        else return n.image;
+    });
+    var dataimg = Meteoris.Images.find({_id: {$in: imgId}}, {fields:{_id:1,copies:1}});
+    return [type, myData, dataimg];
+});
 
+Meteor.publish('listTutoDetails',function(title){
+    console.log("MyTitle: ",title);
+    var con = Meteoris.Contents.findOne({ "title": title});
+    var result = Meteoris.Contents.find({ typeid: con.typeid, category: con.category });
+
+    var imgId = result.map(function(n) {
+        if (n.image instanceof Array)
+            return n.image[0];
+        else return n.image;
+    });
+    var dataimg = Meteoris.Images.find({_id: {$in: imgId}}, {fields:{_id:1,copies:1}});
+    return [result, dataimg];
+});
 
 publishImage = function(listobjPro){
     var checkAtrr=[];
