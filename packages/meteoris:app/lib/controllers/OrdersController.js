@@ -4,8 +4,9 @@ Meteoris.OrdersController = Meteoris.Controller.extend({
 	addToCart: function(e, tpl){
 		var title = unslugTitle(FlowRouter.getParam("title"));  
         var product = Meteoris.Products.findOne({title:title});
-        var id_product = ( product )? product._id:$(e.currentTarget).parent().attr('id');
-        var qty = (tpl.$("#qty").val())? tpl.$("#qty").val():$('#qty'+id_product).val();
+        var id_product = ( product )? product._id:$(e.currentTarget).parents('.product-grid').attr('id');
+        //var qty = (tpl.$("#qty").val())? tpl.$("#qty").val():$('#qty'+id_product).val();
+        var qty = (tpl.$("#qty").val())? tpl.$("#qty").val():1;
         var attrid = $('.attrwrapper .active').attr('data-attr');
         var attribute = '';
         if( attrid )
@@ -19,7 +20,11 @@ Meteoris.OrdersController = Meteoris.Controller.extend({
             }
         }
         var userId = getSessionUserID();
-
+       /* var discount=tpl.$("#discount").val();
+        if(discount==undefined){
+        	discount=0;
+        }*/
+        console.log('discount'+discount);
         console.log('Id Product:', id_product);
         console.log('Id attribute:', attribute);
         console.log('Id userId:', userId);

@@ -22,6 +22,7 @@ function checkIsLogin(){
 FlowRouter.route('/searchproduct/:slug', {
     subscriptions: function(){
         TAPi18n.subscribe('Categories');    
+        return [TAPi18n.subscribe('Categories'), Meteor.subscribe('ParentAttribute')];
     },
     action: function() {
         BlazeLayout.render('mainLayout', {content: "searchproduct"});
@@ -41,19 +42,35 @@ groupRoutes.route('/products/add', {
 FlowRouter.route('/category/:name/:page', {
     subscriptions: function(){
         TAPi18n.subscribe('Categories');
+        return [TAPi18n.subscribe('Categories'), Meteor.subscribe('ParentAttribute'),Meteor.subscribe("alldiscount")];
     },
     action: function( params ) {
-        Session.set('CATEGORYNAME',  unslugTitle(params.name));
-        Session.set('PAGE', params.page );
+        var path = FlowRouter.current().path;
+        var pageslug = path.split('/')
+        Session.set('CATEGORYDATA',  {name:unslugTitle(params.name), page:params.page});
+        Session.set('PATH', pageslug[1] );
         BlazeLayout.render('mainLayout', {content: "category"});
-        //ReactLayout.render(CategoryComponent, {name: "category"})
     }
-    
 
 });
+FlowRouter.route('/filter-product/:name?', {
+    subscriptions: function(){
+        return [TAPi18n.subscribe('Categories'), Meteor.subscribe('ParentAttribute'), Meteor.subscribe('ParentTags')];
+    },
+    action: function( params, queryParams ) {
+        var path = FlowRouter.current().path;
+        var pageslug = path.split('/')
+        var myparam = queryParams;
+        myparam.name = unslugTitle(params.name);
+        Session.set('CATEGORYDATA',  myparam);
+        Session.set('PATH', pageslug[1] );
+        BlazeLayout.render('mainLayout', {content: "filterProduct"});
+    }
+});
+
 FlowRouter.route('/checkout', {
     subscriptions: function(){
-       
+        return [TAPi18n.subscribe('Categories'), Meteor.subscribe('Carts', getSessionUserID())];
     },
     action: function( params ) {
         BlazeLayout.render('mainLayout', {content: "showCart"});
@@ -111,7 +128,7 @@ FlowRouter.route('/ordersuccess', {
 });
 FlowRouter.route('/details/:title', {
     subscriptions: function(){
-        return [Meteor.Loader.loadJs("/js/jquery.elevateZoom-3.0.8.min.js")];
+        return [TAPi18n.subscribe('Categories'),Meteor.subscribe('ParentAttribute'),Meteor.subscribe("alldiscount"),Meteor.Loader.loadJs("/js/jquery.elevateZoom-3.0.8.min.js")];
     },
     action: function() {
         BlazeLayout.render('mainLayout', {content: "detail"});
@@ -212,3 +229,36 @@ groupBannerRoutes.route('/view', {
     },
 });
 /*End banner admin*/
+
+var groupDiscountRoutes = FlowRouter.group({
+    prefix: '/discount',
+    name: 'banner',
+    //triggersEnter: [authenticating]
+});
+groupDiscountRoutes.route('/add', {
+    subscriptions:function(){
+        [Meteor.subscribe("allproducts"),Meteor.subscribe("alldiscount")]
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "meteoris_adddiscount"});
+    },
+});
+
+groupDiscountRoutes.route('/edit-brand/:id', {
+    subscriptions:function(params){
+       Meteor.subscribe("onediscount",params.id);
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "editdiscountBrand"});
+    },
+});
+groupDiscountRoutes.route('/edit-product/:id', {
+    subscriptions:function(params){
+        //Meteor.subscribe("allproducts")
+        Meteor.subscribe("oneProduct",params.id);
+        
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "editdiscountProduct"});
+    },
+});

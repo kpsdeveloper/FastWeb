@@ -101,5 +101,9 @@ Meteor.methods({
 			Meteoris.Carts.update({_id:cart._id},{$set:{total:total,items:newdoc}});
 		}
 
+	},
+	'Meteoris.Cart.getTotalItem': function( userId ){
+		var cart = Meteoris.Carts.findOne({userId:userId});
+		return cart.items.length;
 	}
 });	

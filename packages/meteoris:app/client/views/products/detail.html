@@ -30,7 +30,14 @@
             <div class="col-md-2 col-xs-12">
                 <h5>Get delivered in all Iran!</h5>
                 <div style="height:3px;background:#000;"></div>
-                <h3>ریال <span class="price">{{product.priceAttr}}</span></h3>
+                {{#if checkdiscount product}}
+                    <p>old price<del>{{product.priceAttr}}</del></p>
+                    <p>discount: <span class="price" id="discount">{{checkdiscount product}}%</span></p>
+                    <h3>ریال <span class="price" >{{getPriceAfterDiscount product.priceAttr}}</span></h3>
+                {{else}}
+                    <h3>ریال <span class="price">{{product.priceAttr}}</span></h3>
+               {{/if}}
+                
                 <div class="block">
                 
                     <label class="quantity" for="select">Quantity</label>
