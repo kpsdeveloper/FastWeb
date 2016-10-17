@@ -82,6 +82,7 @@ Package.onUse(function(api) {
         'client/views/admin/products/insert.html',
         'client/views/products/detail.html',
         'client/views/products/category.html',
+        'client/views/products/filter-product.html',
         'client/views/products/quickview.html',
         'client/views/profile/profile.html',
         'client/views/profile/changepassword.html',
