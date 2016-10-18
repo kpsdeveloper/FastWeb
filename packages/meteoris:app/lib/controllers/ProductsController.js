@@ -58,7 +58,7 @@ Meteoris.ProductsController = Meteoris.Controller.extend({
         var userId = getSessionUserID();
         //var cart = Meteoris.Carts.findOne({userId:userId});
         //var ProductInCart = (cart)? cart.items.map( function(pid){ return pid.id_product;}):[];
-        var data =  Meteoris.Products.find({category:{$in:categoryId}},{ fields:{_id:1, title:1,price:1, category:1,discount:1,Brand:1 ,oldId:1,review:1}, limit:limit});
+        var data =  Meteoris.Products.find({category:{$in:categoryId}},{ fields:{_id:1, title:1,price:1, category:1,discount:1,Brand:1 ,oldId:1,review:1,recommended:1}, limit:limit});
         return data;
     },
     addReview: function(t, product_title){
@@ -112,6 +112,7 @@ Meteoris.ProductsController = Meteoris.Controller.extend({
     		var data = Meteoris.Products.find({_id:{$in:recommended}});
     		if( data.count() > 0 ){
 	    		data.forEach( function(data){
+                    var data = getFavoriteRating(data);
 	    			html += listProductHtml(data, 'true');
 	    		})
 	    	}
