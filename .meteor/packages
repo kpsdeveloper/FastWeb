@@ -40,3 +40,5 @@ mrt:external-file-loader
 msavin:mongol
 meteorhacks:aggregate
 tsega:bootstrap3-datetimepicker
+accounts-password
+email

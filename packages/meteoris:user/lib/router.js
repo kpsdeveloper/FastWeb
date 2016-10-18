@@ -12,7 +12,10 @@ function authenticating(path) {
     var except = [
         '/meteoris/user/login',
         '/meteoris/user/register',
-        '/meteoris/user/profile'
+        '/meteoris/user/profile',
+        '/meteoris/user/forget-password',
+        '/meteoris/user/confirmcode',
+        '/meteoris/user/newpassword'
     ];
 
     if (except.indexOf(path) == -1) {
@@ -82,6 +85,18 @@ userRoutes.route('/reset-password/:token', {
 userRoutes.route('/settings', {
     action: function() {
         BlazeLayout.render('meteoris_themeAdminMain', {content: "meteoris_userSettings"});
+    },
+});
+
+userRoutes.route('/confirmcode', {
+    action: function() {
+        BlazeLayout.render('meteoris_themeAdminMain', {content: "meteoris_confirmcode"});
+    },
+});
+
+userRoutes.route('/newpassword', {
+    action: function() {
+        BlazeLayout.render('meteoris_themeAdminMain', {content: "meteoris_resetpwd"});
     },
 });
 
