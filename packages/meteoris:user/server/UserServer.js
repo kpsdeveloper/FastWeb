@@ -79,6 +79,16 @@ Meteor.methods({
         }else return null; 
       
     },
+    loginwithPhone:function(email){
+        var oneuser=Meteor.users.findOne({"profile.phone":email});
+        if(oneuser){
+            email=oneuser.emails[0].address;
+            console.log("EAILSERVER"+email);
+            return email;
+        }else{
+            throw new Meteor.Error('Phone Number not found ');
+        }
+    }
 });
 
 
