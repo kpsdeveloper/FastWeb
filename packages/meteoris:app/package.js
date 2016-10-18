@@ -37,7 +37,6 @@ Package.onUse(function(api) {
         'mrt:fs@0.1.5',
         'cfs:filesystem@0.0.0',
         'wylio:mandrill@1.0.1',
-        'meteorhacks:aggregate',
         //'kadira:debug@3.2.2',
         //'kadira:runtime-dev@0.0.1',
         //'meteorhacks:kadira@2.23.4',
@@ -66,7 +65,6 @@ Package.onUse(function(api) {
         'server/Banner.js',
         'server/Carts.js',
         'server/Orders.js',
-        'server/discount.js',
         'server/Publish.js'
     ], 'server');
 
@@ -84,6 +82,7 @@ Package.onUse(function(api) {
         'client/views/products/category.html',
         'client/views/products/filter-product.html',
         'client/views/products/quickview.html',
+        'client/views/products/recommended-products.html',
         'client/views/profile/profile.html',
         'client/views/profile/changepassword.html',
         'client/views/cart/cart.html',
@@ -102,9 +101,6 @@ Package.onUse(function(api) {
         'client/views/admin/banner/editbanner.html',
         'client/views/admin/banner/viewbanner.html',
         'client/apps/banner.js',
-        'client/views/admin/discount/adddiscount.html',
-        'client/views/admin/discount/editdiscount.html',
-        'client/apps/discount.js',
         /*'client/views/login.html',
         'client/views/login.js',
         'client/views/register.html',

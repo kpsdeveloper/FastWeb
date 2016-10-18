@@ -112,6 +112,11 @@ Template.detail.helpers({
         return ctrl.getPriceAfterDiscount(oldprice);
     }
 });
+Template.quickView.helpers({
+    getRecommendProducts: function( recommended ){
+        return ctrl.getRecommendProducts( recommended );
+    }
+})
 Template.searchproduct.helpers({
     searchResult:function(e){
         //var keyword = unslugTitle(FlowRouter.current().params.slug);

@@ -9,15 +9,32 @@
                 {{#if Template.subscriptionsReady}}
                 	
 		                <form id="menuForm" class="form-horizontal">
+		                	{{#with quickView "true"}}
 		                    <div class="modal-body">
 		                    	<div class="row">
-		                       		{{{quickView "true"}}}
+		                       		
+		                       			<div class="col-md-4 col-xs-12">
+									        <a href="/details/{{slugTitle data.title}}"><img src="{{src}}" style="width:201px;height:201px"></a>
+									    </div>
+									    <div class="col-md-8 col-xs-12">
+									        <a href="/details/{{slugTitle data.title}}"><h3 class="title">{{data.title}}</h3></a>
+									        <p>{{{description}}}</p>
+									        <div class="col-md-6 col-xs-6">
+									            <label class="quantity" for="select">Quantity</label><select id="qty{{_id}}" name="select" class="quantity" size="1"><option value="1">1</option></select>
+									            <p>ریال  <span class="price">{{price}}</span></p>
+									        </div>
+									        <div class="col-md-6 col-xs-6" id="{{_id}}">
+									        <a href="/details/{{slugTitle data.title}}" class="btn btn-details">MORE DETAILS</a>
+									        </div>
+									    </div>
+									    
+		                       		
 		                        </div>
 		                    </div>
-		                    <!--<div class="modal-footer">
-		                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		                        <button type="submit" class="btn btn-primary" id="btnPushToMenu">Submit</button>
-		                    </div>-->
+		                    <div class="modal-footer">
+		                       {{{getRecommendProducts recommended}}}
+		                    </div>
+		                    {{/with}}
 		                </form>
                
                 {{/if}}
