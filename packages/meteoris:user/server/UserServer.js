@@ -88,6 +88,34 @@ Meteor.methods({
         }else{
             throw new Meteor.Error('Phone Number not found ');
         }
+    },
+    sendTextMessage: function(phone,code){
+        var findphone=Meteor.users.findOne({"profile.phone":phone});
+        plivo = Plivo.RestAPI({
+           authId: 'MANGIXNDBLYZQWMDLHZM',
+           authToken: 'NDAyZjcxZDhmZTI4OTEyNzAxNGE2MjlmMmQ5MmIx',
+        });
+        var text='Your Code for verifing is '+code;
+        var params = {
+             'src': '+855974861527', // Caller Id
+             'dst' : phone, // User Number to Call
+             'text' : text,
+             'type' : "sms",
+         };
+        if(findphone){
+            var email=findphone.emails[0].address;
+            console.log("HAMAMMIL" + email);
+            plivo.send_message(params,Meteor.bindEnvironment(function (status, response) {
+                console.log('Status: ', status);
+                console.log('API Response:\n', response);
+                Meteor.users.update({"emails.0.address":email},{$set:{"profile.code":code}});
+                
+            }));
+        }else{
+            throw new Meteor.Error('we cannot find your phone number');
+        }
+        return email;
+        
     }
 });
 

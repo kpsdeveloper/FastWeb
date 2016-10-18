@@ -63,7 +63,12 @@ Meteoris.AppController = Meteoris.Controller.extend({
         varphone=this._validatePhone(phone);
         varhomephone=this._validatePhone(homephone);
         if(username == '' || firstname == '' || lastname == ''|| dob == '' || address == '' || checkphone==true){
-        	Meteoris.Flash.set('danger', "field required");    
+            if(checkphone==true){
+                Meteoris.Flash.set('danger', "phone already exist");  
+            }else{
+                Meteoris.Flash.set('danger', "field required");  
+            }
+        	  
 		}else{
 			if(varemail==undefined||varemail == false){
 				Meteoris.Flash.set('danger', "Email field required");  

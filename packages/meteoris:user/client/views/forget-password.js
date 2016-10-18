@@ -4,7 +4,21 @@ Template.meteoris_userForgetPassword.events = {
     'click #btnForgetPassword': function(e, t){
         e.preventDefault();         
         ctrl.forgetPassword(t);
-    },        
+    },  
+    'change #rdverify' :function(e,t){
+        var rdvalue=t.find("input:radio[name=ver]:checked").value;
+        if(rdvalue=="byphone"){
+            $("#formphone").removeClass("hidden");
+            $("#formeamil").addClass("hidden");
+        }else{
+            $("#formphone").addClass("hidden");
+            $("#formeamil").removeClass("hidden");
+        }
+    },
+    'click #btnverifyByPhone':function(e,t){
+        e.preventDefault();         
+        ctrl.forgetPasswordByPhone(t);
+    }   
 };
 
 Template.meteoris_confirmcode.events = {

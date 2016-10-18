@@ -106,6 +106,7 @@ ordered-dict@1.0.4
 peerlibrary:assert@0.2.5
 peerlibrary:blocking@0.4.3
 peerlibrary:fs@0.1.5
+pfafman:plivo@1.1.0
 promise@0.5.1
 raix:eventemitter@0.0.2
 random@1.0.5

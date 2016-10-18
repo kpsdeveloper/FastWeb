@@ -307,6 +307,22 @@ Meteoris.UserController = Meteoris.Controller.extend({
         //return false;
 
     },
+    forgetPasswordByPhone:function(t){
+        var phonenumber=t.find('#txtphone').value;
+        if(phonenumber!=""){
+            Session.set("GETEPHONE",phonenumber);
+            var code=Math.floor(100000000 + Math.random() * 900000000);
+            Meteor.call("sendTextMessage",phonenumber,code,function(err,data){
+                if(!err){
+                    Session.set("GETEMAIL",data);
+                    Meteoris.Flash.set('success', 'Please Check Your Phone');
+                    FlowRouter.go("/meteoris/user/confirmcode")
+                }else{
+                     Meteoris.Flash.set('danger', err.message);
+                }
+            });
+        }
+    },
     confirmcode:function(t){
         var code = t.find('#txtcode').value;
         if (code != "") {
