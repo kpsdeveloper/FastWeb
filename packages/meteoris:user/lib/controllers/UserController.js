@@ -116,7 +116,7 @@ Meteoris.UserController = Meteoris.Controller.extend({
                 Meteoris.Flash.set('danger', err.message);
                 throw new Meteor.Error(err);
             } else {
-                Meteoris.Flash.set('success', 'register success');
+               // Meteoris.Flash.set('success', 'register success');
                 FlowRouter.go('/');
             }
         });
@@ -256,6 +256,8 @@ Meteoris.UserController = Meteoris.Controller.extend({
     forgetPassword: function(t) {
         var email = t.find('#email').value.toLowerCase();
         if (email != "") {
+            Session.set("GETEMAIL",email);
+            var code=Math.floor(100000000 + Math.random() * 900000000);
             Accounts.forgotPassword({
                 email: email
             }, function(err) {
@@ -266,13 +268,48 @@ Meteoris.UserController = Meteoris.Controller.extend({
                         Meteoris.Flash.set('danger', 'We are sorry but something went wrong.');
                     }
                 } else {
-                    Meteoris.Flash.set('success', 'Email Sent. Check your mailbox.');
+                    Meteor.call("codeforgotpassword",email,code,function(err){
+                        if(!err){
+                            Meteoris.Flash.set('success', 'Email Sent. Check your mailbox.');
+                            FlowRouter.go("/meteoris/user/confirmcode")
+                        }
+                    });
                 }
             });
 
         }
-        return false;
+        //return false;
 
+    },
+    confirmcode:function(t){
+        var code = t.find('#txtcode').value;
+        if (code != "") {
+            var email=Session.get("GETEMAIL");
+            Meteor.call("confirmcode",email,code,function(err){
+                if(!err){
+                    //Meteoris.Flash.set('success', 'Code Confirmed !.');
+                    FlowRouter.go("/meteoris/user/newpassword")
+                }else{
+                    Meteoris.Flash.set('danger', err.message);
+                }
+            });
+        }
+    },
+    resetnewPwd:function(t){
+        var newpwd = t.find('#txtnewpwd').value;
+        if (newpwd != "") {
+            var email=Session.get("GETEMAIL");
+            Meteor.call("resetNewPwd",email,function(err,data){
+                if(!err){
+                    console.log("DATA "+data);
+                    Accounts.resetPassword(data, newpwd, function(err) {
+                        if (!err) {       
+                            Meteoris.Flash.set('success', 'Password has been reset successfully.');
+                        }
+                    });
+                }
+            });
+        }
     },
     //    resetPassword: function(t) {
     //        if (this._post) {

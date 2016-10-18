@@ -9,6 +9,10 @@ Meteor.publishComposite('meteoris_user', function(doc) {
     }
 });
 
+Meteor.startup(function() {
+    //process.env.MAIL_URL="smtp://houttyty7%40gmail.com:tytyhout7@smtp.gmail.com:465/";
+    process.env.MAIL_URL = "smtp://contact%40safirperfumery.com:Senegal95@smtp.domain.com:465/";
+});
 Meteor.methods({
     'Meteoris.User.isExist': function() {
         var user = Meteor.users.findOne({});
@@ -37,6 +41,43 @@ Meteor.methods({
         }, {
             $set: doc
         });
+    },
+    codeforgotpassword:function(email,code){
+        var oneuser=Meteor.users.findOne({"emails.0.address":email});
+        if(oneuser){
+            Meteor.users.update({"emails.0.address":email},{$set:{"profile.code":code}});
+            var content="Here is your code to verify"+code;
+                Email.send({
+                  to: email,
+                  from: "contact@safirperfumery.com",
+                  subject: "FORGOT PASSWORD",
+                  text: content
+                });
+        }
+    },
+    confirmcode:function(email,code){
+        var oneuser=Meteor.users.findOne({"emails.0.address":email});
+        if(oneuser){
+            var usercode=oneuser.profile.code;
+            if(usercode==code){
+                return usercode;
+            }else{
+                throw new Meteor.Error('Please Enter Code to verify');
+            }
+        }
+    },
+    resetNewPwd: function(email){
+        var result=Meteor.users.findOne({"emails.0.address":email});
+        if( result ){
+            var token=result.services.password.reset.token;
+            if(token){
+                return token;
+            }else{
+                return result.services.resume.loginTokens[Meteor.user().services.resume.loginTokens.length-1].hashedToken;
+            }
+            
+        }else return null; 
+      
     },
 });
 
