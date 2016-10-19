@@ -49,7 +49,10 @@ Template.meteoris_profile.events = {
 			});
         });
         
-	}
+	},
+    'keyup #phone':function(e,t){
+        ctrl.checkPhoneExist(e,t);
+    }
 };
 
 Template.meteoris_changepassword.events = {

@@ -92,7 +92,15 @@ Template.mainLayout.events({
         $(e.currentTarget).addClass('active');
     },
     'click .btn-quickview': function(e){
-        Session.set('QUICKVIEWPRODUCT', $(e.currentTarget).parent().parent().attr('id'));
+        var productId = $(e.currentTarget).parent().parent().attr('id');
+        
+        /*var categorydata = Session.get('CATEGORYDATA');
+        var categoryId = getCategoryIdChildren( categorydata.name );
+        var page = categorydata.page;
+        */
+        itemSub = Meteor.subscribe('ProductsRecommended', productId, Meteor.userId(), function(){
+            Session.set('QUICKVIEWPRODUCT', productId);
+        })
     }
     ,
     'mouseover .product-picture': function(e, tmp){
@@ -144,6 +152,10 @@ Template.registerHelper('getListProductsHelper', function( categoryId, thumb) {
 	
 });
 Template.registerHelper('getOneProductHelper', function(data, thumb ){
+    var data = getFavoriteRating(data);
+    return listProductHtml(data, thumb);
+})
+getFavoriteRating = function( data ){
     var fav = Meteoris.Favorites.findOne({proId:data._id, userId:Meteor.userId()});
     if( fav ) data.favorite = true;
     else data.favorite = false;
@@ -155,11 +167,10 @@ Template.registerHelper('getOneProductHelper', function(data, thumb ){
         data.rate = (sum * 100) / (len * 5);
     }else
         data.rate = 0;
-        
-    return listProductHtml(data, thumb);
-})
 
-window.listProductHtml = function( data , thumb){
+    return data;
+}
+listProductHtml = function( data , thumb){
 	var html = '';
 	var src = getImgForProductCDNv2( data._id , thumb);
     //console.log('pro Id', data._id);
@@ -252,23 +263,10 @@ window.quickViewProduct = function( data , thumb){
     var src = getImgForProductCDNv2( data._id , thumb);
     var attr = Meteoris.Attributes.find({product:data.oldId});
     var price = (attr.count() > 0)? attr.fetch()[0].price:data.price;
-
-    html += '<div class="col-md-4 col-xs-12">';
-    html +=     '<a href="/details/'+slugTitle(data.title)+'"><img src="'+src+'" style="width:201px;height:201px"></a>';
-    html += '</div>';
-    html += '<div class="col-md-8 col-xs-12">';
-    html +=     '<a href="/details/'+slugTitle(data.title)+'"><h3 class="title">'+data.title+'</h3></a>';
-    html +=     '<p>'+data.description+'</p>';
-    html +=     '<div class="col-md-6 col-xs-6">';
-    html +=         '<label class="quantity" for="select">Quantity</label><select id="qty'+data._id+'" name="select" class="quantity" size="1"><option value="1">1</option></select>';
-    html +=         '<p>ریال  <span class="price">'+price+'</span></p>';
-    html +=     '</div>';
-    html +=     '<div class="col-md-6 col-xs-6" id="'+data._id+'">';
-    html +=         '<button class="btn btn-details"><span class="pull-left"></span> MORE DETAILS</button>';
-    html +=         '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>';
-    html +=     '</div>';
-    html += '</div>';
-    return html;
+    data.price = price;
+    data.src = src;
+    //console.log(data);
+    return data;
 }
 
 Template.registerHelper('getOneContentHelper', function(data){

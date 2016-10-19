@@ -55,11 +55,20 @@ Meteoris.AppController = Meteoris.Controller.extend({
         var createdAt= t.find('#createdAt').value;
         var updatedAt= new Date();
         var imageurl=t.find("#imagefile").value;
+        var checkphone=$("#msgExist").attr('class');
+        if (!checkphone.match('hidden')) {
+            checkphone = true;
+        }
         varemail=this._validateEmail(email);
         varphone=this._validatePhone(phone);
         varhomephone=this._validatePhone(homephone);
-        if(username == '' || firstname == '' || lastname == ''|| dob == '' || address == ''){
-        	Meteoris.Flash.set('danger', "field required");    
+        if(username == '' || firstname == '' || lastname == ''|| dob == '' || address == '' || checkphone==true){
+            if(checkphone==true){
+                Meteoris.Flash.set('danger', "phone already exist");  
+            }else{
+                Meteoris.Flash.set('danger', "field required");  
+            }
+        	  
 		}else{
 			if(varemail==undefined||varemail == false){
 				Meteoris.Flash.set('danger', "Email field required");  
@@ -102,6 +111,20 @@ Meteoris.AppController = Meteoris.Controller.extend({
 		       
 			}
 		}
+    },
+    checkPhoneExist:function(e,t){
+        var phone = t.find('#phone').value;
+        Meteor.call('checkPhoneExist', phone, function(err, data) {
+            if (!err) {
+                if (data == true) {
+                    console.log("ADD CLASS ME");
+                    $('#msgExist').removeClass('hidden');
+                } else {
+                    console.log("REOVEMEME");
+                    $('#msgExist').addClass('hidden');
+                }
+            }
+        });
     },
     _validateEmail:function(email){
     	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

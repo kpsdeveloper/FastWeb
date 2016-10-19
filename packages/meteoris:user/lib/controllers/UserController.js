@@ -52,21 +52,47 @@ Meteoris.UserController = Meteoris.Controller.extend({
         var email = t.find('#email').value;
         var password = t.find('#password').value;
         var SessionID =  getSessionUserID();
-        Meteor.loginWithPassword(email, password, function(err) {
-            if (err) {
-                Meteoris.Flash.set('danger', err.message);
-            } else {
-                var currentUserID = Meteor.userId();
-                Meteor.call('Meteoris.Orders.UpdateOrderUserID', currentUserID, SessionID );
+        if(email.match(/\d{10,11}/g)){
+            Meteor.call("loginwithPhone",email,function(err,data){
+                if(!err){
+                    Meteor.loginWithPassword(data, password, function(err) {
+                        if (err) {
+                            Meteoris.Flash.set('danger', err.message);
+                        } else {
+                            var currentUserID = Meteor.userId();
+                            Meteor.call('Meteoris.Orders.UpdateOrderUserID', currentUserID, SessionID );
 
-                Meteoris.Flash.set('success', 'login success');
-                if( redirecturl = Session.get('REDIRECTURL') ){
-                    Session.set('REDIRECTURL','')
-                    FlowRouter.go( redirecturl );
-                }else
-                    FlowRouter.go('/');
-            }
-        });
+                            Meteoris.Flash.set('success', 'login success');
+                            if( redirecturl = Session.get('REDIRECTURL') ){
+                                Session.set('REDIRECTURL','')
+                                FlowRouter.go( redirecturl );
+                            }else
+                                FlowRouter.go('/');
+                        }
+                     });
+                }else{
+                     Meteoris.Flash.set('danger', err.message);
+                }
+            });
+            
+        }else{
+            Meteor.loginWithPassword(email, password, function(err) {
+                if (err) {
+                    Meteoris.Flash.set('danger', err.message);
+                } else {
+                    var currentUserID = Meteor.userId();
+                    Meteor.call('Meteoris.Orders.UpdateOrderUserID', currentUserID, SessionID );
+
+                    Meteoris.Flash.set('success', 'login success');
+                    if( redirecturl = Session.get('REDIRECTURL') ){
+                        Session.set('REDIRECTURL','')
+                        FlowRouter.go( redirecturl );
+                    }else
+                        FlowRouter.go('/');
+                }
+            });
+        }
+            
     },
     logout: function() {
         Meteor.logout(function() {
@@ -116,7 +142,7 @@ Meteoris.UserController = Meteoris.Controller.extend({
                 Meteoris.Flash.set('danger', err.message);
                 throw new Meteor.Error(err);
             } else {
-                Meteoris.Flash.set('success', 'register success');
+               // Meteoris.Flash.set('success', 'register success');
                 FlowRouter.go('/');
             }
         });
@@ -256,6 +282,8 @@ Meteoris.UserController = Meteoris.Controller.extend({
     forgetPassword: function(t) {
         var email = t.find('#email').value.toLowerCase();
         if (email != "") {
+            Session.set("GETEMAIL",email);
+            var code=Math.floor(100000000 + Math.random() * 900000000);
             Accounts.forgotPassword({
                 email: email
             }, function(err) {
@@ -266,13 +294,64 @@ Meteoris.UserController = Meteoris.Controller.extend({
                         Meteoris.Flash.set('danger', 'We are sorry but something went wrong.');
                     }
                 } else {
-                    Meteoris.Flash.set('success', 'Email Sent. Check your mailbox.');
+                    Meteor.call("codeforgotpassword",email,code,function(err){
+                        if(!err){
+                            Meteoris.Flash.set('success', 'Email Sent. Check your mailbox.');
+                            FlowRouter.go("/meteoris/user/confirmcode")
+                        }
+                    });
                 }
             });
 
         }
-        return false;
+        //return false;
 
+    },
+    forgetPasswordByPhone:function(t){
+        var phonenumber=t.find('#txtphone').value;
+        if(phonenumber!=""){
+            Session.set("GETEPHONE",phonenumber);
+            var code=Math.floor(100000000 + Math.random() * 900000000);
+            Meteor.call("sendTextMessage",phonenumber,code,function(err,data){
+                if(!err){
+                    Session.set("GETEMAIL",data);
+                    Meteoris.Flash.set('success', 'Please Check Your Phone');
+                    FlowRouter.go("/meteoris/user/confirmcode")
+                }else{
+                     Meteoris.Flash.set('danger', err.message);
+                }
+            });
+        }
+    },
+    confirmcode:function(t){
+        var code = t.find('#txtcode').value;
+        if (code != "") {
+            var email=Session.get("GETEMAIL");
+            Meteor.call("confirmcode",email,code,function(err){
+                if(!err){
+                    //Meteoris.Flash.set('success', 'Code Confirmed !.');
+                    FlowRouter.go("/meteoris/user/newpassword")
+                }else{
+                    Meteoris.Flash.set('danger', err.message);
+                }
+            });
+        }
+    },
+    resetnewPwd:function(t){
+        var newpwd = t.find('#txtnewpwd').value;
+        if (newpwd != "") {
+            var email=Session.get("GETEMAIL");
+            Meteor.call("resetNewPwd",email,function(err,data){
+                if(!err){
+                    console.log("DATA "+data);
+                    Accounts.resetPassword(data, newpwd, function(err) {
+                        if (!err) {       
+                            Meteoris.Flash.set('success', 'Your password has been changed. Welcome back!');
+                        }
+                    });
+                }
+            });
+        }
     },
     //    resetPassword: function(t) {
     //        if (this._post) {
