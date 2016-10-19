@@ -98,6 +98,8 @@ Package.onUse(function(api) {
         'client/views/tuto/tutonew.html', 
         'client/views/tuto/tutolisting.html',
         'client/views/tuto/tutodetails.html',
+        'client/views/webzine/webzinelisting.html',
+        'client/views/webzine/webzinedetails.html',
         'client/apps/cart.js',
         'client/apps/profile.js',
         'client/views/admin/banner/addbanner.html',
@@ -127,6 +129,7 @@ Package.onUse(function(api) {
         'client/apps/helper.js',
         'client/apps/menu.js',
         'client/apps/tuto.js',
+        'client/apps/webzine.js',
     ], 'client');
     api.export([
         'UserController',

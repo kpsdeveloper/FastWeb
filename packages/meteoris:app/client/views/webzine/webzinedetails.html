@@ -1,0 +1,11 @@
+<template name="webzinedetails">
+<div class="container">
+	{{#if Template.subscriptionsReady}}
+		{{#each getContentDetail}}
+			{{title}}
+			<img src="{{src}}">
+			{{{content}}}
+		{{/each}}
+	{{/if}}
+</div>
+</template>

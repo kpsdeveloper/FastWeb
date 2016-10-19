@@ -188,6 +188,27 @@ groupBannerRoutes.route('/edit/:id', {
 });
 /*End banner admin*/
 /*Start tuto page*/
+FlowRouter.route('/news', {
+    subscriptions: function(){
+        TAPi18n.subscribe('Categories');
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "webzinelisting"});
+    }
+});
+
+FlowRouter.route('/webzinedetails/:_id', {
+    subscriptions: function(){
+        return [TAPi18n.subscribe('Categories')];
+    },
+    action: function(params) {
+        var name = params._id;
+        var myTitle = unslugTitle(name);
+        Session.set('WEBZINEDETAIL', myTitle);
+        BlazeLayout.render('mainLayout', {content: "webzinedetails"});
+    }
+});
+
 FlowRouter.route('/tuto', {
     subscriptions: function(){
         TAPi18n.subscribe('Categories');

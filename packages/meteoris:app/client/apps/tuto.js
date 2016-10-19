@@ -25,7 +25,7 @@ Template.tutodetails.onCreated( function(){
 Template.tutodetails.helpers({
     getContentListing: function() {
         var title = Session.get('TUTODETAILID');
-        console.log("This is: ",title);
+        //console.log("This is: ",title);
         var con = Meteoris.Contents.findOne({ "title": title});
         var myData = Meteoris.Contents.find({ typeid: con.typeid, category: con.category });
         var newData = myData.map( function(d){
