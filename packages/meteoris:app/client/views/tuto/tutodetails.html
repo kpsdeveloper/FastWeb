@@ -1,0 +1,129 @@
+<template name="tutodetails">
+    <style type="text/css">
+    .bert-alert.my-error {
+        background: #fff;
+        color: #000;
+        box-shadow: 2px 2px 15px #888;
+    }
+    
+    .fa-review-iconbg {
+        background-image: url('../img/reviewsc.png');
+        background-size: 32px 32px;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .fa-addcart-iconbg {
+        background-image: url('../img/cart.png');
+        background-size: 32px 32px;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .fa-fav-iconbg {
+        background-image: url('../img/fav.png');
+        background-size: 32px 32px;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .fa-remove-iconbg {
+        background-image: url('../img/remove.png');
+        background-size: 32px 32px;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .tutitle {
+        padding-top: 40px;
+    }
+    
+    @media (max-width: 480px) {
+        .tutitle {
+            padding-top: 0px;
+        }
+    }
+    .player-main{
+            overflow: hidden;
+            position: relative;
+            outline: transparent solid 1px;
+        }
+        .loading-play{
+            position:absolute;
+            top:23%;
+            left:33%;
+            border: 2px solid #fff;
+            border-radius: 50%;
+        }
+        .loading{
+            min-height:600px;
+            padding:100px 50px 50px 50px;
+        }
+        .loading6{
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          display: flex;
+          border:0px solid #fff;
+          position:relative;
+
+        }
+        .loading6:before{
+          content:'';
+          width: 0;
+          height: 0;
+          margin:auto;
+          border-radius: 50%;
+          box-shadow:0px 0px 10px #fff;
+          animation:loading6-ani1 3s infinite;
+          position:relative;
+        }
+        .arrow-left {
+          width: 0; 
+          height: 0; 
+          border-top: 10px solid transparent;
+          border-bottom: 10px solid transparent;
+          position:absolute;
+          border-left: 15px solid #fff; 
+         left:40%;
+          top:30%;
+         
+        }
+        @keyframes loading6-ani1{
+          70%{
+            width: 50px;
+            height: 50px;
+          }
+          100%{
+            width: 50px;
+            height: 50px;
+            border-width: 0;
+          }
+        }
+        @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+            h1.mainVideo {
+                margin-bottom: 65px;
+            }
+            .related_loading_play {
+                margin-left: -52px;
+            }
+        }
+        #mainVideo {
+            margin-top:-76px; width:100%;
+        }
+    </style>
+    <!-- Start contain -->
+    {{#if Template.subscriptionsReady}}
+        {{#each getContentListing }}
+            {{#if current}}
+                <h4 class="txt-color mainVideo" style="text-align: right;">{{title}}</h4>
+                <video autoplay height="370" id="mainVideo" class="auto-play" onended="run();">
+                    <source src="/videos/{{url}}" type="video/mp4">
+                </video>
+            {{else}}
+            <p>{{title}}</p>
+            <img src="{{src}}">
+            {{/if}}
+        {{/each}}
+    {{/if}}
+</template>

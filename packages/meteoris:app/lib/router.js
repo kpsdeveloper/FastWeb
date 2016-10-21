@@ -21,6 +21,7 @@ function checkIsLogin(){
 }
 FlowRouter.route('/searchproduct/:slug', {
     subscriptions: function(){
+        TAPi18n.subscribe('Categories');    
         return [TAPi18n.subscribe('Categories'), Meteor.subscribe('ParentAttribute')];
     },
     action: function() {
@@ -40,6 +41,7 @@ groupRoutes.route('/products/add', {
 });
 FlowRouter.route('/category/:name/:page', {
     subscriptions: function(){
+        TAPi18n.subscribe('Categories');
         return [TAPi18n.subscribe('Categories'), Meteor.subscribe('ParentAttribute'),Meteor.subscribe("alldiscount")];
     },
     action: function( params ) {
@@ -184,6 +186,60 @@ groupBannerRoutes.route('/edit/:id', {
         BlazeLayout.render('mainLayout', {content: "meteoris_editbanner"});
     },
 });
+/*End banner admin*/
+/*Start tuto page*/
+FlowRouter.route('/news', {
+    subscriptions: function(){
+        TAPi18n.subscribe('Categories');
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "webzinelisting"});
+    }
+});
+
+FlowRouter.route('/webzinedetails/:_id', {
+    subscriptions: function(){
+        return [TAPi18n.subscribe('Categories')];
+    },
+    action: function(params) {
+        var name = params._id;
+        var myTitle = unslugTitle(name);
+        Session.set('WEBZINEDETAIL', myTitle);
+        BlazeLayout.render('mainLayout', {content: "webzinedetails"});
+    }
+});
+
+FlowRouter.route('/tuto', {
+    subscriptions: function(){
+        TAPi18n.subscribe('Categories');
+    },
+    action: function() {
+        BlazeLayout.render('mainLayout', {content: "tutonew"});
+    }
+});
+FlowRouter.route('/tutolisting/:_id', {
+    subscriptions: function(){
+        return [TAPi18n.subscribe('Categories')];
+    },
+    action: function(params) {
+        var name = params._id;
+        var catId = getCategoryIdChildren(unslugTitle(name));
+        Session.set('TUTOCATEGORYNAME', catId);
+        BlazeLayout.render('mainLayout', {content: "tutolisting"});
+    }
+});
+FlowRouter.route('/tutodetails/:_id', {
+    subscriptions: function(){
+        return [TAPi18n.subscribe('Categories')];
+    },
+    action: function(params) {
+        var name = params._id;
+        var myTitle = unslugTitle(name);
+        Session.set('TUTODETAILID', myTitle);
+        BlazeLayout.render('mainLayout', {content: "tutodetails"});
+    }
+});
+/*End of tuto page*/
 groupBannerRoutes.route('/view', {
     subscriptions:function(){
         var pagename='webzine/favorite';

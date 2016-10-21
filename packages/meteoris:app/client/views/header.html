@@ -1,5 +1,5 @@
 <template name="app_header">
-    <style type="text/css">
+    <!-- <style type="text/css">
         .searchnew ul.list-inline li a {
         color: #000;
         font-size: 16px;
@@ -10,6 +10,367 @@
             color: #000;
             border-bottom: 2px solid #000;
         }
+        /*Top Menu*/
+        /*.allmenu{
+            border-bottom: 1px solid #000;
+            padding-bottom: 10px;
+            margin-top: 10px;
+        }*/
+        .megamenu_light .megamenu li ul li:hover,
+        .megamenu_light .megamenu li ol li:hover,
+        .megamenu_light .megamenu .blue,
+        .megamenu_light .megamenu .grey,
+        .megamenu_light .megamenu .orange,
+        .megamenu_light .megamenu .dark,
+        .megamenu_light .megamenu .purple {
+            color: #00a9e7;
+            opacity: 1;
+            -webkit-transition: all 200ms ease-out;
+            -webkit-transform: scale(1.2);
+            -ms-transition: all 200ms ease-out;
+            -ms-transform: scale(1.2);
+            -moz-transition: all 200ms ease-out;
+            -moz-transform: scale(1.2);
+            transition: all 200ms ease-out;
+            transform: scale(1.2);
+            padding-left: 15px;
+        }
+        .megamenu_dark_bar .megamenu > li > a:hover {
+        background: none !important;
+        color: #000;
+        box-shadow: 0px 0px 3px #777;
+        }
+        
+        .megamenu_dark_bar .megamenu > li:hover > a {
+            background: #fff !important;
+            box-shadow: 0px 0px 3px #777;
+            padding-bottom: 19px;
+        }
+        
+        .megamenu_dark_bar .megamenu > li .megamenu_drop > i {
+            background: url("../img/curet_down.png") no-repeat bottom right;
+            background-size: 10px 10px;
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin: 0px 5px;
+        }
+        
+        .megamenu_dark_bar .megamenu > li:hover .megamenu_drop > i {
+            background: url("../img/curet_up_red.png") no-repeat bottom right;
+            background-size: 10px 10px;
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+        }
+        
+        .megamenu > li > a {
+            padding: 16px 10px 17px 10px;
+        }
+        
+        li.branhover:hover {
+            background: #fff;
+            /*padding: 18px 10px 19px;*/
+        }
+    </style> -->
+    <style type="text/css">
+        <style type="text/css">
+    li.selected {
+        background: #A4A4A4;
+    }
+    
+    .hovered {
+        background-color: ##F1F1F1;
+        color: #FFFFFF;
+    }
+    
+    div:nth-child(5).col_12 {
+        width: 190px;
+    }
+    
+    .menuover {
+        color: red;
+    }
+    
+    .searchleft {
+        text-align: right;
+    }
+    
+    .bert-alert.my-error {
+        background: #fff;
+        color: #000;
+        box-shadow: 2px 2px 15px #888;
+    }
+    
+    .fa-users-iconbg {
+        background-image: url('../img/users.png');
+        background-size: 32px 32px;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .fa-searcherr-iconbg {
+        background-image: url('../img/searcherr.png');
+        background-size: 32px 32px;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .fa-user-plus-iconbg {
+        background-image: url('../img/userplus.png');
+        background-size: 32px 32px;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .fa-searchsc-iconbg {
+        background-image: url('../img/searchsc.png');
+        background-size: 32px 32px;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .fa-loginerr-iconbg {
+        background-image: url('../img/loginerr.png');
+        background-size: 32px 32px;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .logform .form-control {
+        display: block;
+        width: 100%;
+        height: 34px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #000;
+        border-radius: 0px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+        -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    }
+    
+    .logform input {
+        margin-top: 20px;
+    }
+    
+    input.form-control:focus {
+        border-color: red;
+        outline: 0;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+        box-shadow: none;
+        border: 1px solid red !important;
+    }
+    
+    .btn-black {
+        width: 100%;
+        border-radius: 0px;
+        background: #000;
+        color: #fff;
+        font-size: 14px;
+        padding: 6px 12px;
+        margin-bottom: 0px;
+    }
+    
+    .btn-black:hover {
+        width: 100%;
+        border-radius: 0px;
+        background: #ff4661;
+        color: #fff;
+        font-size: 14px;
+        padding: 6px 12px;
+        margin-bottom: 0px;
+    }
+    
+    .btn-black-re {
+        width: 100%;
+        border-radius: 0px;
+        background: #fff;
+        color: #000;
+        font-size: 14px;
+        padding: 6px 12px;
+        margin-bottom: 0px;
+    }
+    
+    .btn-black-re:hover {
+        width: 100%;
+        border-radius: 0px;
+        background: #c00;
+        color: #fff;
+        font-size: 14px;
+        padding: 6px 12px;
+        margin-bottom: 0px;
+    }
+    
+    .logform label {
+        display: inline-block;
+        max-width: 100%;
+        margin-bottom: 5px;
+        font-weight: 400;
+    }
+    
+    .logform label a {
+        margin-top: 10px;
+        margin-bottom: 10px
+    }
+    
+    .btn-social,
+    .btn-social:hover {
+        background: #ff4661;
+        border-radius: 0px;
+        color: #fff;
+        font-size: 14px;
+        padding: 6px 12px;
+        margin-bottom: 0px;
+    }
+    
+    .btn-loginform {
+        background: #000;
+        border-radius: 0px;
+        color: #fff;
+        font-size: 14px;
+        padding: 6px 12px;
+        margin-bottom: 0px;
+    }
+    
+    .btn-loginform:hover {
+        background: #ff4661;
+        border-radius: 0px;
+        color: #fff;
+        font-size: 14px;
+        padding: 6px 12px;
+        margin-bottom: 0px;
+    }
+    
+    .dropdown-fastLogin {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        display: none;
+        float: left;
+        min-width: 400px;
+        padding: 0px;
+        margin: 2px 0 0;
+        font-size: 14px;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 0px;
+        -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+        background-clip: padding-box;
+    }
+    
+    .dropdown-fastLogin .btn {
+        margin-bottom: 0px;
+    }
+    
+    .dropdown-fastLogin .p-account {
+        color: #fff;
+        text-align: left;
+    }
+    /*information password*/
+    
+    #info_pass {
+        border: 0px solid #ddd;
+        border-radius: 4px;
+        color: #829cbd;
+        font: 12px/25px Arial, Helvetica, sans-serif;
+        height: 25px;
+        text-align: center;
+        width: 97.5%;
+        margin-bottom: 10px;
+    }
+    
+    #info_pass.weakpass {
+        background: #ffc7c7 none repeat scroll 0 0;
+        border: 1px solid #ff9191;
+        color: #94546e;
+        text-shadow: 1px 1px 1px #fff;
+    }
+    
+    #info_pass.stillweakpass {
+        background: #fdd none repeat scroll 0 0;
+        border: 1px solid #fbb;
+        color: #945870;
+        text-shadow: 1px 1px 1px #fff;
+    }
+    
+    #info_pass.goodpass {
+        background: #e4ffe4 none repeat scroll 0 0;
+        border: 1px solid #c4eec8;
+        color: #51926e;
+        text-shadow: 1px 1px 1px #fff;
+    }
+    
+    #info_pass.strongpass {
+        background: #79f079 none repeat scroll 0 0;
+        border: 1px solid #6ed66e;
+        color: #348f34;
+        text-shadow: 1px 1px 1px #fff;
+    }
+    
+    #info_pass.vrystrongpass {
+        background: #48b448 none repeat scroll 0 0;
+        border: 1px solid #379137;
+        color: #cdffcd;
+        text-shadow: 1px 1px 1px #296429;
+    }
+    
+    .megamenu li .droplast_right {
+        padding: 16px 24px 8px;
+        top: 44px;
+    }
+    /*end information password*/
+    /*menu mobil*/
+    
+    .megamenu-mobile {
+        padding: 15px 0px;
+        white-space: nowrap;
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .menu-mobile-item {
+        color: #000;
+        padding: 8px;
+    }
+    
+    .mobile-item-last {
+        background: #000;
+        color: #fff;
+        border-right: 0px solid #ccc;
+    }
+    
+    .mobile-item-last:hover {
+        background: #000;
+        color: #E3382A;
+        border-right: 0px solid #ccc;
+    }
+    
+    .m-megamenu-dropdown {
+        padding: 15px 0px;
+    }
+    
+    .title-product-in-card a strong {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 12px;
+        font-weight: normal;
+    }
+    
+    .title-product-in-card p span {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 12px;
+        font-weight: normal;
+    }
     </style>
     <header class="main-header">
         <!-- Logo -->
@@ -96,7 +457,6 @@
                             </li>
                         </ul>
                     </li>
-                    
                 </ul>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

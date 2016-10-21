@@ -505,6 +505,9 @@ window.getOriginalSize = function( src ){
 Template.registerHelper('getImgForProductCDN', function(id, thumb) {
    return getImgForProductCDNv2(id, thumb);
 });
+Template.registerHelper('getImgCDNv2ByHelper', function(id, thumb) {
+   return getImgCDNv2(id, thumb);
+});
 window.getImgCDNv2 = function(id, thumb) {
     if (id.indexOf('http') > -1) {
         return id;
@@ -554,6 +557,39 @@ window.getImgForProductCDNv2 = function(id_product, thumb) {
 Template.registerHelper('slugTitle', function( title ) {
    return slugTitle( title );
 });
+Template.registerHelper('limitSrt',function(content){
+    var len=content.length;
+    if(len>200){
+        return (content.substr(0,200)+' ...');
+    }else{
+        return content;
+    }
+})
+window.getListCategoryByParent = function(cats) {
+    var list_categories = [];
+    list_categories.push(cats._id);
+    var lvl1 = Meteoris.Categories.find({ "parent": cats._id }).fetch();
+    for (var i = 0; i < lvl1.length; i++) {
+        var cur1 = lvl1[i]._id;
+        list_categories.push(cur1);
+        var lvl2 = Meteoris.Categories.find({ "parent": cur1 }).fetch();
+        for (var j = 0; j < lvl2.length; j++) {
+            var cur2 = lvl2[j]._id;
+            list_categories.push(cur2);
+            var lvl3 = Meteoris.Categories.find({ "parent": cur2 }).fetch();
+            for (var k = 0; k < lvl3.length; k++) {
+                var cur3 = lvl3[k]._id;
+                list_categories.push(cur3);
+                var lvl4 = Meteoris.Categories.find({ "parent": cur3 }).fetch();
+                for (var l = 0; l < lvl4.length; l++) {
+                    var cur4 = lvl4[l]._id;
+                    list_categories.push(cur4);
+                }
+            }
+        }
+    }
+    return list_categories;
+}
 window.slugTitle = function(title) {
     if (!title)
         return;
@@ -581,7 +617,7 @@ window.slugTitle = function(title) {
     //title = title.toLowerCase();
     return title;
 }
-window.unslugTitle = function(title) {
+unslugTitle = function(title) {
 	if (!title)
         return;
     title = title.replace(/\-/g, " ");

@@ -1,0 +1,22 @@
+<template name="webzinelisting">
+	<div>
+		{{#with getnewaticle}}
+		    <a href="/webzinedetails/{{slugTitle title}}"><h1>{{title}}</h1></a>
+		    <p>{{{limitSrt content}}}</p>
+	    {{/with}}
+
+	    {{#each getParentCatgories}} 
+	    	<h4 style="color:red">{{title}}</h4>
+	    	<ul>
+	    		{{#each getWebzinByCatId _id}}
+	    		<li>
+	    			<a href="/webzinedetails/{{slugTitle title}}">
+	    			<img src="{{src}}" img-responsive thumbanil-webzine width="194px;" height="120px;">
+	    			<span style="color:blue;">{{title}}</span></a>
+	    			<p>{{{ limitSrt content}}}</p>
+	    		</li>
+	    		{{/each}}
+	    	</ul>
+	    {{/each}}
+    </div>
+</template>

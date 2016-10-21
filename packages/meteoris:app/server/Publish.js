@@ -29,39 +29,39 @@ Meteor.publish('FilterProducts', function(data) {
     var parent = (data.parent instanceof Array)? data.parent:[data.parent];
     var child = (data.child instanceof Array)? data.child:[data.child];
     //var tags = age.concat(skintype);
-    console.log('parent:',parent);
-    console.log('child:',child);
+    // console.log('parent:',parent);
+    // console.log('child:',child);
     var query = {};
     var skip = (page<=1)? 0 : (page - 1) * limit;
 
     if( price > 0 && parent.length <= 0 && child.length <= 0){
-        console.log('case 1');
+        //console.log('case 1');
         query = { category:{$in:categoryId}, price:{$lte:price}};
     }else if( price > 0 && parent.length > 0 && child.length <= 0 ){
-        console.log('case 2');
+        //console.log('case 2');
         query = { category:{$in:categoryId}, $or: [{ price:{$lte:price}, 'tags.parent':{$in:parent}}] };
     }else if( price > 0 && parent.length <= 0 && child.length > 0 ){
-        console.log('case 3');
+        //console.log('case 3');
         query = { category:{$in:categoryId}, $or: [{ price:{$lte:price}, 'tags.value':{$in:child}}] };
     }
     else if( price > 0 && parent.length > 0 && child.length > 0 ){
-        console.log('case 4');
+        //console.log('case 4');
         query = { category:{$in:categoryId}, $or: [{ price:{$lte:price}, 'tags.parent':{$in:parent}, 'tags.value':{$in:child}}] };
     }
     else if( price <= 0 && parent.length > 0 && child.length <= 0 ){
-        console.log('case 5');
+        //console.log('case 5');
         query = { category:{$in:categoryId}, 'tags.parent':{$in:parent}};
     }
     else if( price <= 0 && parent.length > 0 && child.length > 0 ){
-        console.log('case 6');
+        //console.log('case 6');
         query = { category:{$in:categoryId}, $or: [{'tags.parent':{$in:parent}, 'tags.value':{$in:child}}] };
     }
     else if( price <= 0 && parent.length <= 0 && child.length > 0 ){
-        console.log('case 7');
+        //console.log('case 7');
         query = { category:{$in:categoryId}, 'tags.value':{$in:child}};
     }
     else{
-        console.log('case 8');
+        //console.log('case 8');
         query = { category:{$in:categoryId}};
     }
     var data = Meteoris.Products.find( query,{ fields:{_id:1, title:1,price:1,category:1, oldId:1,image:1,description:1,review:1}, sort:{price:1},skip: skip, limit:limit});
@@ -74,7 +74,7 @@ Meteor.publish('FilterProducts', function(data) {
         else
             if(n.image) return n.image;
     });
-    console.log('product:', data.count());
+    //console.log('product:', data.count());
     var dataattr = Meteoris.Attributes.find({product: {$in: attrId}});
     var datafavorite = Meteoris.Favorites.find({proId: {$in: prodID}, userId:userId});
     var imgattrId = dataattr.map(function(p) { if( p.productImage ) return p.productImage });
@@ -176,7 +176,15 @@ Meteor.publish('Orders', function(userId) {
 });
 TAPi18n.publish('Categories', function() {
     var data = Meteoris.Categories.find({});
-    return data;
+    var dataParent = Meteoris.Categories.find({ "$or": [{ "parent": "0" }, { "parent": " " }] });
+    var imgId = dataParent.map(function(n) { 
+        if (n.image instanceof Array)
+            return n.image[0];
+        else
+            return n.image;
+    });
+    var dataimg = Meteoris.Images.find({_id: {$in: imgId}});
+    return [data, dataimg];
 });
 Meteor.publish('Provinces', function() {
     return Meteoris.Provinces.find({});
@@ -343,6 +351,58 @@ Meteor.publish('editBanner', function(id) {
     
     return banner;
 });
+
+Meteor.publish('TutoContent',function(id){
+    var type = Meteoris.ContentType.find({ type: "Tuto" });
+    var tutoid = type.fetch()[0]._id;
+    var myData =  Meteoris.Contents.find({ category:{$in: id} ,typeid: tutoid },{sort: {_id:-1}});
+    var imgId = myData.map(function(n) {
+        if (n.image instanceof Array)
+            return n.image[0];
+        else return n.image;
+    });
+    var dataimg = Meteoris.Images.find({_id: {$in: imgId}}, {fields:{_id:1,copies:1}});
+    return [type, myData, dataimg];
+});
+Meteor.publish('webzineTopContent',function(){
+    var type = Meteoris.ContentType.find({ "type": "Webzine" });
+    var typeid=type.fetch()[0]._id; 
+    var myData = Meteoris.Contents.find({'typeid':typeid},{sort:{date:-1}});
+    var imgId = myData.map(function(n) {
+        if (n.image instanceof Array)
+            return n.image[0];
+        else return n.image;
+    });
+    var dataimg = Meteoris.Images.find({_id: {$in: imgId}}, {fields:{_id:1,copies:1}});
+    return [type, myData, dataimg];
+});
+Meteor.publish('listTutoDetails',function(title){
+    // console.log("MyTitle: ",title);
+    var con = Meteoris.Contents.findOne({ "title": title});
+    var result = Meteoris.Contents.find({ typeid: con.typeid, category: con.category });
+
+    var imgId = result.map(function(n) {
+        if (n.image instanceof Array)
+            return n.image[0];
+        else return n.image;
+    });
+    var dataimg = Meteoris.Images.find({_id: {$in: imgId}}, {fields:{_id:1,copies:1}});
+    return [result, dataimg];
+});
+Meteor.publish('webzineDetails',function(title){
+    var con = Meteoris.Contents.findOne({ "title": title});
+    var result = Meteoris.Contents.find({ typeid: con.typeid, category: con.category });
+    
+    var imgId = result.map(function(n) {
+        if (n.image instanceof Array)
+            return n.image[0];
+        else return n.image;
+    });
+    var dataimg = Meteoris.Images.find({_id: {$in: imgId}}, {fields:{_id:1,copies:1}});
+    
+    return [result, dataimg];
+});
+
 Meteor.publish('alldiscount', function() {
     return Discount.find({}); 
 });

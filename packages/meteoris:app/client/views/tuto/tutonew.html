@@ -1,0 +1,29 @@
+<template name="tutonew">
+    <style type="text/css">
+        /*@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+            h1.txt-color {
+                margin-bottom: 0px;
+            }
+        }*/
+    </style>
+    <div class="container">
+        <div class="clearfix"></div>
+        <div class="space_cont_top">
+            <div class="row">
+
+                {{#each getTutoCategory }}
+                <div class="col-lg-4 col-sm-4 {{getStyleFa}}">
+                    <a href="/tutolisting/{{slugTitle title}}" id="linkTotulisting" class="tutoImg">
+    					
+    				        <img src="{{src}}" width="220px" height="220px" style="margin-left: 20px; margin-top:20px; padding-bottom: 15px;">
+    					
+                    </a>
+                    <a href="/tutolisting/{{slugTitle title}}" id="linkTotulisting">
+                        <h1 class="text-center txt-color bold">{{title}}</h1>
+                    </a>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</template>
