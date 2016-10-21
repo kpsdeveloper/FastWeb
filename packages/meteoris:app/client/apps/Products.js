@@ -263,7 +263,11 @@ Template.app_header.events({
         var search = $('#textToSearch').val();
         Session.set('keyword', search);
         FlowRouter.go('/searchproduct/'+search);
-    }
+    },
+    'click #changelanguage': function(e, t){
+        e.preventDefault();      
+        ctrl.changelanguage(t);
+    }  
 });
 Template.app_header.helpers({
     getParentCategories: function() {
@@ -294,6 +298,12 @@ Template.app_header.helpers({
         });
 
         return children;
+    },
+    showlanguage:function(){
+        if (TAPi18n.getLanguage() == 'fa')
+            return 'English';
+        if (TAPi18n.getLanguage() == 'en')
+            return 'فارسی';
     }
 });
 Template.filterProduct.helpers({

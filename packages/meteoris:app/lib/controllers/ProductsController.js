@@ -269,5 +269,15 @@ Meteoris.ProductsController = Meteoris.Controller.extend({
     getAttributeById: function( id ){
         return Meteoris.Attributes.findOne({_id:id});
 
+    },
+    //FOR CHANGELANGUAGE FROM HELPER.JS
+    changelanguage:function(t){
+        var lang = "";
+        if (TAPi18n.getLanguage() == 'fa') { 
+            lang = 'en';
+        } else { 
+            lang = 'fa';
+        }
+        Session.set('LANG', lang);
     }
 });

@@ -45,7 +45,7 @@ Meteor.methods({
     codeforgotpassword:function(email,code){
         var oneuser=Meteor.users.findOne({"emails.0.address":email});
         if(oneuser){
-            Meteor.users.update({"emails.0.address":email},{$set:{"profile.code":code}});
+            Meteor.users.update({"emails.0.address":email},{$set:{"profile.verifycode":code}});
             var content="Here is your code to verify"+code;
                 Email.send({
                   to: email,
@@ -58,7 +58,7 @@ Meteor.methods({
     confirmcode:function(email,code){
         var oneuser=Meteor.users.findOne({"emails.0.address":email});
         if(oneuser){
-            var usercode=oneuser.profile.code;
+            var usercode=oneuser.profile.verifycode;
             if(usercode==code){
                 return usercode;
             }else{
@@ -104,11 +104,10 @@ Meteor.methods({
          };
         if(findphone){
             var email=findphone.emails[0].address;
-            console.log("HAMAMMIL" + email);
             plivo.send_message(params,Meteor.bindEnvironment(function (status, response) {
                 console.log('Status: ', status);
                 console.log('API Response:\n', response);
-                Meteor.users.update({"emails.0.address":email},{$set:{"profile.code":code}});
+                Meteor.users.update({"emails.0.address":email},{$set:{"profile.verifycode":code}});
                 
             }));
         }else{

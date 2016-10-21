@@ -828,3 +828,10 @@ Template.registerHelper("convertMsTimeStamp", function(tms) {
         if()
     }
 }*/
+
+Template.registerHelper("getDirection", function(img, price) {
+    if (TAPi18n.getLanguage() == 'fa')
+        return 'rtl';
+    else
+        return 'ltr';
+});

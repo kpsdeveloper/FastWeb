@@ -24,6 +24,7 @@ Package.onUse(function(api) {
         'meteoris:role@0.0.0',
         //'deps',
         //'session',
+        'u2622:persistent-session',
         'mongo',
         'kadira:flow-router@2.0.0',
         'kadira:blaze-layout@2.0.0',
@@ -55,6 +56,7 @@ Package.onUse(function(api) {
         'lib/collections/Carts.js',
         'lib/collections/Orders.js',
         'lib/collections/Contents.js',
+        'lib/controllers/language.js',
         'lib/router.js',
     ], ['client', 'server']);
 
