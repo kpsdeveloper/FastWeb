@@ -9,7 +9,7 @@
 
             <!-- Content Wrapper. Contains page content -->      
             <!-- Main content -->
-            <div class="content-wrapper"> 
+            <div class="content-wrapper" id="applyFarsifont"> 
                 {{> Template.dynamic template=content}}
             </div>
             <!-- /.content-wrapper -->                
@@ -22,6 +22,32 @@
         </div>
     </div>
     {{> quickView}}
+    {{#if farsi}}
+        <script type="text/javascript">
+            $(document).ready( function (e) {
+                $('#applyFarsifont').css('font-family', 'Conv_bmitra');
+                $('h1#applyFarsifont').css('font-family', 'Conv_bmitra');
+                $('#applyFarsifont .price').css('font-family', 'Conv_bmitra');
+                $('.price').attr('dir', 'ltr');
+
+            });
+           
+        </script>
+
+    {{else}}
+        <script type="text/javascript">
+            $(document).ready( function (e) {
+                $('#applyFarsifont').css('font-family', '');
+                $('#applyFarsifont h1,h2,h3,h4,h5,h6').css('font-family', '');
+                $('h1#applyFarsifont').css('font-family', '');
+                $('#applyFarsifont .price').css('font-family', '');
+                $('.price').attr('dir', 'rtl');
+                
+            });
+           
+        </script>
+
+    {{/if}}
 </template>
 
 

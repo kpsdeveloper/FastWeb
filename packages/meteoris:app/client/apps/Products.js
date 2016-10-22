@@ -273,10 +273,14 @@ Template.app_header.helpers({
     getParentCategories: function() {
         var menu = Meteoris.Categories.find({ "$or": [{ "parent": "0" }, { "parent": " " }] }).map(function(document, index) {
             var lang = Session.get('LANG');
-            if( lang == 'en'){
+             if( lang == 'en'){
                 document.title = document.i18n.en.title;
-                document.slug  = slugTitle(document.i18n.en.title);
+                document.slug  = slugTitle(document.title);
+            }else{
+                document.title = document.title;
+                document.slug  = slugTitle(document.title);
             }
+
             document.index = index + 1;
             return document;
         });
@@ -288,6 +292,9 @@ Template.app_header.helpers({
             if( lang == 'en'){
                 document.title = document.i18n.en.title;
                 document.slug  = slugTitle(document.i18n.en.title);
+            }else{
+                document.title = document.title;
+                document.slug  = slugTitle(document.title);
             }
             document.index = index + 1;
             var hasChildren = Meteoris.Categories.findOne({ "parent": document._id });

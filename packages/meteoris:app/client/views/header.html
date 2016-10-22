@@ -385,10 +385,10 @@
             <!-- Start of header search-->
             <div class="pull-right searchnew col-md-6 col-sm-6">
                 <ul class="list-inline search-option {{getDiv}}">
-                    <li><a href="#" id="selsect_search" data-group="0">ALL</a></li>
-                    <li class="active"><a href="#" id="selsect_search" data-group="1">Products</a></li>
-                    <li><a href="#" id="selsect_search" data-group="2">WEBZINE</a></li>
-                    <li><a href="#" id="selsect_search" data-group="3">Tutorials</a></li>
+                    <li><a href="#" id="selsect_search" data-group="0">{{_"All"}}</a></li>
+                    <li class="active"><a href="#" id="selsect_search" data-group="1">{{_"Products"}}</a></li>
+                    <li><a href="#" id="selsect_search" data-group="2">{{_"WEBZINE"}}</a></li>
+                    <li><a href="#" id="selsect_search" data-group="3">{{_"Tutorials"}}</a></li>
                     <li><a href="" id="changelanguage" data-group="3">{{showlanguage}}</a></li>
                 </ul>
                 <script type="text/javascript">
@@ -468,11 +468,11 @@
                     <ul class="dropdown-menu">
                         {{#each getChildrenCategories _id}}
                             <li class="{{#if hasChildren}}dropdown-submenu{{/if}}">
-                                <a href="/category/{{slug}}/1">{{title}}</a>
+                                <a href="/category/{{slugTitle slug}}/1">{{title}}</a>
                                 {{#if hasChildren}}
                                     <ul class="dropdown-menu">
                                         {{#each getChildrenCategories _id}}
-                                            <li><a href="/category/{{slug}}/1">{{title}}</a></li>
+                                            <li><a href="/category/{{slugTitle slug}}/1">{{title}}</a></li>
                                         {{/each}}
                                     </ul>
                                 {{/if}}

@@ -10,7 +10,7 @@
 
             <div class="col-md-5 col-xs-12" id="detail_desccription">
                
-                    <div class="hold_description">
+                    <div class="hold_description" dir="{{getDirection}}">
                         <h3>{{product.title}}</h3>
                         <p class="brand"><span>Brands:</span>
                             <span style="color:#dd2a1b">
@@ -27,20 +27,31 @@
                 
                 {{getCategoryName ../product.category}}
             </div>
-            <div class="col-md-2 col-xs-12">
-                <h5>Get delivered in all Iran!</h5>
+            <div class="col-md-2 col-xs-12" style="width:235px">
+                <h5>{{_"Get delivered in all Iran"}}</h5>
                 <div style="height:3px;background:#000;"></div>
-                {{#if checkdiscount product}}
-                    <p>old price<del>{{product.priceAttr}}</del></p>
-                    <p>discount: <span class="price" id="discount">{{checkdiscount product}}%</span></p>
-                    <h3>ریال <span class="price" >{{getPriceAfterDiscount product.priceAttr}}</span></h3>
+                {{#if farsi}}
+                    {{#if checkdiscount product}}
+                        <p>old price<del>{{product.priceAttr}}</del></p>
+                        <p>discount: <span class="price" style="font-family:'Conv_bmitra';" id="discount">{{checkdiscount product}}%</span></p>
+                        <h3>ریال <span class="price" style="font-family:'Conv_bmitra';">{{getPriceAfterDiscount product.priceAttr}}</span></h3>
+                    {{else}}
+                        <h3 style="font-family:'Conv_bmitra'">&nbsp;&nbsp;ریال &nbsp;&nbsp; <span dir="ltr" class="price" style="font-size:23px;">{{product.priceAttr}}</span> &nbsp;</h3>
+                   {{/if}}
                 {{else}}
-                    <h3>ریال <span class="price">{{product.priceAttr}}</span></h3>
-               {{/if}}
+                    {{#if checkdiscount product}}
+                        <p>old price<del>{{product.priceAttr}}</del></p>
+                        <p>discount: <span class="price" id="discount">{{checkdiscount product}}%</span></p>
+                        <h3>ریال <span class="price">{{getPriceAfterDiscount product.priceAttr}}</span></h3>
+                    {{else}}
+                        <h3>ریال <span class="price" style="font-size:23px;">{{product.priceAttr}}</span></h3>
+                   {{/if}}
+
+                {{/if}}
                 
-                <div class="block">
+               <div class="block" dir="{{getDirection}}">
                 
-                    <label class="quantity" for="select">Quantity</label>
+                    <label class="quantity" for="select">{{_"Quantity"}}</label>
                     <select id="qty" name="select" class="quantity" size="1">
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -54,13 +65,15 @@
                         <option value="10">10</option>
                     </select>
                 </div>
-                <div class="block attrwrapper">  
+
+            
+                <div class="block attrwrapper" dir="{{getDirection}}">  
                     {{#each attribute}}
                         <span data-price="{{price}}" data-attr="{{_id}}" class="btn btn-primary {{active}} attribute">{{value}}</span>
                     {{/each}}
                 </div>
                 <div class="block">                 
-                    <button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>
+                    <button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> {{_"ADD TO CART"}}</button>
                      
                 </div> 
                  <div class="block"> 
@@ -69,9 +82,9 @@
                           
                 </div>     
             </div>
-            <div class="col-md-10 col-xs-12">
+            <div class="col-md-10 col-xs-12" dir="{{getDirection}}">
                 {{#if isUserLoggedIn }}
-                    <h1 class="title-review">RATINGS &amp; REVIEWS</h1>
+                    <h1 class="title-review">{{_"Ratings & Reviews"}}</h1>
                     <form role="form" class="add-review">
                         <div class="form-group">
                           <label for="review-title">Title:</label>
@@ -148,17 +161,17 @@
                     </div>
 
                 {{else}}
-                    <h1 class="title-review"> RATINGS &amp; REVIEWS</h1>
+                    <h1 class="title-review">{{_"Ratings & Reviews"}}</h1>
                     <div class="col-md-8 col-sm-12 col-xs-12 col-md-offset-2">
                         <div class="bg-review-comment text-center">
                             <a href="/meteoris/user/login">
-                                <button class="btn-review" type="button">Login to add reviews</button>
+                                <button class="btn-review" type="button">{{_ "Login to add reviews"}}</button>
                             </a>
-                            <p class="text-sm-review">Be the first to add reviews</p>
+                            <p class="text-sm-review">{{_"Be the first to add reviews"}}</p>
                         </div>
                     </div>
                 {{/if}}
-                <h1>Customers Who Bought This Item Also Bought</h1>
+                <h1>{{_"Customers Who Bought This Item Also Bought"}}</h1>
                 {{{getRecommendProducts product.recommended}}}
 
             </div>

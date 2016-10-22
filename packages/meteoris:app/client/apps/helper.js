@@ -239,12 +239,20 @@ listProductHtml = function( data , thumb){
         html +=     '<a href="#" data-id="'+data._id+'" class="heart  like like'+data._id+'"><span class="fa fa-heart fa-heart-full btn-like"></span></a>';
     html +=     '</div>';
     html +=     '<div class="clear"></div>';
-    html +=     '<ul class="attribute">'+listAttribute+'</ul>';
-    html +=     '<div class="clear"></div>';
-    html +=     '<div class="price-wrapper"><p>ریال  <span class="price">'+price+'</span></p></div>';
-    html +=     '<div class="addtocart-wrapper">';
-    //html +=     '<label class="quantity" for="select">Quantity</label><select id="qty'+data._id+'" name="select" class="quantity" size="1"><option value="1">1</option></select>';
-    html +=     '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>';
+    if (TAPi18n.getLanguage() == 'fa') {
+        html +=     '<ul class="attribute" id="showattribute" dir="rtl">'+listAttribute+'</ul>';
+        html +=     '<div class="clear"></div>';
+        html +=     '<div class="price-wrapper"><p>ریال  <span class="price" dir="ltr">'+price+'</span></p></div>';
+        html +=     '<div class="addtocart-wrapper">';
+        //html +=     '<label class="quantity" for="select">Quantity</label><select id="qty'+data._id+'" name="select" class="quantity" size="1"><option value="1">1</option></select>';
+        html +=     '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span>افزودن به سبد خرید</button>';
+    }else{
+        html +=     '<ul class="attribute" id="showattribute">'+listAttribute+'</ul>';
+        html +=     '<div class="clear"></div>';
+        html +=     '<div class="price-wrapper"><p>ریال  <span class="price">'+price+'</span></p></div>';
+        html +=     '<div class="addtocart-wrapper">';
+        html +=     '<button class="btn btn-addtocart" id="addToCart"><span class="cart pull-left"></span> ADD TO CART</button>';
+    }
     html +=     '</div>';
     html += '</div>';
     return html;
@@ -870,4 +878,11 @@ Template.registerHelper("getDirection", function(img, price) {
         return 'rtl';
     else
         return 'ltr';
+});
+Template.registerHelper('farsi', function() {
+    if (TAPi18n.getLanguage() == 'fa') {
+        return true;
+    } else {
+        return false;
+    }
 });
