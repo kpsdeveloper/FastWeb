@@ -1,4 +1,12 @@
-upload/*
-upload/*.DS_store
-.DS_Store
-public/videos/*
+# IDE Files
+#-------------------------
+/nbproject/
+.idea/*
+
+## Sublime Text cache files
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+
